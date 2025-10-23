@@ -21,7 +21,7 @@ export function ExperienceInfo({ experiences, providedItems }: ExperienceInfoPro
       {experiences.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {experiences.map((experience) => {
-            const IconComponent = (Icons as Record<string, React.ComponentType<{ className?: string }>>)[experience.iconName] || Icons.Star;
+            const IconComponent = Icons[experience.iconName] || Icons.Star;
             return (
               <Card key={experience.id}>
                 <CardHeader>

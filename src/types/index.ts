@@ -1,10 +1,11 @@
 // ChonCance Type Definitions
+import type * as Icons from "lucide-react";
 
 export interface Experience {
   id: string;
   title: string;
   description: string;
-  iconName: string; // lucide-react icon name
+  iconName: keyof typeof Icons; // lucide-react icon name
 }
 
 export interface Property {
