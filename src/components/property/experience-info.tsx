@@ -1,6 +1,6 @@
 import type { Experience } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, LucideIcon } from "lucide-react";
 import * as Icons from "lucide-react";
 
 interface ExperienceInfoProps {
@@ -21,7 +21,7 @@ export function ExperienceInfo({ experiences, providedItems }: ExperienceInfoPro
       {experiences.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {experiences.map((experience) => {
-            const IconComponent = Icons[experience.iconName] || Icons.Star;
+            const IconComponent = (Icons[experience.iconName] || Icons.Star) as LucideIcon;
             return (
               <Card key={experience.id}>
                 <CardHeader>
