@@ -1,6 +1,6 @@
-import { defineContext7Config } from '@context7/core'
+import { defineConfig } from 'bmad-method'
 
-export default defineContext7Config({
+export default defineConfig({
   project: {
     name: 'ProTask',
     description: '개인 또는 소규모 팀이 프로젝트와 작업을 시각적으로 관리할 수 있는 미니멀하고 빠른 웹 대시보드',
