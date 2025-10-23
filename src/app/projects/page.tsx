@@ -1,26 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { ProjectFormDialog } from "@/components/project-form-dialog";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { ProjectsClientPage } from "./projects-client-page";
 
 export default function ProjectsPage() {
-  const handleAddProject = (data: { name: string; description: string }) => {
-    console.log("New project added:", data);
-    // In a real application, you would send this data to your backend
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">내 프로젝트</h1>
-        <ProjectFormDialog
-          title="새 프로젝트 추가"
-          description="새로운 프로젝트의 이름과 설명을 입력하세요."
-          onSubmit={handleAddProject}
-        >
-          <Button>새 프로젝트</Button>
-        </ProjectFormDialog>
-      </div>
+      <ProjectsClientPage />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Placeholder Project Cards */}
