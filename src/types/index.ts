@@ -5,7 +5,7 @@ export interface Experience {
   id: string;
   title: string;
   description: string;
-  iconName: keyof typeof Icons; // lucide-react icon name
+  iconName: Exclude<keyof typeof Icons, "default">; // lucide-react icon name
 }
 
 export interface Property {
