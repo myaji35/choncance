@@ -1,0 +1,10 @@
+{
+  "editor.chatPredictions.silent": true,
+  "promptDirectory": "./.gemini/prompts",
+  "editor.chatResponsePanelPosition": "right",
+  "editor.codeActions.maxProblemItems": 100,
+  "editor.inlineSuggestCount": 3,
+  "editor.snippetCount": 3,
+  "editor.snippetSuggestions": "inline",
+  "editor.suggestOnTriggerCharacters": true
+}
