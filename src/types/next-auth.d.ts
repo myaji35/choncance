@@ -1,12 +1,14 @@
-import 'next-auth';
+import { DefaultSession } from "next-auth";
 
-declare module 'next-auth' {
-  /**
-   * Extends the built-in session.user type to include the 'id' property.
-   */
+declare module "next-auth" {
   interface Session {
     user: {
-      id: string; // Add the id property
-    } & DefaultSession['user']; // Keep the default properties like name, email, image
+      id: string;
+      role: string;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    role: string;
   }
 }

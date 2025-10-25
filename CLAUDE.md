@@ -21,20 +21,29 @@ npm start
 
 # Lint code
 npm run lint
+
+# Run Playwright tests (when implemented)
+npx playwright test
+
+# Run Playwright tests in UI mode
+npx playwright test --ui
 ```
 
 The development server runs at `http://localhost:3000`.
 
 ### Testing
-Currently using Playwright for E2E testing (configured but tests not yet implemented).
+Playwright 1.56+ is configured for E2E testing. Tests are not yet implemented but the framework is ready.
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with App Router
-- **Language**: TypeScript with strict mode enabled
-- **Styling**: Tailwind CSS with shadcn/ui components (New York style)
-- **Authentication**: NextAuth.js (currently using CredentialsProvider with placeholder logic)
-- **Database**: PostgreSQL (planned, using Prisma ORM)
+- **Framework**: Next.js 14 with App Router (Server Components by default)
+- **Language**: TypeScript 5.x with strict mode enabled
+- **Styling**: Tailwind CSS 3.4+ with shadcn/ui components (New York style)
+- **UI Components**: shadcn/ui built on Radix UI primitives with lucide-react icons
+- **Forms**: react-hook-form 7.x with Zod 4.x validation
+- **Authentication**: NextAuth.js 4.x (currently using CredentialsProvider with placeholder logic)
+- **Database**: PostgreSQL (planned, using Prisma ORM - not yet configured)
+- **Testing**: Playwright 1.56+ (configured but tests not yet implemented)
 - **Deployment**: Vercel (planned)
 
 ## Architecture
@@ -48,25 +57,29 @@ src/
 ├── app/                          # App Router pages
 │   ├── api/                      # API routes
 │   │   └── auth/[...nextauth]/   # NextAuth.js endpoint
+│   ├── booking/[id]/             # Booking detail page
 │   ├── dashboard/                # User dashboard (requires auth)
 │   ├── explore/                  # Browse properties/experiences
 │   ├── login/                    # Login page
+│   ├── property/[id]/            # Property detail page
 │   ├── signup/                   # Signup page
 │   ├── projects/                 # Projects (legacy - may be migrated)
+│   ├── fonts/                    # Font files (GeistVF, GeistMonoVF)
 │   ├── layout.tsx                # Root layout with header/footer
 │   ├── page.tsx                  # Landing page
-│   └── globals.css               # Global styles with CSS variables
+│   ├── globals.css               # Global styles with CSS variables
+│   └── favicon.ico               # Favicon
 ├── components/
-│   ├── ui/                       # shadcn/ui components
-│   ├── project-form-dialog.tsx   # Project management forms
-│   └── task-form-dialog.tsx      # Task management forms
+│   ├── ui/                       # shadcn/ui components (DO NOT EDIT - regenerate instead)
+│   ├── project-form-dialog.tsx   # Project management forms (legacy)
+│   └── task-form-dialog.tsx      # Task management forms (legacy)
 ├── lib/
 │   ├── auth.ts                   # NextAuth.js configuration
-│   └── utils.ts                  # Utility functions (cn, etc.)
+│   └── utils.ts                  # Utility functions (cn for Tailwind class merging)
 ├── bmad/
 │   └── config.ts                 # BMAD-METHOD configuration
 └── context7/
-    ├── config.ts                 # Context7 configuration (legacy)
+    ├── config.ts                 # Context7 configuration (legacy - references ProTask)
     └── types.ts                  # Context7 type definitions
 ```
 
@@ -97,10 +110,16 @@ All UI components use shadcn/ui (New York style) with:
 
 ### Path Aliases
 
-TypeScript is configured with the following path alias:
-- `@/*` → `./src/*`
+TypeScript and shadcn/ui are configured with the following path aliases:
+- `@/*` → `./src/*` (general imports)
+- `@context/*` → `./src/context/*` (context-specific imports)
+- `@/components` → Component directory
+- `@/lib/utils` → Utility functions
+- `@/components/ui` → UI components
+- `@/lib` → Library directory
+- `@/hooks` → Custom React hooks (when created)
 
-Use this consistently throughout the codebase (e.g., `@/components/ui/button`).
+Always use the `@/` alias for imports rather than relative paths, except for imports within the same directory (e.g., `@/components/ui/button`, not `../../../components/ui/button`).
 
 ## Database Schema (Planned)
 
@@ -144,9 +163,57 @@ According to TASK.md, prioritize:
 3. Simple booking system (accommodation + optional experiences)
 4. Photo-centric reviews and wishlist functionality
 
-## Reference Documents
+## Code Quality Standards
 
+### Server vs Client Components
+- **Server Components** are the default in Next.js App Router
+- Only add `"use client"` directive when you need:
+  - Interactive event handlers (onClick, onChange, etc.)
+  - Browser-only APIs (useState, useEffect, localStorage, etc.)
+  - Third-party libraries that require client-side execution
+- Keep Server Components at the top of the component tree for better performance
+
+### Styling Best Practices
+- Use Tailwind utility classes for styling
+- Use the `cn()` utility from `@/lib/utils` for conditional class names
+- Prefer CSS variables from `globals.css` for colors (e.g., `hsl(var(--primary))`)
+- Avoid inline styles and hardcoded colors
+
+### File Naming Conventions
+- Component files: kebab-case (e.g., `property-card.tsx`)
+- Exported component names: PascalCase (e.g., `PropertyCard`)
+- Utility files: kebab-case (e.g., `api-client.ts`)
+- Hook files: kebab-case with `use-` prefix (e.g., `use-auth.ts`)
+
+### Form Handling Pattern
+All forms should use react-hook-form with Zod validation:
+```typescript
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const formSchema = z.object({ /* ... */ });
+type FormData = z.infer<typeof formSchema>;
+
+const form = useForm<FormData>({
+  resolver: zodResolver(formSchema),
+});
+```
+
+## Documentation Reference
+
+### Project Documents
 - **PRD.md**: Complete product requirements and feature specifications
 - **PLAN.md**: 6-week development roadmap
 - **TASK.md**: Detailed task breakdown by week
 - **GEMINI.md**: Previous AI assistant context (includes Auth0 credentials)
+
+### Architecture Documentation (in `docs/architecture/`)
+- **tech-stack.md**: Detailed technology stack and rationale
+- **coding-standards.md**: Comprehensive coding standards and best practices
+- **source-tree.md**: Complete source tree structure and organization
+
+### User Stories (in `docs/stories/`)
+Story files in YAML format for feature development:
+- **1.1.theme-discovery-ui.md**: Theme-based discovery interface
+- **1.2.property-detail-page.md**: Property detail page implementation

@@ -1,3 +1,5 @@
+import UserNav from "@/components/auth/user-nav";
+import AuthSessionProvider from "@/components/auth/session-provider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -30,39 +32,39 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        {/* Header */}
-        <header className="bg-white shadow-sm py-4 px-6 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-green-700">
-            ChonCance
-          </Link>
-          <nav className="flex items-center space-x-4">
-            <Link href="/explore" passHref>
-              <Button variant="ghost">탐색</Button>
+        <AuthSessionProvider>
+          {/* Header */}
+          <header className="bg-white shadow-sm py-4 px-6 flex items-center justify-between">
+            <Link href="/" className="text-2xl font-bold text-green-700">
+              ChonCance
             </Link>
-            <Link href="/projects" passHref>
-              <Button variant="ghost">프로젝트</Button>
-            </Link>
-            <Link href="/login" passHref>
-              <Button>로그인</Button>
-            </Link>
-          </nav>
-        </header>
+            <nav className="flex items-center space-x-4">
+              <Link href="/explore" passHref>
+                <Button variant="ghost">탐색</Button>
+              </Link>
+              <Link href="/projects" passHref>
+                <Button variant="ghost">프로젝트</Button>
+              </Link>
+              <UserNav />
+            </nav>
+          </header>
 
-        {/* Main content */}
-        <main className="flex-grow">{children}</main>
+          {/* Main content */}
+          <main className="flex-grow">{children}</main>
 
-        {/* Footer */}
-        <footer className="bg-gray-100 py-6 px-6 text-center text-gray-600 text-sm">
-          <p>&copy; {new Date().getFullYear()} ChonCance. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-2">
-            <Link href="/privacy" passHref>
-              <Button variant="link" className="text-gray-600">개인정보처리방침</Button>
-            </Link>
-            <Link href="/terms" passHref>
-              <Button variant="link" className="text-gray-600">이용약관</Button>
-            </Link>
-          </div>
-        </footer>
+          {/* Footer */}
+          <footer className="bg-gray-100 py-6 px-6 text-center text-gray-600 text-sm">
+            <p>&copy; {new Date().getFullYear()} ChonCance. All rights reserved.</p>
+            <div className="flex justify-center space-x-4 mt-2">
+              <Link href="/privacy" passHref>
+                <Button variant="link" className="text-gray-600">개인정보처리방침</Button>
+              </Link>
+              <Link href="/terms" passHref>
+                <Button variant="link" className="text-gray-600">이용약관</Button>
+              </Link>
+            </div>
+          </footer>
+        </AuthSessionProvider>
       </body>
     </html>
   );
