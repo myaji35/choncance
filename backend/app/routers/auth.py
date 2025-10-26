@@ -12,9 +12,13 @@ from app.schemas.user import (
     UserRegisterResponse,
     UserResponse,
     UserLoginRequest,
-    UserLoginResponse
+    UserLoginResponse,
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
+    ResetPasswordRequest,
+    ResetPasswordResponse
 )
-from app.utils.security import hash_password, create_access_token, verify_password
+from app.utils.security import hash_password, create_access_token, verify_password, create_reset_token, verify_reset_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -153,4 +157,100 @@ async def login_user(
         access_token=access_token,
         token_type="bearer",
         expires_in=expires_in
+    )
+
+
+@router.post("/forgot-password", response_model=ForgotPasswordResponse)
+async def forgot_password(
+    request_data: ForgotPasswordRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    비밀번호 재설정 이메일 발송
+
+    보안상 이메일 존재 여부와 관계없이 동일한 응답 반환
+
+    Args:
+        request_data: 비밀번호 재설정 요청 데이터 (이메일)
+        db: 데이터베이스 세션
+
+    Returns:
+        ForgotPasswordResponse: 재설정 링크 발송 완료 메시지
+    """
+    # 사용자 조회
+    result = await db.execute(
+        select(User).where(User.email == request_data.email)
+    )
+    user = result.scalar_one_or_none()
+
+    if user:
+        # 재설정 토큰 생성
+        reset_token = create_reset_token(str(user.id))
+
+        # TODO: 이메일 발송
+        # 실제 프로덕션에서는 이메일 발송 서비스 사용
+        # await send_password_reset_email(
+        #     email=user.email,
+        #     reset_token=reset_token
+        # )
+
+        # 개발 환경에서는 콘솔에 로그 출력
+        print(f"Password reset token for {user.email}: {reset_token}")
+        print(f"Reset URL: http://localhost:3000/reset-password?token={reset_token}")
+
+    # 보안상 항상 동일한 응답 반환
+    return ForgotPasswordResponse(
+        message="비밀번호 재설정 링크가 이메일로 발송되었습니다"
+    )
+
+
+@router.post("/reset-password", response_model=ResetPasswordResponse)
+async def reset_password(
+    request_data: ResetPasswordRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    비밀번호 재설정
+
+    Args:
+        request_data: 비밀번호 재설정 데이터 (토큰, 새 비밀번호)
+        db: 데이터베이스 세션
+
+    Returns:
+        ResetPasswordResponse: 비밀번호 변경 완료 메시지
+
+    Raises:
+        HTTPException: 토큰이 유효하지 않거나 만료된 경우 400 Bad Request
+    """
+    # 토큰 검증
+    user_id = verify_reset_token(request_data.token)
+
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "code": "INVALID_TOKEN",
+                "message": "재설정 링크가 만료되었거나 유효하지 않습니다"
+            }
+        )
+
+    # 사용자 조회
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "code": "USER_NOT_FOUND",
+                "message": "사용자를 찾을 수 없습니다"
+            }
+        )
+
+    # 비밀번호 변경
+    user.password = hash_password(request_data.new_password)
+    await db.commit()
+
+    return ResetPasswordResponse(
+        message="비밀번호가 성공적으로 변경되었습니다"
     )

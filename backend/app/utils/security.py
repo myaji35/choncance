@@ -77,3 +77,44 @@ def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
         return payload
     except JWTError:
         return None
+
+
+def create_reset_token(user_id: str) -> str:
+    """
+    Create a password reset token
+
+    Args:
+        user_id: User ID to encode in token
+
+    Returns:
+        Encoded JWT reset token (expires in 1 hour)
+    """
+    payload = {
+        "sub": user_id,
+        "exp": datetime.utcnow() + timedelta(hours=1),
+        "type": "password_reset"
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+def verify_reset_token(token: str) -> Optional[str]:
+    """
+    Verify and decode a password reset token
+
+    Args:
+        token: JWT reset token
+
+    Returns:
+        User ID if token is valid, None otherwise
+    """
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+
+        # Check token type
+        if payload.get("type") != "password_reset":
+            return None
+
+        user_id: Optional[str] = payload.get("sub")
+        return user_id
+    except JWTError:
+        return None

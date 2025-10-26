@@ -13,6 +13,10 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.KAKAO_CLIENT_SECRET!,
     }),
   ],
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
@@ -21,5 +25,10 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
+    async signIn({ user, account, profile }) {
+      // Allow sign in
+      return true;
+    },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };
