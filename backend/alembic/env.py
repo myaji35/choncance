@@ -14,7 +14,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from app.core.database import Base
-from app.models import user  # Import all models
+from app.models import user, tag  # Import all models
 from dotenv import load_dotenv
 
 load_dotenv()
