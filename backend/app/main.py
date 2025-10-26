@@ -18,6 +18,7 @@ origins = [
     "http://localhost:3000",  # Next.js development server
     "http://localhost:8000",  # FastAPI development server
     "https://choncance.com",  # Production frontend (update as needed)
+    "https://choncance.netlify.app",  # Netlify deployment
 ]
 
 app.add_middleware(
