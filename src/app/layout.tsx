@@ -1,4 +1,4 @@
-import UserNav from "@/components/auth/user-nav";
+
 import AuthSessionProvider from "@/components/auth/session-provider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
