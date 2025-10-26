@@ -92,8 +92,14 @@ export default function SignupPage() {
       // Store JWT token
       localStorage.setItem("access_token", result.access_token);
 
-      // Redirect to dashboard
-      router.push("/dashboard");
+      // Store user info (optional, for UI display)
+      localStorage.setItem("user", JSON.stringify(result.user));
+
+      // Show success message
+      alert("가입이 완료되었습니다!");
+
+      // Redirect to main page
+      router.push("/");
     } catch (err) {
       setError("서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.");
       console.error("Signup error:", err);
