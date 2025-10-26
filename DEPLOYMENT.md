@@ -27,17 +27,21 @@
 Netlify 대시보드 → Site settings → Environment variables에서 다음 환경 변수를 추가하세요:
 
 ```bash
-# NextAuth.js
-NEXTAUTH_URL=https://your-domain.netlify.app
-NEXTAUTH_SECRET=your-nextauth-secret-key
-
-# Kakao OAuth (설정 시)
-KAKAO_CLIENT_ID=your-kakao-client-id
-KAKAO_CLIENT_SECRET=your-kakao-client-secret
-
 # Backend API URL (Railway 또는 Render 배포 후 설정)
 NEXT_PUBLIC_API_URL=https://your-backend.railway.app
+
+# Clerk Authentication (Production Keys)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_your-key-here
+CLERK_SECRET_KEY=sk_live_your-key-here
+
+# Clerk Routes (optional)
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 ```
+
+**Clerk 키 받기**: https://dashboard.clerk.com → API Keys → Production
 
 ### 배포 트리거
 
@@ -79,6 +83,9 @@ DATABASE_URL=postgresql+asyncpg://postgres:...@...railway.app:5432/railway
 SECRET_KEY=your-super-secret-jwt-key-change-in-production
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Clerk (Backend에서 JWT 검증 시)
+CLERK_SECRET_KEY=sk_live_your-key-here
 
 # Python 버전 (선택 사항)
 PYTHON_VERSION=3.12
@@ -150,6 +157,7 @@ DATABASE_URL=postgresql+asyncpg://choncance_user:...@...render.com/choncance
 SECRET_KEY=your-super-secret-jwt-key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
+CLERK_SECRET_KEY=sk_live_your-key-here
 PYTHON_VERSION=3.12
 ```
 
@@ -194,7 +202,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://your-domain.netlify.app"
+        "https://your-domain.netlify.app",
+        "https://choncance.netlify.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
