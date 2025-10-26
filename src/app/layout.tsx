@@ -1,10 +1,10 @@
-
-import AuthSessionProvider from "@/components/auth/session-provider";
+import { ClerkProvider } from '@clerk/nextjs';
+import { koKR } from '@clerk/localizations';
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Link from "next/link"; // Import Link for navigation
-import { Button } from "@/components/ui/button"; // Assuming Button is available
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,13 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko"> {/* Changed lang to ko */}
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-      >
-        <AuthSessionProvider>
-
-
+    <ClerkProvider localization={koKR}>
+      <html lang="ko">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        >
           {/* Main content */}
           <main className="flex-grow">{children}</main>
 
@@ -50,8 +48,8 @@ export default function RootLayout({
               </Link>
             </div>
           </footer>
-        </AuthSessionProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
