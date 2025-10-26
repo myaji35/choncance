@@ -60,7 +60,7 @@ export default function ProfilePage() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/user/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/profile`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -93,7 +93,7 @@ export default function ProfilePage() {
     const token = localStorage.getItem('access_token');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/user/profile', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -170,7 +170,7 @@ export default function ProfilePage() {
           {/* Profile Photo */}
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="w-24 h-24">
-              <AvatarImage src={profile.profile_image ? `http://localhost:8000${profile.profile_image}` : undefined} />
+              <AvatarImage src={profile.profile_image ? `${process.env.NEXT_PUBLIC_API_URL}${profile.profile_image}` : undefined} />
               <AvatarFallback>{profile.name[0]}</AvatarFallback>
             </Avatar>
             <div>

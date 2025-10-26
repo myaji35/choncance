@@ -47,7 +47,7 @@ export default function BecomeAHostPage() {
     const token = localStorage.getItem('access_token');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/user/request-host', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/request-host`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
