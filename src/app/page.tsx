@@ -1,174 +1,261 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import Image from "next/image";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/authOptions";
+import { useState, useEffect } from "react";
+import { ArrowDown } from 'lucide-react';
 
-export default async function LandingPage() {
-  const session = await getServerSession(authOptions);
+export default function LandingPage() {
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
 
-  if (session) {
-    redirect("/dashboard");
-  }
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsHeaderVisible(true);
+      } else {
+        setIsHeaderVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
-      <header className="flex justify-between items-center px-6 py-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm">
-        <div className="text-2xl font-bold tracking-tight text-primary">촌캉스</div>
-        <nav className="hidden md:flex space-x-6">
-          <Link href="#themes" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">테마</Link>
-          <Link href="#experiences" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">체험</Link>
-          <Link href="#stories" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">스토리</Link>
-        </nav>
-        <div className="space-x-2">
-          <Button variant="ghost" asChild>
-            <Link href="/login">로그인</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">회원가입</Link>
-          </Button>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isHeaderVisible ? "bg-white/90 shadow-md dark:bg-gray-900/90" : "bg-transparent"
+        }`}
+      >
+        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+          <Link href="/" className="text-2xl font-bold text-primary">
+            촌캉스
+          </Link>
+          <nav className="hidden items-center space-x-8 md:flex">
+            <Link
+              href="#how-it-works"
+              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
+            >
+              이용방법
+            </Link>
+            <Link
+              href="#featured-experiences"
+              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
+            >
+              추천 촌캉스
+            </Link>
+            <Link
+              href="#stories"
+              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
+            >
+              스토리
+            </Link>
+          </nav>
+          <div className="space-x-2">
+            <Button variant="ghost" asChild>
+              <Link href="/login">로그인</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/signup">회원가입</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center text-center bg-cover bg-center" style={{ backgroundImage: "url('/placeholder-hero.jpg')" }}>
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 text-white p-6 max-w-4xl w-full">
-          <h1 className="text-5xl md:text-7xl font-light mb-6 leading-tight tracking-wide">
-            진짜 촌캉스를 찾아서
+      <section className="relative h-screen flex items-center justify-center text-center overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute z-0 w-auto min-w-full min-h-full max-w-none"
+        >
+          <source src="/placeholder-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20"></div>
+        <div className="relative z-10 text-white p-6 max-w-5xl w-full flex flex-col items-center">
+          <h1 className="text-5xl md:text-7xl font-extralight mb-6 leading-tight tracking-wide animate-fade-in-up">
+            도시의 소음은 잠시 끄고, <br />
+            당신의 진짜 쉼을 켜세요
           </h1>
-          <p className="text-xl md:text-2xl mb-10 font-light tracking-wide">
-            논뷰 맛집부터 할매니얼 감성까지, <br />
-            나만의 힐링 스토리가 시작됩니다
+          <p className="text-xl md:text-2xl mb-12 font-light tracking-wide animate-fade-in-up animation-delay-300">
+            촌캉스가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-2xl w-full animate-fade-in-up animation-delay-600">
             <Input
               type="text"
-              placeholder="원하는 테마나 지역을 검색해보세요..."
-              className="w-full sm:flex-1 p-4 rounded-lg text-gray-900 border-0"
+              placeholder="어떤 쉼을 찾고 있나요?"
+              className="w-full sm:flex-1 p-4 rounded-full text-lg text-gray-900 border-0 shadow-lg"
             />
-            <Button size="lg" className="sm:w-auto px-8 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg">
-              탐색하기
+            <Button size="lg" className="sm:w-auto px-8 rounded-full text-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg">
+              쉼 찾기
             </Button>
+          </div>
+          <div className="absolute bottom-10 animate-bounce">
+            <ArrowDown className="w-8 h-8" />
           </div>
         </div>
       </section>
 
-      {/* Theme Section */}
-      <section id="themes" className="py-20 px-6 md:px-12 lg:px-20 bg-white dark:bg-gray-950">
-        <h2 className="text-4xl md:text-5xl font-light text-center mb-4 text-gray-800 dark:text-gray-100">감성 테마</h2>
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-16 text-lg">당신의 마음이 이끄는 곳으로</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardContent className="p-0">
-              <div className="relative h-64">
-                <Image src="/placeholder-property-1.jpg" alt="논뷰 맛집" fill className="object-cover" />
+      {/* How it Works Section */}
+      <section id="how-it-works" className="py-24 px-6 md:px-12 lg:px-20">
+        <div className="container mx-auto">
+          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">촌캉스 이용방법</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">세상 가장 쉬운 쉼을 찾는 여정</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto text-center">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-5xl">🎨</span>
               </div>
-              <div className="p-6">
-                <CardTitle className="text-2xl mb-2 font-light">#논뷰맛집</CardTitle>
-                <CardDescription className="text-base">멍때리기 좋은 황금빛 논밭 풍경</CardDescription>
+              <h3 className="text-3xl font-light mb-4">테마 발견</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">#논뷰맛집 #불멍과별멍 #찐할머니손맛<br/>당신을 위한 테마를 찾아보세요.</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-5xl">📖</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardContent className="p-0">
-              <div className="relative h-64">
-                <Image src="/placeholder-property-2.jpg" alt="불멍과 별멍" fill className="object-cover" />
+              <h3 className="text-3xl font-light mb-4">스토리 탐색</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">호스트의 진솔한 이야기를 통해<br/>공간에 대한 깊은 이해를 더하세요.</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-5xl">🏡</span>
               </div>
-              <div className="p-6">
-                <CardTitle className="text-2xl mb-2 font-light">#불멍과별멍</CardTitle>
-                <CardDescription className="text-base">모닥불 앞에서 누리는 완벽한 단절</CardDescription>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
-            <CardContent className="p-0">
-              <div className="relative h-64">
-                <Image src="/placeholder-property-3.jpg" alt="할매니얼" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <CardTitle className="text-2xl mb-2 font-light">#찐할머니손맛</CardTitle>
-                <CardDescription className="text-base">할머니의 손맛이 담긴 시골 밥상</CardDescription>
-              </div>
-            </CardContent>
-          </Card>
+              <h3 className="text-3xl font-light mb-4">경험 예약</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">단 몇 번의 클릭으로<br/>당신만의 촌캉스를 예약하세요.</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section id="experiences" className="py-20 px-6 md:px-12 lg:px-20 bg-gray-50 dark:bg-gray-900">
-        <h2 className="text-4xl md:text-5xl font-light text-center mb-4 text-gray-800 dark:text-gray-100">느리고 진짜인 체험</h2>
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-16 text-lg">몸빼바지를 입고 떠나는 로컬 스토리</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <Card className="overflow-hidden border-0 shadow-lg">
-            <CardContent className="p-0">
-              <div className="relative h-80">
-                <Image src="/placeholder-property-4.jpg" alt="아궁이 체험" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <div className="flex gap-2 mb-3">
-                  <span className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full">#아궁이체험</span>
-                  <span className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full">#장작패기</span>
+      <section id="featured-experiences" className="py-24 px-6 md:px-12 lg:px-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto">
+          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">추천 촌캉스</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">지금 가장 인기있는 촌캉스를 만나보세요</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
+              <CardContent className="p-0">
+                <div className="relative h-72">
+                  <Image src="/placeholder-property-1.jpg" alt="논뷰 맛집" fill className="object-cover" />
+                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
+                    <span className="text-2xl">❤️</span>
+                  </Button>
                 </div>
-                <CardTitle className="text-xl mb-2 font-light">할머니와 함께하는 아궁이 밥짓기</CardTitle>
-                <CardDescription className="text-base">장작을 패고 불을 지피는 아날로그 감성</CardDescription>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="p-6">
+                  <CardTitle className="text-2xl mb-3 font-light">#논뷰맛집</CardTitle>
+                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">멍때리기 좋은 황금빛 논밭 풍경</CardDescription>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="overflow-hidden border-0 shadow-lg">
-            <CardContent className="p-0">
-              <div className="relative h-80">
-                <Image src="/placeholder-property-5.jpg" alt="텃밭 체험" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <div className="flex gap-2 mb-3">
-                  <span className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full">#텃밭수확</span>
-                  <span className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full">#제철채소</span>
+            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
+              <CardContent className="p-0">
+                <div className="relative h-72">
+                  <Image src="/placeholder-property-2.jpg" alt="불멍과 별멍" fill className="object-cover" />
+                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
+                    <span className="text-2xl">❤️</span>
+                  </Button>
                 </div>
-                <CardTitle className="text-xl mb-2 font-light">싱싱한 제철 채소 수확 체험</CardTitle>
-                <CardDescription className="text-base">직접 수확한 채소로 차려내는 저녁 식탁</CardDescription>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="p-6">
+                  <CardTitle className="text-2xl mb-3 font-light">#불멍과별멍</CardTitle>
+                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">모닥불 앞에서 누리는 완벽한 단절</CardDescription>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
+              <CardContent className="p-0">
+                <div className="relative h-72">
+                  <Image src="/placeholder-property-3.jpg" alt="할매니얼" fill className="object-cover" />
+                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
+                    <span className="text-2xl">❤️</span>
+                  </Button>
+                </div>
+                <div className="p-6">
+                  <CardTitle className="text-2xl mb-3 font-light">#찐할머니손맛</CardTitle>
+                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">할머니의 손맛이 담긴 시골 밥상</CardDescription>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
-
-      {/* Story Section */}
-      <section id="stories" className="py-20 px-6 md:px-12 lg:px-20 bg-white dark:bg-gray-950">
-        <h2 className="text-4xl md:text-5xl font-light text-center mb-4 text-gray-800 dark:text-gray-100">진정성 있는 이야기</h2>
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-16 text-lg">호스트의 삶과 공간이 만나는 곳</p>
-        <div className="max-w-4xl mx-auto">
-          <blockquote className="text-center text-xl md:text-2xl font-light text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-            &ldquo;와이파이가 잘 안 터지고, 가끔 벌레도 나와요. <br />
-            하지만 그게 바로 이곳의 매력이에요. <br />
-            완벽한 단절, 진짜 쉼이 여기 있습니다.&rdquo;
-          </blockquote>
-          <p className="text-center text-gray-500 dark:text-gray-400">- 강원도 어느 한옥 스테이 호스트</p>
+      
+      <section id="stories" className="py-24 px-6 md:px-12 lg:px-20">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl">
+              <Image src="/placeholder-host.jpg" alt="강원도 어느 한옥 스테이 호스트" fill className="object-cover" />
+            </div>
+            <div className="text-center lg:text-left">
+              <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800 dark:text-gray-100">진정성 있는 이야기</h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-10 text-xl">호스트의 삶과 공간이 만나는 곳</p>
+              <blockquote className="text-2xl md:text-3xl font-light text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
+                &ldquo;와이파이가 잘 안 터지고, 가끔 벌레도 나와요. <br />
+                하지만 그게 바로 이곳의 매력이에요. <br />
+                완벽한 단절, 진짜 쉼이 여기 있습니다.&rdquo;
+              </blockquote>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">- 강원도 어느 한옥 스테이 호스트</p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-primary text-primary-foreground text-center">
-        <h2 className="text-4xl md:text-5xl font-light mb-6">당신만의 촌캉스를 시작하세요</h2>
-        <p className="text-lg md:text-xl mb-8 font-light">SNS에 공유하고 싶은 순간들이 기다리고 있습니다</p>
-        <Button size="lg" variant="secondary" className="px-10 py-6 text-lg rounded-lg" asChild>
-          <Link href="/explore">지금 탐색하기</Link>
-        </Button>
+      <section className="py-24 px-6 bg-primary text-primary-foreground text-center">
+        <div className="container mx-auto">
+          <h2 className="text-4xl md:text-5xl font-light mb-6">당신만의 촌캉스를 시작하세요</h2>
+          <p className="text-xl md:text-2xl mb-10 font-light">SNS에 공유하고 싶은 순간들이 기다리고 있습니다</p>
+          <Button size="lg" variant="secondary" className="px-12 py-8 text-xl rounded-full" asChild>
+            <Link href="/explore">지금 탐색하기</Link>
+          </Button>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 md:px-12 lg:px-20 bg-gray-900 dark:bg-black text-gray-300 text-center">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-2xl font-bold mb-6 text-white">촌캉스</div>
-          <p className="text-sm mb-4">진짜 촌캉스를 찾아서</p>
-          <p className="text-xs text-gray-500">&copy; 2025 ChonCance. All rights reserved.</p>
+      <footer className="py-16 px-6 md:px-12 lg:px-20 bg-gray-900 text-gray-400">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="md:col-span-1">
+            <h3 className="text-2xl font-bold text-white mb-4">촌캉스</h3>
+            <p className="text-sm">진짜 촌캉스를 찾아서</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-white mb-4">탐색</h4>
+            <ul>
+              <li className="mb-2"><Link href="#" className="hover:text-white">테마별</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">지역별</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">인기 촌캉스</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-white mb-4">소개</h4>
+            <ul>
+              <li className="mb-2"><Link href="#" className="hover:text-white">촌캉스 스토리</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">호스트 되기</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">채용</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-white mb-4">지원</h4>
+            <ul>
+              <li className="mb-2"><Link href="#" className="hover:text-white">도움말 센터</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">이용약관</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">개인정보처리방침</Link></li>
+            </ul>
+          </div>
+        </div>
+        <div className="container mx-auto text-center mt-12 border-t border-gray-800 pt-8">
+          <p className="text-sm">&copy; 2025 ChonCance. All rights reserved.</p>
         </div>
       </footer>
     </div>

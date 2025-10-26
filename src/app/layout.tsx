@@ -33,21 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <AuthSessionProvider>
-          {/* Header */}
-          <header className="bg-white shadow-sm py-4 px-6 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-green-700">
-              ChonCance
-            </Link>
-            <nav className="flex items-center space-x-4">
-              <Link href="/explore" passHref>
-                <Button variant="ghost">탐색</Button>
-              </Link>
-              <Link href="/projects" passHref>
-                <Button variant="ghost">프로젝트</Button>
-              </Link>
-              <UserNav />
-            </nav>
-          </header>
+
 
           {/* Main content */}
           <main className="flex-grow">{children}</main>
