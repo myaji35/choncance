@@ -163,6 +163,30 @@ According to TASK.md, prioritize:
 3. Simple booking system (accommodation + optional experiences)
 4. Photo-centric reviews and wishlist functionality
 
+### Implemented Features
+
+**Epic 1: Discovery & Exploration**
+- ✅ Story 1.1: Theme-Based Discovery UI (`/explore` page with 3 themes)
+- ✅ Story 1.2: Property Detail Page (`/property/[id]` with host stories)
+- ✅ Story 007: Tag System - Backend integration with 16 tags across 4 categories (VIEW, ACTIVITY, FACILITY, VIBE)
+- ✅ Tag-Based Filtering - Click tags to filter properties (`/explore?tag=태그명`)
+
+**Authentication**
+- ✅ Clerk authentication with Korean localization
+- ✅ Login/Signup pages with catch-all routing (`/login/[[...rest]]`, `/signup/[[...rest]]`)
+- ✅ Protected routes via middleware
+
+**Components**
+- ✅ SearchBar component (UI only, functionality pending)
+- ✅ TagBadge and TagList components with color styling
+- ✅ PropertyCard and ThemeSection components
+- ✅ shadcn/ui components (Button, Badge, Card, Input)
+
+**Backend API (FastAPI)**
+- ✅ Tag API (`GET /api/v1/tags`) with category filtering
+- ✅ User authentication endpoints
+- ✅ PostgreSQL database with Tag model and seed data
+
 ## Code Quality Standards
 
 ### Server vs Client Components

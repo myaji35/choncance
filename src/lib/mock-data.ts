@@ -301,3 +301,18 @@ export function getAllThemes(): Theme[] {
 export function getAllProperties(): Property[] {
   return properties;
 }
+
+/**
+ * Filter properties by tag name
+ * Matches if property's tag includes the tag name (case insensitive)
+ */
+export function getPropertiesByTagName(tagName: string): Property[] {
+  const normalizedTagName = tagName.toLowerCase().replace(/\s+/g, '');
+
+  return properties.filter((property) => {
+    return property.tags.some((tag) => {
+      const normalizedTag = tag.toLowerCase().replace(/[#\s]/g, '');
+      return normalizedTag.includes(normalizedTagName) || normalizedTagName.includes(normalizedTag);
+    });
+  });
+}

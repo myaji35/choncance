@@ -89,19 +89,21 @@ export default function LandingPage() {
             </nav>
 
             <div className="flex items-center space-x-2 flex-shrink-0">
-              <Button
-                variant={isHeaderVisible ? "ghost" : "ghost"}
-                asChild
-                className={isHeaderVisible ? "" : "text-white hover:text-white hover:bg-white/20"}
-              >
-                <Link href="/login">로그인</Link>
-              </Button>
-              <Button
-                asChild
-                className={isHeaderVisible ? "" : "bg-white text-primary hover:bg-white/90"}
-              >
-                <Link href="/signup">회원가입</Link>
-              </Button>
+              <Link href="/login">
+                <Button
+                  variant={isHeaderVisible ? "ghost" : "ghost"}
+                  className={isHeaderVisible ? "" : "text-white hover:text-white hover:bg-white/20"}
+                >
+                  로그인
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button
+                  className={isHeaderVisible ? "" : "bg-white text-primary hover:bg-white/90"}
+                >
+                  회원가입
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
