@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/components/layout/site-header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
         >
+          {/* Site Header */}
+          <SiteHeader />
+
           {/* Main content */}
           <main className="flex-grow">{children}</main>
 

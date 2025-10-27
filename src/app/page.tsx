@@ -33,7 +33,7 @@ export default function LandingPage() {
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isHeaderVisible ? "bg-white/95 backdrop-blur-md shadow-md dark:bg-gray-900/95" : "bg-transparent"
+          isHeaderVisible ? "bg-white/95 backdrop-blur-md shadow-md dark:bg-gray-900/95" : "bg-black/30 backdrop-blur-sm"
         }`}
       >
         <div className="container mx-auto px-4 md:px-6">
@@ -91,15 +91,15 @@ export default function LandingPage() {
             <div className="flex items-center space-x-2 flex-shrink-0">
               <Link href="/login">
                 <Button
-                  variant={isHeaderVisible ? "ghost" : "ghost"}
-                  className={isHeaderVisible ? "" : "text-white hover:text-white hover:bg-white/20"}
+                  variant={isHeaderVisible ? "ghost" : "outline"}
+                  className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
                 >
                   로그인
                 </Button>
               </Link>
               <Link href="/signup">
                 <Button
-                  className={isHeaderVisible ? "" : "bg-white text-primary hover:bg-white/90"}
+                  className={isHeaderVisible ? "" : "bg-white text-gray-900 hover:bg-white/90 shadow-md"}
                 >
                   회원가입
                 </Button>
