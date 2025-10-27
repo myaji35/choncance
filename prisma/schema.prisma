@@ -43,12 +43,15 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  phone         String?
   accounts      Account[]
   sessions      Session[]
   kakaoId       String?   @unique
   provider      String?   @default("email")
   role          Role      @default(USER)
   hostProfile   HostProfile?
+  pmProjects    PMProject[]
+  bookings      Booking[]
 }
 
 model HostProfile {
@@ -58,6 +61,9 @@ model HostProfile {
   businessNumber  String
   contact         String
   status          HostStatus @default(PENDING)
+
+  properties      Property[]
+  experiences     Experience[]
 }
 
 enum Role {
@@ -79,4 +85,417 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// ============================================
+// PM Tools Models
+// ============================================
+
+model PMProject {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  prds        PRD[]
+  epics       Epic[]
+  stories     Story[]
+  changeLogs  ChangeLog[]
+
+  // Created by
+  creatorId   String
+  creator     User     @relation(fields: [creatorId], references: [id])
+}
+
+model PRD {
+  id               String   @id @default(cuid())
+  title            String
+  type             String   // "greenfield" or "brownfield"
+  goals            Json     // Array of goal strings
+  background       String   @db.Text
+  uiGoals          Json?    // UI/UX requirements
+  technicalAssum   Json?    // Technical assumptions
+  status           String   @default("draft") // draft, review, approved
+
+  projectId        String
+  project          PMProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  requirements     Requirement[]
+  epics            Epic[]
+  changeLogs       ChangeLog[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Requirement {
+  id          String   @id @default(cuid())
+  prefix      String   // "FR", "NFR", "CR"
+  number      Int
+  description String   @db.Text
+  type        String   // "functional", "non-functional", "compatibility"
+
+  prdId       String
+  prd         PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Epic {
+  id          String   @id @default(cuid())
+  number      Int
+  title       String
+  goal        String   @db.Text
+  type        String   @default("greenfield") // "greenfield" or "brownfield"
+  status      String   @default("pending") // pending, in_progress, completed
+
+  projectId   String?
+  project     PMProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  prdId       String?
+  prd         PRD?     @relation(fields: [prdId], references: [id], onDelete: Cascade)
+
+  stories     Story[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Story {
+  id                String   @id @default(cuid())
+  epicNumber        Int
+  storyNumber       Int
+  title             String
+  userType          String
+  action            String   @db.Text
+  benefit           String   @db.Text
+  type              String   @default("greenfield") // "greenfield" or "brownfield"
+  status            String   @default("pending") // pending, in_progress, completed
+
+  epicId            String
+  epic              Epic     @relation(fields: [epicId], references: [id], onDelete: Cascade)
+
+  projectId         String?
+  project           PMProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  acceptanceCriteria AcceptanceCriteria[]
+  integrationVerification IntegrationVerification[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model AcceptanceCriteria {
+  id          String   @id @default(cuid())
+  number      Int
+  criteria    String   @db.Text
+
+  storyId     String
+  story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model IntegrationVerification {
+  id          String   @id @default(cuid())
+  number      Int
+  description String   @db.Text
+
+  storyId     String
+  story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ChangeLog {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  version     String
+  description String   @db.Text
+  author      String
+
+  projectId   String?
+  project     PMProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  prdId       String?
+  prd         PRD?     @relation(fields: [prdId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CourseCorrection {
+  id                String   @id @default(cuid())
+  title             String
+  changeTrigger     String   @db.Text
+  impactAnalysis    Json     // Structured analysis results
+  proposedChanges   Json     // Array of proposed changes
+  status            String   @default("draft") // draft, review, approved, implemented
+
+  projectId         String
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// ============================================
+// ChonCance Core Models
+// ============================================
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique  // "#논뷰맛집"
+  category    TagCategory
+  icon        String?  // 이모지
+  description String?
+  color       String?  // 배지 색상 (예: "blue", "green")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  properties  Property[]
+}
+
+enum TagCategory {
+  VIEW
+  ACTIVITY
+  FACILITY
+  VIBE
+}
+
+model Property {
+  id            String   @id @default(cuid())
+  hostId        String
+  host          HostProfile @relation(fields: [hostId], references: [id])
+
+  // 기본 정보
+  name          String
+  description   String   @db.Text
+  address       String
+  location      Json     // { lat: number, lng: number }
+  province      String?  // 시/도 (예: "강원도")
+  city          String?  // 시/군/구 (예: "강릉시")
+
+  // 가격 및 수용 인원
+  pricePerNight Decimal  @db.Decimal(10, 2)
+  maxGuests     Int
+  allowsPets    Boolean  @default(false) // 반려동물 동반 가능
+
+  // 미디어
+  images        String[] // Image URLs
+  thumbnailUrl  String?  // 대표 이미지
+
+  // 스토리 및 상세 정보
+  hostStory     String?  @db.Text
+  amenities     String[] // ["wifi", "parking", "kitchen", ...]
+  rules         String?  @db.Text
+
+  // 체크인/체크아웃
+  checkInTime   String   @default("15:00")
+  checkOutTime  String   @default("11:00")
+  minNights     Int      @default(1)
+  maxNights     Int      @default(30)
+
+  // 상태
+  status        PropertyStatus @default(PENDING)
+
+  // 태그 관계 (Many-to-Many)
+  tags          Tag[]
+
+  // 관계
+  bookings      Booking[]
+  calendar      Calendar[]
+
+  // 타임스탬프
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([province])
+  @@index([city])
+  @@index([pricePerNight])
+  @@index([maxGuests])
+}
+
+enum PropertyStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  INACTIVE
+}
+
+model Experience {
+  id                String   @id @default(cuid())
+  propertyId        String
+  hostId            String
+  host              HostProfile @relation(fields: [hostId], references: [id])
+
+  name              String
+  description       String   @db.Text
+  price             Decimal  @db.Decimal(10, 2)
+  duration          Int      // 분 단위
+  maxParticipants   Int
+
+  images            String[]
+
+  // 가용 시간
+  availableDays     Int[]    // [0,1,2,3,4,5,6] (일~토)
+  availableTimes    String[] // ["10:00", "14:00"]
+
+  status            String   @default("active")
+
+  bookingItems      BookingItem[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// ============================================
+// Booking System Models
+// ============================================
+
+model Booking {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  propertyId          String
+  property            Property @relation(fields: [propertyId], references: [id])
+
+  // 예약 날짜
+  checkIn             DateTime
+  checkOut            DateTime
+  guests              Int
+
+  // 가격 정보
+  nightlyRate         Decimal  @db.Decimal(10, 2)
+  numberOfNights      Int
+  accommodationTotal  Decimal  @db.Decimal(10, 2)
+  experiencesTotal    Decimal  @db.Decimal(10, 2) @default(0)
+  serviceFee          Decimal  @db.Decimal(10, 2)
+  totalAmount         Decimal  @db.Decimal(10, 2)
+
+  // 예약 상태
+  status              BookingStatus @default(PENDING)
+
+  // 게스트 연락 정보
+  guestName           String
+  guestPhone          String
+  guestEmail          String
+
+  // 특별 요청
+  specialRequests     String?  @db.Text
+
+  // 타임스탬프
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  confirmedAt         DateTime?
+  cancelledAt         DateTime?
+  cancellationReason  String?  @db.Text
+
+  // 관계
+  items               BookingItem[]
+  payment             Payment?
+
+  @@index([userId, status])
+  @@index([propertyId, checkIn, checkOut])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  REJECTED
+  NO_SHOW
+}
+
+model BookingItem {
+  id            String   @id @default(cuid())
+  bookingId     String
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  experienceId  String
+  experience    Experience @relation(fields: [experienceId], references: [id])
+
+  date          DateTime // 체험 날짜
+  time          String   // 체험 시간 "14:00"
+  quantity      Int      // 참가 인원
+  price         Decimal  @db.Decimal(10, 2) // 단가
+  totalPrice    Decimal  @db.Decimal(10, 2) // 총 가격
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Calendar {
+  id            String   @id @default(cuid())
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  date          DateTime @db.Date
+  available     Boolean  @default(true)
+  priceOverride Decimal? @db.Decimal(10, 2) // 해당 날짜의 가격 오버라이드
+  reason        String?  // 불가 사유
+  minNights     Int?     // 해당 날짜의 최소 숙박일
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([propertyId, date])
+  @@index([propertyId, date])
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  bookingId     String   @unique
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  amount        Decimal  @db.Decimal(10, 2)
+  currency      String   @default("KRW")
+  status        PaymentStatus @default(READY)
+  paymentMethod String?  // "card", "transfer", "kakao_pay"
+
+  // Toss Payments 정보
+  paymentKey    String?  // Toss paymentKey
+  orderId       String   @unique // 주문 ID
+  orderName     String   // 주문명
+
+  // 타임스탬프
+  requestedAt   DateTime @default(now())
+  approvedAt    DateTime?
+  cancelledAt   DateTime?
+
+  // 환불 정보
+  refundAmount  Decimal? @db.Decimal(10, 2)
+  refundReason  String?  @db.Text
+
+  transactions  PaymentTransaction[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([orderId])
+}
+
+enum PaymentStatus {
+  READY
+  IN_PROGRESS
+  DONE
+  CANCELLED
+  FAILED
+}
+
+model PaymentTransaction {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  externalId  String?  // 외부 거래 ID
+  type        String   // "payment", "refund"
+  amount      Decimal  @db.Decimal(10, 2)
+  metadata    Json?    // 추가 메타데이터
+
+  createdAt   DateTime @default(now())
 }

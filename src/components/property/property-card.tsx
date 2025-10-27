@@ -2,21 +2,40 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import type { Property } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { TagList } from "@/components/tag-badge";
+
+interface Property {
+  id: string;
+  name: string;
+  description: string;
+  address: string;
+  pricePerNight: number;
+  images: string[];
+  thumbnailUrl?: string | null;
+  tags: Array<{
+    id: string;
+    name: string;
+    category: string;
+    icon?: string | null;
+    color?: string | null;
+  }>;
+}
 
 interface PropertyCardProps {
   property: Property;
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
+  const imageUrl = property.thumbnailUrl || property.images[0] || '/placeholder-property.jpg';
+
   return (
     <Link href={`/property/${property.id}`} className="block group">
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
         <div className="relative aspect-[4/3] w-full overflow-hidden">
           <Image
-            src={property.imageUrl}
-            alt={property.title}
+            src={imageUrl}
+            alt={property.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -24,28 +43,34 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
         <CardHeader className="space-y-2">
           <CardTitle className="text-lg font-bold line-clamp-1">
-            {property.title}
+            {property.name}
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
-            {property.location}
+            {property.address}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           <p className="text-sm text-gray-600 line-clamp-2">
             {property.description}
           </p>
-          {property.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              {property.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+
+          {/* Tags */}
+          {property.tags && property.tags.length > 0 && (
+            <TagList
+              tags={property.tags}
+              size="sm"
+              maxTags={3}
+              className="mt-3"
+            />
           )}
+
+          {/* Price */}
+          <div className="text-right pt-2 border-t">
+            <p className="text-lg font-bold text-primary">
+              ₩{property.pricePerNight.toLocaleString()}
+              <span className="text-sm font-normal text-gray-600"> / 박</span>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </Link>

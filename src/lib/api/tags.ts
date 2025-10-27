@@ -1,9 +1,9 @@
 /**
- * Tag API Client
+ * Tag API Client (Next.js API Routes)
  */
 import type { Tag, TagCategory } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export interface TagListResponse {
   tags: Tag[];

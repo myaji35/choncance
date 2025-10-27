@@ -166,10 +166,17 @@ According to TASK.md, prioritize:
 ### Implemented Features
 
 **Epic 1: Discovery & Exploration**
-- ✅ Story 1.1: Theme-Based Discovery UI (`/explore` page with 3 themes)
-- ✅ Story 1.2: Property Detail Page (`/property/[id]` with host stories)
-- ✅ Story 007: Tag System - Backend integration with 16 tags across 4 categories (VIEW, ACTIVITY, FACILITY, VIBE)
+- ✅ Story 1.1: Theme-Based Discovery UI (`/explore` page with tag categories)
+- ✅ Story 1.2: Property Detail Page (`/property/[id]` with host stories, tags, amenities, and related properties)
+- ✅ Story 007: Tag System - Full integration with 16 tags across 4 categories (VIEW, ACTIVITY, FACILITY, VIBE)
 - ✅ Tag-Based Filtering - Click tags to filter properties (`/explore?tag=태그명`)
+- ✅ Text Search - Search properties by name, description, address, or tags (`/explore?search=검색어`)
+
+**Epic 2: Booking System (In Progress)**
+- ✅ Database Models - Booking, BookingItem, Calendar, Payment, PaymentTransaction models
+- ⏳ Booking API - Availability check, booking creation, payment integration
+- ⏳ Booking UI - Date picker, booking widget, checkout flow
+- ⏳ Payment Integration - Toss Payments integration
 
 **Authentication**
 - ✅ Clerk authentication with Korean localization
@@ -177,15 +184,25 @@ According to TASK.md, prioritize:
 - ✅ Protected routes via middleware
 
 **Components**
-- ✅ SearchBar component (UI only, functionality pending)
-- ✅ TagBadge and TagList components with color styling
-- ✅ PropertyCard and ThemeSection components
-- ✅ shadcn/ui components (Button, Badge, Card, Input)
+- ✅ SearchBar component with tag-based search and text search functionality
+- ✅ TagBadge and TagList components with category-based color styling
+- ✅ PropertyCard with tags, price, and image display
+- ✅ PropertyGallery component for property images
+- ✅ ThemeSection components for tag categories
+- ✅ shadcn/ui components (Button, Badge, Card, Input, Tabs, Label, Textarea)
 
-**Backend API (FastAPI)**
-- ✅ Tag API (`GET /api/v1/tags`) with category filtering
-- ✅ User authentication endpoints
-- ✅ PostgreSQL database with Tag model and seed data
+**Backend API (Next.js API Routes)**
+- ✅ Tag API (`GET /api/tags`) with category filtering
+- ✅ Property API (`GET /api/properties`, `GET /api/properties/[id]`) with tag filtering
+- ⏳ Booking API (`POST /api/bookings`, `GET /api/bookings`, `GET /api/bookings/[id]`)
+- ⏳ Availability API (`GET /api/availability/check`, `GET /api/availability/calendar/:propertyId`)
+- ⏳ Payment API (`POST /api/payments/confirm`, `GET /api/payments/:bookingId`)
+
+**Database (PostgreSQL via Prisma)**
+- ✅ Core models: User, HostProfile, Property, Tag, Experience
+- ✅ Booking models: Booking, BookingItem, Calendar, Payment, PaymentTransaction
+- ✅ PM Tools models: PMProject, PRD, Epic, Story, Requirements, etc.
+- ✅ Seed data: 16 tags, 3 test properties with tags
 
 ## Code Quality Standards
 
@@ -236,6 +253,8 @@ const form = useForm<FormData>({
 - **tech-stack.md**: Detailed technology stack and rationale
 - **coding-standards.md**: Comprehensive coding standards and best practices
 - **source-tree.md**: Complete source tree structure and organization
+- **pm-tools-architecture.md**: PM Tools system architecture and implementation
+- **booking-system-architecture.md**: Booking System architecture with ERD, API design, and workflows
 
 ### User Stories (in `docs/stories/`)
 Story files in YAML format for feature development:

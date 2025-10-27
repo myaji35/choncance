@@ -1,14 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getPropertyById } from "@/lib/mock-data";
+import { getPropertyById, getProperties } from "@/lib/api/properties";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MapPin, Users, Home } from "lucide-react";
 import { PropertyGallery } from "@/components/property/property-gallery";
-import { PropertyTags } from "@/components/property/property-tags";
-import { HostStory } from "@/components/property/host-story";
-import { ExperienceInfo } from "@/components/property/experience-info";
-import { HonestGuide } from "@/components/property/honest-guide";
+import { TagList } from "@/components/tag-badge";
+import { PropertyCard } from "@/components/property/property-card";
+import { BookingWidget } from "@/components/booking/booking-widget";
 
 interface PropertyDetailPageProps {
   params: {
@@ -16,11 +15,29 @@ interface PropertyDetailPageProps {
   };
 }
 
-export default function PropertyDetailPage({ params }: PropertyDetailPageProps) {
-  const property = getPropertyById(params.id);
+export default async function PropertyDetailPage({ params }: PropertyDetailPageProps) {
+  let property;
+  try {
+    property = await getPropertyById(params.id);
+  } catch (error) {
+    notFound();
+  }
 
   if (!property) {
     notFound();
+  }
+
+  // 관련 숙소 추천 (같은 태그를 가진 숙소)
+  let relatedProperties = [];
+  if (property.tags.length > 0) {
+    try {
+      const allProperties = await getProperties([property.tags[0].name]);
+      relatedProperties = allProperties
+        .filter(p => p.id !== property.id)
+        .slice(0, 3);
+    } catch (error) {
+      console.error("Failed to fetch related properties:", error);
+    }
   }
 
   return (
@@ -40,63 +57,114 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-12">
             {/* Property Gallery */}
-            <PropertyGallery images={property.images} title={property.title} />
+            <PropertyGallery images={property.images} title={property.name} />
 
             {/* Property Header */}
             <div className="space-y-4">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                {property.title}
+                {property.name}
               </h1>
-              <p className="text-lg text-gray-600">{property.location}</p>
-              <PropertyTags tags={property.tags} />
+
+              <div className="flex items-center gap-2 text-gray-600">
+                <MapPin className="w-4 h-4" />
+                <p className="text-lg">{property.address}</p>
+              </div>
+
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>최대 {property.maxGuests}명</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Home className="w-4 h-4" />
+                  <span>최소 {property.minNights}박</span>
+                </div>
+              </div>
+
+              {property.tags && property.tags.length > 0 && (
+                <TagList tags={property.tags} size="md" />
+              )}
             </div>
 
             {/* Property Description */}
             <section className="space-y-4">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">소개</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">숙소 소개</h2>
+              <p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {property.description}
               </p>
             </section>
 
             {/* Host Story */}
-            <HostStory hostStory={property.hostStory} />
+            {property.hostStory && (
+              <section className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">호스트 이야기</h2>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <p className="text-lg text-gray-700 leading-relaxed whitespace-pre-wrap italic">
+                    {property.hostStory}
+                  </p>
+                  <p className="mt-4 text-sm text-gray-600">
+                    - {property.host.user.name || '호스트'}
+                  </p>
+                </div>
+              </section>
+            )}
 
-            {/* Experience Info */}
-            <ExperienceInfo
-              experiences={property.experiences}
-              providedItems={property.providedItems}
-            />
+            {/* Amenities */}
+            {property.amenities && property.amenities.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">편의시설</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {property.amenities.map((amenity) => (
+                    <div key={amenity} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                      <span className="text-gray-700">{amenity}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
-            {/* Honest Guide */}
-            <HonestGuide honestGuide={property.honestGuide} />
+            {/* Rules */}
+            {property.rules && (
+              <section className="space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">숙소 이용규칙</h2>
+                <div className="bg-blue-50 p-6 rounded-lg">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    {property.rules}
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {/* Check-in/out times */}
+            <section className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">체크인/체크아웃</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <Card>
+                  <CardContent className="p-4">
+                    <p className="text-sm text-gray-600 mb-1">체크인</p>
+                    <p className="text-xl font-bold">{property.checkInTime}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <p className="text-sm text-gray-600 mb-1">체크아웃</p>
+                    <p className="text-xl font-bold">{property.checkOutTime}</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
           </div>
 
           {/* Right Column - Booking Sidebar (Desktop) */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-8">
-              <Card className="shadow-lg">
-                <CardContent className="p-6 space-y-6">
-                  {/* Price */}
-                  <div className="pb-6 border-b">
-                    <p className="text-sm text-gray-600 mb-1">1박 기준</p>
-                    <p className="text-3xl font-bold text-gray-900">
-                      ₩{property.pricePerNight.toLocaleString()}
-                    </p>
-                  </div>
-
-                  {/* Booking Button */}
-                  <Link href={`/booking/${property.id}`} className="block">
-                    <Button className="w-full" size="lg">
-                      예약하기
-                    </Button>
-                  </Link>
-
-                  <p className="text-xs text-gray-500 text-center">
-                    예약 확정 전에는 요금이 청구되지 않습니다
-                  </p>
-                </CardContent>
-              </Card>
+              <BookingWidget
+                propertyId={property.id}
+                pricePerNight={Number(property.pricePerNight)}
+                maxGuests={property.maxGuests}
+                minNights={property.minNights}
+                maxNights={property.maxNights}
+              />
             </div>
           </div>
         </div>
@@ -118,6 +186,25 @@ export default function PropertyDetailPage({ params }: PropertyDetailPageProps) 
 
         {/* Add padding at bottom for mobile sticky CTA */}
         <div className="h-20 lg:hidden" />
+
+        {/* Related Properties Section */}
+        {relatedProperties.length > 0 && (
+          <section className="mt-20">
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                비슷한 촌캉스
+              </h2>
+              <p className="text-gray-600">
+                이 숙소와 비슷한 테마의 촌캉스를 추천합니다
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedProperties.map((relatedProperty) => (
+                <PropertyCard key={relatedProperty.id} property={relatedProperty} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

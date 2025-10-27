@@ -1,19 +1,19 @@
-import { getAllThemes, getPropertiesByThemeId, getPropertiesByTagName } from "@/lib/mock-data";
-import { ThemeSection } from "@/components/theme/theme-section";
 import { getTagsGroupedByCategory } from "@/lib/api/tags";
+import { getProperties, getPropertiesByTagName } from "@/lib/api/properties";
 import { TagCategorySection } from "@/components/tag/tag-section";
+import { PropertyCard } from "@/components/property/property-card";
 import type { TagCategory } from "@/types";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ExplorePageProps {
-  searchParams: { tag?: string };
+  searchParams: { tag?: string; search?: string };
 }
 
 export default async function ExplorePage({ searchParams }: ExplorePageProps) {
-  const themes = getAllThemes();
   const selectedTag = searchParams.tag;
+  const searchQuery = searchParams.search;
 
   // Fetch tags from backend
   let tagsGrouped;
@@ -24,10 +24,39 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
     tagsGrouped = { VIEW: [], ACTIVITY: [], FACILITY: [], VIBE: [] };
   }
 
-  // Filter properties by selected tag
-  const filteredProperties = selectedTag
-    ? getPropertiesByTagName(selectedTag)
-    : null;
+  // Fetch all properties for featured sections
+  let allProperties = [];
+  try {
+    allProperties = await getProperties();
+  } catch (error) {
+    console.error("Failed to fetch properties:", error);
+  }
+
+  // Fetch properties (with tag filter or search query if provided)
+  let filteredProperties = null;
+  if (selectedTag) {
+    try {
+      filteredProperties = await getPropertiesByTagName(selectedTag);
+    } catch (error) {
+      console.error("Failed to fetch filtered properties:", error);
+      filteredProperties = [];
+    }
+  } else if (searchQuery) {
+    try {
+      // Search by property name, description, address
+      const allProperties = await getProperties();
+      const query = searchQuery.toLowerCase();
+      filteredProperties = allProperties.filter(property =>
+        property.name.toLowerCase().includes(query) ||
+        property.description.toLowerCase().includes(query) ||
+        property.address.toLowerCase().includes(query) ||
+        property.tags.some(tag => tag.name.toLowerCase().includes(query))
+      );
+    } catch (error) {
+      console.error("Failed to search properties:", error);
+      filteredProperties = [];
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -42,10 +71,12 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
       </div>
 
       {/* Active Filter Display */}
-      {selectedTag && (
+      {(selectedTag || searchQuery) && (
         <div className="mb-8 flex items-center justify-center gap-2">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full">
-            <span className="font-medium">선택된 태그: {selectedTag}</span>
+            <span className="font-medium">
+              {selectedTag ? `선택된 태그: ${selectedTag}` : `검색: ${searchQuery}`}
+            </span>
             <Link href="/explore">
               <Button
                 variant="ghost"
@@ -67,23 +98,23 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
               검색 결과 ({filteredProperties.length}개)
             </h2>
             <p className="text-gray-600">
-              &apos;{selectedTag}&apos; 태그와 관련된 촌캉스를 찾았습니다
+              {selectedTag
+                ? `'${selectedTag}' 태그와 관련된 촌캉스를 찾았습니다`
+                : `'${searchQuery}'에 대한 검색 결과입니다`}
             </p>
           </div>
-          <ThemeSection
-            theme={{
-              id: "filtered",
-              title: `"${selectedTag}" 태그 결과`,
-              description: "",
-              propertyIds: []
-            }}
-            properties={filteredProperties}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProperties.map((property) => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
         </div>
       ) : filteredProperties && filteredProperties.length === 0 ? (
         <div className="mb-20 text-center py-16">
           <p className="text-xl text-gray-600 mb-4">
-            &apos;{selectedTag}&apos; 태그와 관련된 촌캉스를 찾을 수 없습니다
+            {selectedTag
+              ? `'${selectedTag}' 태그와 관련된 촌캉스를 찾을 수 없습니다`
+              : `'${searchQuery}'에 대한 검색 결과가 없습니다`}
           </p>
           <Link href="/explore">
             <Button variant="outline">모든 태그 보기</Button>
@@ -91,47 +122,66 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         </div>
       ) : (
         <>
+          {/* Hero Section with Featured Properties */}
+          {allProperties.length > 0 && (
+            <div className="mb-20">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-light text-gray-800 mb-4">
+                  이번 주 추천 촌캉스
+                </h2>
+                <p className="text-lg text-gray-600">
+                  엄선된 숙소에서 특별한 휴식을 경험하세요
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {allProperties.slice(0, 3).map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Tag Categories Section */}
-          <div className="mb-20 space-y-12">
-            <div className="text-center mb-8">
+          <div className="mb-20 space-y-16">
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-light text-gray-800 mb-2">
-                촌캉스 태그로 찾기
+                테마별로 찾아보세요
               </h2>
               <p className="text-gray-600">
-                원하는 테마로 완벽한 촌캉스를 발견하세요
+                원하는 분위기와 경험으로 완벽한 촌캉스를 발견하세요
               </p>
             </div>
 
-            <div className="space-y-10">
-              {Object.entries(tagsGrouped).map(([category, tags]) => (
-                <TagCategorySection
-                  key={category}
-                  category={category as TagCategory}
-                  tags={tags}
-                />
-              ))}
-            </div>
-          </div>
+            {Object.entries(tagsGrouped).map(([category, tags]) => {
+              // Get properties for the first tag in this category (as featured)
+              const firstTag = tags[0];
+              const featuredProperties = firstTag
+                ? allProperties
+                    .filter((p) => p.tags.some((t) => t.name === firstTag.name))
+                    .slice(0, 3)
+                : [];
 
-          {/* Theme Sections */}
-          <div className="space-y-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-light text-gray-800 mb-2">
-                큐레이션 테마
-              </h2>
-              <p className="text-gray-600">
-                엄선된 촌캉스 테마를 둘러보세요
-              </p>
-            </div>
-
-            {themes.map((theme) => {
-              const properties = getPropertiesByThemeId(theme.id);
               return (
-                <ThemeSection
-                  key={theme.id}
-                  theme={theme}
-                  properties={properties}
-                />
+                <div key={category} className="space-y-6">
+                  <TagCategorySection
+                    category={category as TagCategory}
+                    tags={tags}
+                  />
+
+                  {/* Featured Properties for This Category */}
+                  {featuredProperties.length > 0 && (
+                    <div className="mt-6">
+                      <h3 className="text-lg font-medium text-gray-700 mb-4 text-center">
+                        &apos;{firstTag.name}&apos; 추천 숙소
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {featuredProperties.map((property) => (
+                          <PropertyCard key={property.id} property={property} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>

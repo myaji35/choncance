@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
 interface SearchBarProps {
@@ -16,11 +17,19 @@ export function SearchBar({
 }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(query);
+
+    if (query.trim()) {
+      // If custom onSearch is provided, use it
+      if (onSearch) {
+        onSearch(query);
+      } else {
+        // Default behavior: redirect to explore page with search query
+        router.push(`/explore?search=${encodeURIComponent(query.trim())}`);
+      }
     }
   };
 
