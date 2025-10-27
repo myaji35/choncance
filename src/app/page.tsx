@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/components/search-bar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -32,40 +33,76 @@ export default function LandingPage() {
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isHeaderVisible ? "bg-white/90 shadow-md dark:bg-gray-900/90" : "bg-transparent"
+          isHeaderVisible ? "bg-white/95 backdrop-blur-md shadow-md dark:bg-gray-900/95" : "bg-transparent"
         }`}
       >
-        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            촌캉스
-          </Link>
-          <nav className="hidden items-center space-x-8 md:flex">
-            <Link
-              href="#how-it-works"
-              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
-            >
-              이용방법
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex h-20 items-center justify-between">
+            <Link href="/" className="text-2xl font-bold text-primary flex-shrink-0">
+              촌캉스
             </Link>
-            <Link
-              href="#featured-experiences"
-              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
-            >
-              추천 촌캉스
-            </Link>
-            <Link
-              href="#stories"
-              className="text-gray-600 hover:text-primary transition-colors dark:text-gray-300"
-            >
-              스토리
-            </Link>
-          </nav>
-          <div className="space-x-2">
-            <Button variant="ghost" asChild>
-              <Link href="/login">로그인</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">회원가입</Link>
-            </Button>
+
+            {/* Search Bar - visible when header is visible */}
+            <div className={`hidden md:block flex-1 max-w-md mx-8 transition-all duration-300 ${
+              isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+            }`}>
+              <SearchBar
+                placeholder="어떤 쉼을 찾고 있나요?"
+                onSearch={(query) => {
+                  console.log('Search:', query);
+                  // TODO: Implement search functionality
+                }}
+              />
+            </div>
+
+            <nav className="hidden items-center space-x-6 lg:flex">
+              <Link
+                href="#how-it-works"
+                className={`transition-colors ${
+                  isHeaderVisible
+                    ? "text-gray-600 hover:text-primary dark:text-gray-300"
+                    : "text-white hover:text-white/80"
+                }`}
+              >
+                이용방법
+              </Link>
+              <Link
+                href="#featured-experiences"
+                className={`transition-colors ${
+                  isHeaderVisible
+                    ? "text-gray-600 hover:text-primary dark:text-gray-300"
+                    : "text-white hover:text-white/80"
+                }`}
+              >
+                추천 촌캉스
+              </Link>
+              <Link
+                href="#stories"
+                className={`transition-colors ${
+                  isHeaderVisible
+                    ? "text-gray-600 hover:text-primary dark:text-gray-300"
+                    : "text-white hover:text-white/80"
+                }`}
+              >
+                스토리
+              </Link>
+            </nav>
+
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <Button
+                variant={isHeaderVisible ? "ghost" : "ghost"}
+                asChild
+                className={isHeaderVisible ? "" : "text-white hover:text-white hover:bg-white/20"}
+              >
+                <Link href="/login">로그인</Link>
+              </Button>
+              <Button
+                asChild
+                className={isHeaderVisible ? "" : "bg-white text-primary hover:bg-white/90"}
+              >
+                <Link href="/signup">회원가입</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
