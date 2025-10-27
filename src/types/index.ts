@@ -31,3 +31,16 @@ export interface Theme {
   description: string;
   propertyIds: string[];
 }
+
+export type TagCategory = "VIEW" | "ACTIVITY" | "FACILITY" | "VIBE";
+
+export interface Tag {
+  id: string;
+  name: string;
+  category: TagCategory;
+  icon: string | null;
+  color: string;
+  description: string | null;
+  display_order: number;
+  created_at: string;
+}
