@@ -1,0 +1,68 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="table-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background - warm kitchen -->
+  <rect width="800" height="600" fill="#F5DEB3"/>
+
+  <!-- Traditional window light -->
+  <rect x="50" y="50" width="200" height="200" fill="#FFF8DC" opacity="0.8"/>
+
+  <!-- Wooden table -->
+  <rect x="100" y="350" width="600" height="40" rx="5" fill="url(#table-gradient)"/>
+  <rect x="100" y="390" width="600" height="180" fill="#8B6914"/>
+
+  <!-- Rice bowl (밥) -->
+  <ellipse cx="250" cy="440" rx="50" ry="18" fill="#FFFFFF"/>
+  <ellipse cx="250" cy="435" rx="50" ry="18" fill="#F5F5DC"/>
+  <ellipse cx="250" cy="430" rx="45" ry="15" fill="#FFFFFF"/>
+
+  <!-- Kimchi bowl (김치) -->
+  <ellipse cx="400" cy="450" rx="45" ry="16" fill="#CD5C5C"/>
+  <ellipse cx="400" cy="445" rx="45" ry="16" fill="#DC143C"/>
+  <circle cx="390" cy="440" r="8" fill="#8B0000"/>
+  <circle cx="405" cy="443" r="6" fill="#8B0000"/>
+  <circle cx="395" cy="448" r="7" fill="#8B0000"/>
+
+  <!-- Jjigae pot (찌개) -->
+  <ellipse cx="550" cy="455" rx="55" ry="20" fill="#8B4513"/>
+  <ellipse cx="550" cy="450" rx="55" ry="20" fill="#CD853F"/>
+  <ellipse cx="550" cy="445" rx="50" ry="18" fill="#D2691E"/>
+  <!-- Bubbles in jjigae -->
+  <circle cx="540" cy="440" r="5" fill="#FFFFFF" opacity="0.6"/>
+  <circle cx="555" cy="438" r="4" fill="#FFFFFF" opacity="0.6"/>
+  <circle cx="548" cy="445" r="3" fill="#FFFFFF" opacity="0.5"/>
+
+  <!-- Namul (나물) side dishes -->
+  <ellipse cx="300" cy="480" rx="35" ry="12" fill="#228B22"/>
+  <ellipse cx="300" cy="476" rx="35" ry="12" fill="#32CD32"/>
+
+  <ellipse cx="480" cy="490" rx="38" ry="13" fill="#DAA520"/>
+  <ellipse cx="480" cy="486" rx="38" ry="13" fill="#FFD700"/>
+
+  <!-- Chopsticks -->
+  <rect x="350" y="510" width="3" height="70" fill="#8B4513" transform="rotate(-15 351 545)"/>
+  <rect x="358" y="510" width="3" height="70" fill="#8B4513" transform="rotate(-10 359 545)"/>
+
+  <!-- Spoon -->
+  <ellipse cx="410" cy="520" rx="12" ry="8" fill="#C0C0C0"/>
+  <rect x="407" y="528" width="6" height="45" rx="3" fill="#C0C0C0"/>
+
+  <!-- Steam from hot food -->
+  <path d="M 540 420 Q 535 405 540 390" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M 555 415 Q 560 400 555 385" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M 548 418 Q 543 403 548 388" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.5"/>
+
+  <!-- Traditional pattern decoration -->
+  <circle cx="150" cy="100" r="30" fill="#CD853F" opacity="0.3"/>
+  <circle cx="650" cy="120" r="25" fill="#CD853F" opacity="0.3"/>
+
+  <!-- Text overlay at bottom -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.5"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#ffffff" text-anchor="middle">찐할머니손맛</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" text-anchor="middle" opacity="0.95">정성 가득 담긴 시골 밥상</text>
+</svg>

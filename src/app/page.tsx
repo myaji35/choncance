@@ -266,7 +266,12 @@ export default function LandingPage() {
             <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
               <CardContent className="p-0">
                 <div className="relative h-72">
-                  <Image src="/placeholder-property-3.jpg" alt="할매니얼" fill className="object-cover" />
+                  <Image
+                    src="/grandma-food.svg"
+                    alt="찐할머니손맛"
+                    fill
+                    className="object-cover"
+                  />
                   <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
                     <span className="text-2xl">❤️</span>
                   </Button>
