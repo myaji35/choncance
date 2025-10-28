@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -20,9 +21,11 @@ type HostRequestFormData = z.infer<typeof hostRequestSchema>;
 
 export default function BecomeAHostPage() {
   const router = useRouter();
+  const { isLoaded, userId, isSignedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [existingProfile, setExistingProfile] = useState<string | null>(null);
 
   const {
     register,
@@ -32,29 +35,40 @@ export default function BecomeAHostPage() {
     resolver: zodResolver(hostRequestSchema),
   });
 
-  // Check if user is already authenticated
+  // Check if user is authenticated and has existing host profile
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
+    if (isLoaded && !isSignedIn) {
       router.push('/login');
+      return;
     }
-  }, [router]);
+
+    if (isLoaded && isSignedIn) {
+      // Check if user already has a host profile
+      fetch('/api/host/profile')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.hostProfile) {
+            setExistingProfile(data.hostProfile.status);
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to check host profile:', err);
+        });
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   const onSubmit = async (data: HostRequestFormData) => {
     setIsLoading(true);
     setError(null);
 
-    const token = localStorage.getItem('access_token');
-
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/request-host`, {
+      const response = await fetch('/api/host/profile', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          business_number: data.businessNumber,
+          businessNumber: data.businessNumber,
           contact: data.contact,
         }),
       });
@@ -62,12 +76,11 @@ export default function BecomeAHostPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.detail?.code === 'ALREADY_HOST_OR_PENDING') {
-          setError('이미 호스트이거나 승인 대기 중입니다.');
-        } else if (result.detail?.code === 'HOST_PROFILE_EXISTS') {
-          setError('이미 호스트 프로필이 존재합니다.');
+        if (result.code === 'HOST_PROFILE_EXISTS') {
+          setError(`이미 호스트 프로필이 존재합니다 (상태: ${result.status})`);
+          setExistingProfile(result.status);
         } else {
-          setError(result.detail?.message || '호스트 신청에 실패했습니다');
+          setError(result.error || '호스트 신청에 실패했습니다');
         }
         return;
       }
@@ -80,6 +93,56 @@ export default function BecomeAHostPage() {
       setIsLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-12">
+        <div className="text-center">로딩 중...</div>
+      </div>
+    );
+  }
+
+  // Show existing profile status
+  if (existingProfile) {
+    const statusText = existingProfile === 'PENDING'
+      ? '승인 대기 중입니다'
+      : existingProfile === 'APPROVED'
+      ? '이미 승인된 호스트입니다'
+      : existingProfile === 'REJECTED'
+      ? '호스트 신청이 거부되었습니다'
+      : '호스트 프로필이 존재합니다';
+
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-12">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl text-center">호스트 상태</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 text-sm bg-blue-50 rounded-md">
+              {statusText}
+            </div>
+            {existingProfile === 'APPROVED' && (
+              <Button
+                onClick={() => router.push('/host/dashboard')}
+                className="w-full"
+              >
+                호스트 대시보드로 이동
+              </Button>
+            )}
+            <Button
+              onClick={() => router.push('/')}
+              variant="outline"
+              className="w-full"
+            >
+              메인 페이지로 이동
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (success) {
     return (
