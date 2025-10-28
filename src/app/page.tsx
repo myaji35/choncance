@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ArrowDown } from 'lucide-react';
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export default function LandingPage() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
@@ -89,21 +90,42 @@ export default function LandingPage() {
             </nav>
 
             <div className="flex items-center space-x-2 flex-shrink-0">
-              <Link href="/login">
-                <Button
-                  variant={isHeaderVisible ? "ghost" : "outline"}
-                  className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
-                >
-                  로그인
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button
-                  className={isHeaderVisible ? "" : "bg-white text-gray-900 hover:bg-white/90 shadow-md"}
-                >
-                  회원가입
-                </Button>
-              </Link>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <Button
+                    variant={isHeaderVisible ? "ghost" : "outline"}
+                    className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
+                  >
+                    로그인
+                  </Button>
+                </SignInButton>
+                <Link href="/signup">
+                  <Button
+                    className={isHeaderVisible ? "" : "bg-white text-gray-900 hover:bg-white/90 shadow-md"}
+                  >
+                    회원가입
+                  </Button>
+                </Link>
+              </SignedOut>
+
+              <SignedIn>
+                <Link href="/bookings">
+                  <Button
+                    variant={isHeaderVisible ? "ghost" : "outline"}
+                    className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
+                  >
+                    내 예약
+                  </Button>
+                </Link>
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10",
+                    },
+                  }}
+                />
+              </SignedIn>
             </div>
           </div>
         </div>
