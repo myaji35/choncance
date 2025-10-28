@@ -236,7 +236,7 @@ export default function LandingPage() {
             <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
               <CardContent className="p-0">
                 <div className="relative h-72">
-                  <Image src="/placeholder-property-1.jpg" alt="논뷰 맛집" fill className="object-cover" />
+                  <Image src="/rice-field-view.svg" alt="논뷰 맛집" fill className="object-cover" />
                   <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
                     <span className="text-2xl">❤️</span>
                   </Button>
@@ -251,7 +251,7 @@ export default function LandingPage() {
             <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
               <CardContent className="p-0">
                 <div className="relative h-72">
-                  <Image src="/placeholder-property-2.jpg" alt="불멍과 별멍" fill className="object-cover" />
+                  <Image src="/campfire-stars.svg" alt="불멍과 별멍" fill className="object-cover" />
                   <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
                     <span className="text-2xl">❤️</span>
                   </Button>
@@ -290,7 +290,7 @@ export default function LandingPage() {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl">
-              <Image src="/placeholder-host.jpg" alt="강원도 어느 한옥 스테이 호스트" fill className="object-cover" />
+              <Image src="/hanok-host.svg" alt="강원도 어느 한옥 스테이 호스트" fill className="object-cover" />
             </div>
             <div className="text-center lg:text-left">
               <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800 dark:text-gray-100">진정성 있는 이야기</h2>

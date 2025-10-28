@@ -1,0 +1,105 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="campfire-flame" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="40%" style="stop-color:#FF8C00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF4500;stop-opacity:0.8" />
+    </radialGradient>
+    <linearGradient id="night-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#000428;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004e92;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="fire-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF8C00;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#FF4500;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Night sky background -->
+  <rect width="800" height="600" fill="url(#night-sky)"/>
+
+  <!-- Milky Way effect -->
+  <ellipse cx="400" cy="150" rx="300" ry="80" fill="#FFFFFF" opacity="0.05"/>
+  <ellipse cx="350" cy="180" rx="250" ry="60" fill="#FFFFFF" opacity="0.03"/>
+
+  <!-- Stars - scattered across sky -->
+  <circle cx="80" cy="60" r="2" fill="#ffffff"/>
+  <circle cx="150" cy="90" r="1.5" fill="#ffffff"/>
+  <circle cx="230" cy="50" r="2.5" fill="#ffffff"/>
+  <circle cx="320" cy="80" r="1.5" fill="#ffffff"/>
+  <circle cx="410" cy="45" r="2" fill="#ffffff"/>
+  <circle cx="520" cy="70" r="2.5" fill="#ffffff"/>
+  <circle cx="630" cy="55" r="1.5" fill="#ffffff"/>
+  <circle cx="720" cy="85" r="2" fill="#ffffff"/>
+
+  <circle cx="100" cy="130" r="1" fill="#ffffff"/>
+  <circle cx="200" cy="110" r="1.5" fill="#ffffff"/>
+  <circle cx="300" cy="140" r="1" fill="#ffffff"/>
+  <circle cx="450" cy="120" r="2" fill="#ffffff"/>
+  <circle cx="550" cy="100" r="1" fill="#ffffff"/>
+  <circle cx="670" cy="135" r="1.5" fill="#ffffff"/>
+  <circle cx="750" cy="115" r="1" fill="#ffffff"/>
+
+  <circle cx="120" cy="180" r="1.5" fill="#ffffff"/>
+  <circle cx="260" cy="170" r="1" fill="#ffffff"/>
+  <circle cx="380" cy="190" r="1.5" fill="#ffffff"/>
+  <circle cx="500" cy="165" r="1" fill="#ffffff"/>
+  <circle cx="620" cy="185" r="2" fill="#ffffff"/>
+  <circle cx="700" cy="175" r="1" fill="#ffffff"/>
+
+  <!-- Twinkling stars (larger) -->
+  <circle cx="650" cy="80" r="3" fill="#FFD700" opacity="0.8"/>
+  <circle cx="180" cy="70" r="2.5" fill="#E0FFFF" opacity="0.9"/>
+  <circle cx="420" cy="110" r="2.5" fill="#FFFACD" opacity="0.8"/>
+
+  <!-- Crescent moon -->
+  <circle cx="680" cy="100" r="40" fill="#F4E4C1" opacity="0.95"/>
+  <circle cx="695" cy="95" r="38" fill="#004e92"/>
+
+  <!-- Forest/Mountain silhouette -->
+  <path d="M 0 400 L 0 320 L 80 360 L 150 310 L 220 350 L 300 330 L 380 380 L 460 340 L 540 370 L 620 330 L 700 360 L 800 340 L 800 600 L 0 600 Z" fill="#0a1628"/>
+
+  <!-- Ground -->
+  <rect y="400" width="800" height="200" fill="#1a1a2e"/>
+
+  <!-- Sitting logs around fire -->
+  <ellipse cx="280" cy="480" rx="60" ry="12" fill="#4a3020"/>
+  <ellipse cx="520" cy="480" rx="60" ry="12" fill="#4a3020"/>
+
+  <!-- Fire pit base -->
+  <ellipse cx="400" cy="470" rx="80" ry="20" fill="#2C1810"/>
+
+  <!-- Logs in fire -->
+  <rect x="340" y="460" width="50" height="12" rx="3" fill="#654321" transform="rotate(-15 365 466)"/>
+  <rect x="410" y="460" width="50" height="12" rx="3" fill="#654321" transform="rotate(15 435 466)"/>
+  <rect x="370" y="455" width="60" height="10" rx="2" fill="#8B4513"/>
+
+  <!-- Main fire flames -->
+  <ellipse cx="400" cy="390" rx="70" ry="90" fill="url(#fire-glow)"/>
+  <polygon points="360,460 400,360 440,460" fill="url(#campfire-flame)"/>
+  <polygon points="370,460 400,380 430,460" fill="#FFD700" opacity="0.8"/>
+  <polygon points="380,460 400,390 420,460" fill="#FFA500" opacity="0.9"/>
+
+  <!-- Inner bright flame -->
+  <polygon points="385,450 400,400 415,450" fill="#FFFF00" opacity="0.7"/>
+
+  <!-- Fire glow on ground -->
+  <ellipse cx="400" cy="470" rx="120" ry="30" fill="#FF6347" opacity="0.3"/>
+  <ellipse cx="400" cy="475" rx="100" ry="25" fill="#FF8C00" opacity="0.4"/>
+
+  <!-- Sparks flying up -->
+  <circle cx="395" cy="340" r="2" fill="#FFD700" opacity="0.8"/>
+  <circle cx="410" cy="350" r="1.5" fill="#FFA500" opacity="0.7"/>
+  <circle cx="388" cy="365" r="1" fill="#FF6347" opacity="0.6"/>
+  <circle cx="415" cy="335" r="1.5" fill="#FFD700" opacity="0.9"/>
+  <circle cx="392" cy="325" r="1" fill="#FFA500" opacity="0.7"/>
+
+  <!-- Tent silhouette in background -->
+  <path d="M 120 420 L 180 360 L 240 420 Z" fill="#1a1a1a" opacity="0.6"/>
+  <path d="M 600 430 L 660 370 L 720 430 Z" fill="#1a1a1a" opacity="0.6"/>
+
+  <!-- Text overlay -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.6"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#ffffff" text-anchor="middle">불멍과 별멍</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" text-anchor="middle" opacity="0.95">모닥불과 별빛 아래 완벽한 힐링</text>
+</svg>

@@ -1,0 +1,90 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mountain-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A7C59;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B8E23;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="field-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F4E4C1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="380" fill="url(#sky-gradient)"/>
+
+  <!-- Sun -->
+  <circle cx="650" cy="120" r="50" fill="#FFD700" opacity="0.9"/>
+  <circle cx="650" cy="120" r="55" fill="#FFA500" opacity="0.3"/>
+
+  <!-- Distant mountains -->
+  <path d="M 0 280 L 200 180 L 400 240 L 600 200 L 800 260 L 800 380 L 0 380 Z" fill="#8FBC8F" opacity="0.5"/>
+
+  <!-- Middle mountains -->
+  <path d="M 0 320 L 250 220 L 500 280 L 750 240 L 800 300 L 800 380 L 0 380 Z" fill="url(#mountain-gradient)"/>
+
+  <!-- Trees on mountains -->
+  <circle cx="300" cy="250" r="25" fill="#228B22" opacity="0.7"/>
+  <circle cx="320" cy="255" r="20" fill="#228B22" opacity="0.7"/>
+  <circle cx="500" cy="270" r="22" fill="#2E8B57" opacity="0.7"/>
+  <circle cx="520" cy="275" r="18" fill="#2E8B57" opacity="0.7"/>
+
+  <!-- Golden rice fields -->
+  <rect y="380" width="800" height="220" fill="url(#field-gradient)"/>
+
+  <!-- Rice field rows/lines -->
+  <rect y="390" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="410" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="430" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="450" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="470" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="490" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="510" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="530" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="550" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="570" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+  <rect y="590" width="800" height="3" fill="#E8D4A8" opacity="0.8"/>
+
+  <!-- Rice plants detail -->
+  <path d="M 100 420 Q 105 410 110 420" stroke="#DAA520" stroke-width="2" fill="none"/>
+  <path d="M 150 440 Q 155 430 160 440" stroke="#DAA520" stroke-width="2" fill="none"/>
+  <path d="M 250 460 Q 255 450 260 460" stroke="#DAA520" stroke-width="2" fill="none"/>
+  <path d="M 400 480 Q 405 470 410 480" stroke="#DAA520" stroke-width="2" fill="none"/>
+  <path d="M 550 500 Q 555 490 560 500" stroke="#DAA520" stroke-width="2" fill="none"/>
+  <path d="M 650 520 Q 655 510 660 520" stroke="#DAA520" stroke-width="2" fill="none"/>
+
+  <!-- Traditional Korean house (hanok) -->
+  <rect x="550" y="360" width="180" height="80" fill="#8B7355"/>
+  <path d="M 530 360 L 640 320 L 750 360 Z" fill="#A0522D"/>
+  <!-- House door -->
+  <rect x="620" y="400" width="40" height="40" fill="#654321"/>
+  <!-- House window -->
+  <rect x="570" y="380" width="30" height="25" fill="#FFF8DC" opacity="0.7"/>
+
+  <!-- Scarecrow in field -->
+  <rect x="180" y="440" width="4" height="60" fill="#8B4513"/>
+  <circle cx="182" cy="435" r="8" fill="#DEB887"/>
+  <rect x="160" y="450" width="44" height="4" fill="#8B4513"/>
+  <rect x="178" y="460" width="8" height="30" fill="#4682B4"/>
+
+  <!-- Birds flying -->
+  <path d="M 300 180 Q 310 170 320 180" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 320 180 Q 330 170 340 180" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <path d="M 500 150 Q 510 140 520 150" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 520 150 Q 530 140 540 150" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- Clouds -->
+  <circle cx="150" cy="100" r="30" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="180" cy="100" r="35" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="210" cy="100" r="30" fill="#FFFFFF" opacity="0.8"/>
+
+  <!-- Text overlay -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.5"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#ffffff" text-anchor="middle">논뷰 맛집</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" text-anchor="middle" opacity="0.95">황금빛 논밭이 펼쳐진 전원 풍경</text>
+</svg>
