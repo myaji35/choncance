@@ -18,7 +18,10 @@
 5. [사용자 스토리 (User Stories)](#5-사용자-스토리-user-stories)
 6. [데이터 모델](#6-데이터-모델)
 7. [기술 스택](#7-기술-스택)
-8. [성공 지표](#8-성공-지표)
+8. [개발 방법론 (BMAD Token-Efficient Workflow)](#8-개발-방법론-bmad-token-efficient-workflow)
+9. [성공 지표](#9-성공-지표)
+10. [개발 우선순위 및 마일스톤](#10-개발-우선순위-및-마일스톤)
+11. [미결정 사항 및 추후 논의 필요](#11-미결정-사항-및-추후-논의-필요)
 
 ---
 
@@ -1008,9 +1011,91 @@ model Review {
 
 ---
 
-## 8. 성공 지표
+## 8. 개발 방법론 (BMAD Token-Efficient Workflow)
 
-### 8.1 비즈니스 지표
+### 8.1 개요
+
+ChonCance 프로젝트는 **BMAD (Build-Measure-Analyze-Deploy) Token-Efficient Workflow**를 적용하여 개발 비용을 94% 절감하고 생산성을 극대화합니다.
+
+**핵심 원칙**:
+- 최소 컨텍스트 (devLoadAlwaysFiles 최소화)
+- 재사용 가능한 Tasks 및 Templates 활용
+- Codebase Flattener를 통한 컨텍스트 압축
+- API 캐싱 (90% 입력 토큰 절감)
+- text_editor 도구 활용 (90% 출력 토큰 절감)
+
+**예상 효과**:
+- 기존 방식: $3.00/story
+- 최적화 후: $0.19/story
+- **94% 비용 절감**
+
+### 8.2 5단계 워크플로우
+
+#### Phase 1: 계획 (BMAD CapEx)
+**목표**: PRD 및 아키텍처 문서 완성
+- **사용 모델**: Sonnet 4.5 또는 Opus 4.1
+- **방법**: BMAD의 표준 웹 워크플로우 또는 API를 통해 Analyst/PM 에이전트와 함께 문서 작성
+- **결과물**: PRD.md, 아키텍처 문서, Story 파일
+
+#### Phase 2: 환경 설정 (Platform)
+**목표**: Lean POC 가이드라인 정의
+- **파일**: CLAUDE.md
+- **내용**:
+  - 프로젝트 개요 (핵심만)
+  - 기술 스택 요약
+  - 공통 개발 명령어
+  - 주요 문서 참조 링크
+- **원칙**: 상세 내용은 별도 파일로 분리, CLAUDE.md는 "목차" 역할만
+
+#### Phase 3: 컨텍스트 캐싱 (API)
+**목표**: 대용량 컨텍스트 캐싱으로 90% 입력 토큰 절감
+- **도구**: BMAD Codebase Flattener
+- **실행**:
+  1. `scripts/generate-codebase-xml.sh` 실행하여 `codebase.xml` 생성
+  2. PRD, 아키텍처, codebase.xml을 시스템 프롬프트에 포함
+  3. `cache_control: { type: "ephemeral" }` 적용
+  4. API 1회 호출로 컨텍스트 캐싱
+- **효과**: 이후 5분간 동일 컨텍스트 사용 시 90% 입력 토큰 할인
+
+#### Phase 4: 개발 루프 (API + BMAD-Lite)
+**목표**: Story 기반 개발로 90% 출력 토큰 절감
+- **사용 모델**: Haiku 3.5
+- **프로세스**:
+  1. Story 파일(예: `story_001.md`)을 user 메시지로 전송
+  2. `text_editor` 도구를 tools 목록에 포함
+  3. `anthropic-beta: token-efficient-tools-2025-04-30` 헤더 활성화
+  4. AI가 `text_editor`의 create/insert 명령(JSON)으로 코드 생성
+  5. 로컬 스크립트로 파일 자동 생성
+- **효과**: JSON 명령으로 출력 토큰 90% 절감
+
+#### Phase 5: 반복 수정 (Token-Efficient Vibe)
+**목표**: "Vibe" 프롬프트로 빠른 수정
+- **방법**:
+  1. 사용자가 간단한 요청 입력 (예: "50줄 수정해줘")
+  2. API는 캐시된 컨텍스트 읽기 (90% 입력 할인)
+  3. `text_editor`의 `str_replace` JSON으로 응답 (90% 출력 절감)
+  4. 로컬 스크립트로 파일 수정 실행
+- **효과**: 양방향 토큰 절감으로 최대 효율
+
+### 8.3 도구 및 스크립트
+
+프로젝트는 다음 스크립트를 제공합니다:
+- **scripts/generate-codebase-xml.sh**: Codebase XML 생성
+- **scripts/cache-context.py**: 컨텍스트 캐싱 (Python)
+- **scripts/dev-loop.py**: 개발 루프 자동화 (Python)
+- **scripts/vibe.py**: Vibe 프롬프트 처리 (Python)
+
+### 8.4 관련 문서
+
+- **BMAD_WORKFLOW_IMPLEMENTATION.md**: 5단계 워크플로우 상세 가이드
+- **BMAD_OPTIMIZATION_GUIDE.md**: 컨텍스트 최적화 전략
+- **PROJECT_STATUS.md**: 프로젝트 상태 요약 (BMAD 원칙 적용)
+
+---
+
+## 9. 성공 지표
+
+### 9.1 비즈니스 지표
 
 | 지표 | 목표 (1개월) | 목표 (3개월) | 측정 방법 |
 |------|-------------|-------------|----------|
@@ -1020,7 +1105,7 @@ model Review {
 | **총 거래액 (GMV)** | 500만원 | 3,000만원 | Payment 합계 |
 | **예약 전환율** | 2% | 5% | 예약 / 상세 페이지 조회 |
 
-### 8.2 사용자 지표
+### 9.2 사용자 지표
 
 | 지표 | 목표 (1개월) | 목표 (3개월) | 측정 방법 |
 |------|-------------|-------------|----------|
@@ -1028,7 +1113,7 @@ model Review {
 | **월간 활성 사용자 (MAU)** | 50명 | 200명 | 로그인 로그 |
 | **평균 세션 시간** | 3분 | 5분 | Google Analytics |
 
-### 8.3 제품 지표
+### 9.3 제품 지표
 
 | 지표 | 목표 | 측정 방법 |
 |------|-----|----------|
@@ -1037,7 +1122,7 @@ model Review {
 | **테마 클릭률** | > 30% | 테마 클릭 / 메인 페이지 방문 |
 | **평균 별점** | > 4.0 | Review 평균 |
 
-### 8.4 운영 지표
+### 9.4 운영 지표
 
 | 지표 | 목표 | 측정 방법 |
 |------|-----|----------|
@@ -1047,7 +1132,7 @@ model Review {
 
 ---
 
-## 9. 개발 우선순위 및 마일스톤
+## 10. 개발 우선순위 및 마일스톤
 
 ### Phase 1: Week 1-2 (핵심 기능)
 **목표**: 로그인, 숙소 조회, 호스트 등록 가능
@@ -1080,7 +1165,7 @@ model Review {
 
 ---
 
-## 10. 미결정 사항 및 추후 논의 필요
+## 11. 미결정 사항 및 추후 논의 필요
 
 1. **타겟 고객 세그먼트 구체화**
    - 초기 테마 선정에 영향
