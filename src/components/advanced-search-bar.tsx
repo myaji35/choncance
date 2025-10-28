@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GuestSelector } from "@/components/guest-selector";
+import { LocationSelector } from "@/components/location-selector";
 
 interface GuestCounts {
   adults: number;
@@ -55,19 +56,11 @@ export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBa
             focusedField === "location" ? "bg-gray-50" : "hover:bg-gray-50"
           }`}
         >
-          <label htmlFor="location" className="block text-xs font-semibold text-gray-900 mb-1">
-            여행지
-          </label>
-          <input
-            id="location"
-            type="text"
-            placeholder="어디로 떠나시나요?"
+          <LocationSelector
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={setLocation}
             onFocus={() => setFocusedField("location")}
             onBlur={() => setFocusedField(null)}
-            onKeyDown={handleKeyDown}
-            className="w-full text-sm bg-transparent border-none outline-none placeholder:text-gray-500"
           />
         </div>
 

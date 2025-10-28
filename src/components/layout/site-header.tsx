@@ -21,28 +21,17 @@ export function SiteHeader() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center relative">
+          <Link href="/" className="flex items-center gap-2 relative">
             <Image
               src="/choncance-logo.png"
               alt="촌캉스"
-              width={120}
+              width={40}
               height={40}
-              className="h-10 w-auto drop-shadow-sm"
+              className="h-10 w-10 drop-shadow-sm"
               style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
               priority
-              onError={(e) => {
-                // Fallback to text if image fails
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                const parent = target.parentElement;
-                if (parent) {
-                  const text = document.createElement('span');
-                  text.className = 'text-2xl font-bold text-primary';
-                  text.textContent = '촌캉스';
-                  parent.appendChild(text);
-                }
-              }}
             />
+            <span className="text-2xl font-bold text-primary">촌캉스</span>
           </Link>
 
           {/* Search Bar - Desktop */}

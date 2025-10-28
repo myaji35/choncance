@@ -43,13 +43,13 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex h-20 items-center justify-between">
-            <Link href="/" className="flex items-center flex-shrink-0 relative">
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0 relative">
               <Image
                 src="/choncance-logo.png"
                 alt="촌캉스"
-                width={120}
+                width={40}
                 height={40}
-                className={`h-10 w-auto transition-all duration-300 ${
+                className={`h-10 w-10 transition-all duration-300 ${
                   isHeaderVisible
                     ? 'drop-shadow-sm'
                     : 'drop-shadow-[0_2px_4px_rgba(255,255,255,0.8)]'
@@ -60,19 +60,12 @@ export default function LandingPage() {
                   filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))'
                 }}
                 priority
-                onError={(e) => {
-                  // Fallback to text if image fails
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const parent = target.parentElement;
-                  if (parent && !parent.querySelector('span')) {
-                    const text = document.createElement('span');
-                    text.className = `text-2xl font-bold ${isHeaderVisible ? 'text-primary' : 'text-white'}`;
-                    text.textContent = '촌캉스';
-                    parent.appendChild(text);
-                  }
-                }}
               />
+              <span className={`text-2xl font-bold transition-colors duration-300 ${
+                isHeaderVisible ? 'text-primary' : 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'
+              }`}>
+                촌캉스
+              </span>
             </Link>
 
             {/* Search Bar - visible when header is visible */}
