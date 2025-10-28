@@ -65,7 +65,8 @@ export async function getProperties(tags?: string[]): Promise<Property[]> {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "no-store",
+    // Enable caching for 60 seconds (revalidate every minute)
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {
@@ -92,7 +93,8 @@ export async function getPropertyById(id: string): Promise<Property> {
     headers: {
       "Content-Type": "application/json",
     },
-    cache: "no-store",
+    // Enable caching for 60 seconds
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {

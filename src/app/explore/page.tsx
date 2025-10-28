@@ -16,49 +16,38 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   const selectedTag = searchParams.tag;
   const searchQuery = searchParams.search;
 
-  // Fetch tags from backend
-  let tagsGrouped;
-  try {
-    tagsGrouped = await getTagsGroupedByCategory();
-  } catch (error) {
-    console.error("Failed to fetch tags:", error);
-    tagsGrouped = { VIEW: [], ACTIVITY: [], FACILITY: [], VIBE: [] };
-  }
+  // Parallel fetch: tags and properties at the same time
+  const [tagsGrouped, allProperties] = await Promise.all([
+    getTagsGroupedByCategory().catch((error) => {
+      console.error("Failed to fetch tags:", error);
+      return { VIEW: [], ACTIVITY: [], FACILITY: [], VIBE: [] };
+    }),
+    getProperties().catch((error) => {
+      console.error("Failed to fetch properties:", error);
+      return [];
+    }),
+  ]);
 
-  // Fetch all properties for featured sections
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let allProperties: any[] = [];
-  try {
-    allProperties = await getProperties();
-  } catch (error) {
-    console.error("Failed to fetch properties:", error);
-  }
-
-  // Fetch properties (with tag filter or search query if provided)
+  // Filter properties based on tag or search (no additional API calls needed)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let filteredProperties: any[] | null = null;
   if (selectedTag) {
-    try {
-      filteredProperties = await getPropertiesByTagName(selectedTag);
-    } catch (error) {
-      console.error("Failed to fetch filtered properties:", error);
-      filteredProperties = [];
-    }
+    // Client-side filtering instead of API call
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filteredProperties = allProperties.filter((property: any) =>
+      property.tags.some((tag: any) => tag.name === selectedTag)
+    );
   } else if (searchQuery) {
-    try {
-      // Search by property name, description, address
-      const allProperties = await getProperties();
-      const query = searchQuery.toLowerCase();
-      filteredProperties = allProperties.filter(property =>
-        property.name.toLowerCase().includes(query) ||
-        property.description.toLowerCase().includes(query) ||
-        property.address.toLowerCase().includes(query) ||
-        property.tags.some(tag => tag.name.toLowerCase().includes(query))
-      );
-    } catch (error) {
-      console.error("Failed to search properties:", error);
-      filteredProperties = [];
-    }
+    // Client-side search
+    const query = searchQuery.toLowerCase();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filteredProperties = allProperties.filter((property: any) =>
+      property.name.toLowerCase().includes(query) ||
+      property.description.toLowerCase().includes(query) ||
+      property.address.toLowerCase().includes(query) ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      property.tags.some((tag: any) => tag.name.toLowerCase().includes(query))
+    );
   }
 
   return (
