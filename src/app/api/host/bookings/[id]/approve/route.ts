@@ -92,11 +92,6 @@ export async function POST(
       include: {
         property: true,
         user: true,
-        bookingItems: {
-          include: {
-            experience: true,
-          },
-        },
       },
     });
 

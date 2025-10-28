@@ -1,4 +1,4 @@
-import { PrismaClient, TagCategory } from '@prisma/client';
+import { PrismaClient, TagCategory, PropertyStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -65,7 +65,7 @@ async function main() {
       userId: testUser.id,
       businessNumber: '123-45-67890',
       contact: '010-1234-5678',
-      status: 'APPROVED',
+      status: PropertyStatus.APPROVED,
     },
   });
 
@@ -101,7 +101,7 @@ async function main() {
       hostStory: '저희 가족이 3대째 지켜온 한옥입니다. 할아버지 때부터 농사를 지으셨고, 지금도 논에서 직접 농사를 짓고 있어요. 게스트분들이 진정한 시골의 평화로움을 느끼셨으면 좋겠습니다.',
       amenities: ['wifi', 'parking', 'aircon', 'kitchen'],
       rules: '실내 금연, 반려동물 불가, 밤 10시 이후 정숙',
-      status: 'APPROVED',
+      status: PropertyStatus.APPROVED,
       tags: {
         connect: [
           { id: tag논뷰?.id },
@@ -126,7 +126,7 @@ async function main() {
       hostStory: '서울에서 회사 생활을 하다가 5년 전 귀촌했습니다. 직접 통나무를 쌓아 만든 집이에요. 계곡물 소리가 너무 좋아서 매일 아침 명상을 하고 있어요.',
       amenities: ['wifi', 'parking', 'bbq', 'fireplace'],
       rules: '반려동물 동반 가능 (소형견만), 실내 금연',
-      status: 'APPROVED',
+      status: PropertyStatus.APPROVED,
       tags: {
         connect: [
           { id: tag계곡?.id },
@@ -152,7 +152,7 @@ async function main() {
       hostStory: '큰 마당과 넓은 공간에서 가족, 친구들과 자유롭게 시간을 보낼 수 있는 곳입니다. 바비큐 그릴과 모닥불 공간도 완비되어 있어요.',
       amenities: ['wifi', 'parking', 'bbq', 'kitchen', 'washer', 'dryer'],
       rules: '실내외 금연, 반려동물 동반 가능',
-      status: 'APPROVED',
+      status: PropertyStatus.APPROVED,
       tags: {
         connect: [
           { id: tag독채?.id },

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FilterSidebar } from "./filter-sidebar";
 import { Button } from "@/components/ui/button";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import type { Tag, TagCategory } from "@/types";
 

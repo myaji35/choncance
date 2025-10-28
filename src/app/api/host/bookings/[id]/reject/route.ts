@@ -73,16 +73,11 @@ export async function POST(
       include: {
         property: true,
         user: true,
-        bookingItems: {
-          include: {
-            experience: true,
-          },
-        },
       },
     });
 
     // TODO: Process refund if payment was made
-    if (booking.payment && booking.payment.status === "COMPLETED") {
+    if (booking.payment && booking.payment.status === "DONE") {
       console.log(
         `Process refund for booking ${id}, payment ${booking.payment.id}`
       );

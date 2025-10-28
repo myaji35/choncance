@@ -2,6 +2,7 @@ import { getTagsGroupedByCategory } from "@/lib/api/tags";
 import { getProperties, getPropertiesByTagName } from "@/lib/api/properties";
 import { TagCategorySection } from "@/components/tag/tag-section";
 import { PropertyCard } from "@/components/property/property-card";
+import { ExploreContent } from "@/components/explore/explore-content";
 import type { TagCategory } from "@/types";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -59,7 +60,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <ExploreContent tags={tagsGrouped}>
       {/* Page Header */}
       <div className="mb-12 space-y-4">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center">
@@ -187,6 +188,6 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
           </div>
         </>
       )}
-    </div>
+    </ExploreContent>
   );
 }
