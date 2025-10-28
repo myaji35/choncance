@@ -43,16 +43,35 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex h-20 items-center justify-between">
-            <Link href="/" className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center flex-shrink-0 relative">
               <Image
                 src="/choncance-logo.png"
                 alt="촌캉스"
                 width={120}
                 height={40}
                 className={`h-10 w-auto transition-all duration-300 ${
-                  isHeaderVisible ? '' : 'brightness-0 invert'
+                  isHeaderVisible
+                    ? 'drop-shadow-sm'
+                    : 'drop-shadow-[0_2px_4px_rgba(255,255,255,0.8)]'
                 }`}
+                style={!isHeaderVisible ? {
+                  filter: 'brightness(0) invert(1) drop-shadow(0 2px 4px rgba(255,255,255,0.8))'
+                } : {
+                  filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))'
+                }}
                 priority
+                onError={(e) => {
+                  // Fallback to text if image fails
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent && !parent.querySelector('span')) {
+                    const text = document.createElement('span');
+                    text.className = `text-2xl font-bold ${isHeaderVisible ? 'text-primary' : 'text-white'}`;
+                    text.textContent = '촌캉스';
+                    parent.appendChild(text);
+                  }
+                }}
               />
             </Link>
 
@@ -169,7 +188,12 @@ export default function LandingPage() {
                 if (params.location) searchParams.set("location", params.location);
                 if (params.checkIn) searchParams.set("checkIn", params.checkIn);
                 if (params.checkOut) searchParams.set("checkOut", params.checkOut);
-                if (params.guests) searchParams.set("guests", params.guests.toString());
+                if (params.guests) {
+                  searchParams.set("adults", params.guests.adults.toString());
+                  if (params.guests.children > 0) searchParams.set("children", params.guests.children.toString());
+                  if (params.guests.infants > 0) searchParams.set("infants", params.guests.infants.toString());
+                  if (params.guests.pets > 0) searchParams.set("pets", params.guests.pets.toString());
+                }
                 router.push(`/explore?${searchParams.toString()}`);
               }}
             />

@@ -21,14 +21,27 @@ export function SiteHeader() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center relative">
             <Image
               src="/choncance-logo.png"
               alt="촌캉스"
               width={120}
               height={40}
-              className="h-10 w-auto"
+              className="h-10 w-auto drop-shadow-sm"
+              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
               priority
+              onError={(e) => {
+                // Fallback to text if image fails
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  const text = document.createElement('span');
+                  text.className = 'text-2xl font-bold text-primary';
+                  text.textContent = '촌캉스';
+                  parent.appendChild(text);
+                }
+              }}
             />
           </Link>
 
@@ -62,18 +75,20 @@ export function SiteHeader() {
           <div className="flex items-center space-x-2 ml-4">
             <SignedOut>
               <SignInButton mode="modal">
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" size="sm" className="border-gray-300">
                   로그인
                 </Button>
               </SignInButton>
               <Link href="/signup">
-                <Button size="sm">회원가입</Button>
+                <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
+                  회원가입
+                </Button>
               </Link>
             </SignedOut>
 
             <SignedIn>
               <Link href="/bookings">
-                <Button variant="ghost" size="sm">
+                <Button variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                   내 예약
                 </Button>
               </Link>

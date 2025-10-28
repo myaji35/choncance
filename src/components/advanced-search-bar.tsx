@@ -3,13 +3,21 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GuestSelector } from "@/components/guest-selector";
+
+interface GuestCounts {
+  adults: number;
+  children: number;
+  infants: number;
+  pets: number;
+}
 
 interface AdvancedSearchBarProps {
   onSearch?: (params: {
     location: string;
     checkIn: string;
     checkOut: string;
-    guests: number;
+    guests: GuestCounts;
   }) => void;
   className?: string;
 }
@@ -18,7 +26,12 @@ export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBa
   const [location, setLocation] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(1);
+  const [guests, setGuests] = useState<GuestCounts>({
+    adults: 1,
+    children: 0,
+    infants: 0,
+    pets: 0,
+  });
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSearch = () => {
@@ -114,23 +127,10 @@ export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBa
           className={`flex-1 px-6 py-3 transition-colors ${
             focusedField === "guests" ? "bg-gray-50" : "hover:bg-gray-50"
           }`}
+          onFocus={() => setFocusedField("guests")}
+          onBlur={() => setFocusedField(null)}
         >
-          <label htmlFor="guests" className="block text-xs font-semibold text-gray-900 mb-1">
-            인원
-          </label>
-          <input
-            id="guests"
-            type="number"
-            min="1"
-            max="20"
-            placeholder="게스트 추가"
-            value={guests}
-            onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-            onFocus={() => setFocusedField("guests")}
-            onBlur={() => setFocusedField(null)}
-            onKeyDown={handleKeyDown}
-            className="w-full text-sm bg-transparent border-none outline-none placeholder:text-gray-500"
-          />
+          <GuestSelector value={guests} onChange={setGuests} />
         </div>
 
         {/* Search Button */}
