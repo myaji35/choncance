@@ -35,27 +35,30 @@ export default function BecomeAHostPage() {
     resolver: zodResolver(hostRequestSchema),
   });
 
-  // Check if user is authenticated and has existing host profile
+  // Check if user has existing host profile
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/login');
+    if (!isLoaded || !isSignedIn) {
       return;
     }
 
-    if (isLoaded && isSignedIn) {
-      // Check if user already has a host profile
-      fetch('/api/host/profile')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.hostProfile) {
-            setExistingProfile(data.hostProfile.status);
-          }
-        })
-        .catch((err) => {
-          console.error('Failed to check host profile:', err);
-        });
-    }
-  }, [isLoaded, isSignedIn, router]);
+    // Check if user already has a host profile
+    fetch('/api/host/profile')
+      .then((res) => {
+        if (!res.ok) {
+          // 401 or 404 is expected for new users
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data?.hostProfile) {
+          setExistingProfile(data.hostProfile.status);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to check host profile:', err);
+      });
+  }, [isLoaded, isSignedIn]);
 
   const onSubmit = async (data: HostRequestFormData) => {
     setIsLoading(true);
@@ -94,11 +97,16 @@ export default function BecomeAHostPage() {
     }
   };
 
-  // Show loading while checking authentication
-  if (!isLoaded) {
+  // Show loading while checking authentication and profile
+  if (!isLoaded || !isSignedIn) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-64px)] py-12">
-        <div className="text-center">로딩 중...</div>
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">로딩 중...</span>
+          </div>
+          <p className="mt-4 text-gray-600">인증 확인 중...</p>
+        </div>
       </div>
     );
   }
