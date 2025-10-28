@@ -1,0 +1,58 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hero3-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="campfire" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8C00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF4500;stop-opacity:0.8" />
+    </radialGradient>
+  </defs>
+
+  <!-- Night sky -->
+  <rect width="1920" height="1080" fill="url(#hero3-sky)"/>
+
+  <!-- Stars -->
+  <circle cx="200" cy="150" r="3" fill="#ffffff"/>
+  <circle cx="400" cy="100" r="2" fill="#ffffff"/>
+  <circle cx="600" cy="180" r="2.5" fill="#ffffff"/>
+  <circle cx="800" cy="120" r="2" fill="#ffffff"/>
+  <circle cx="1000" cy="90" r="3" fill="#ffffff"/>
+  <circle cx="1200" cy="160" r="2" fill="#ffffff"/>
+  <circle cx="1400" cy="110" r="2.5" fill="#ffffff"/>
+  <circle cx="1600" cy="140" r="3" fill="#ffffff"/>
+  <circle cx="1800" cy="100" r="2" fill="#ffffff"/>
+
+  <circle cx="300" cy="300" r="1.5" fill="#ffffff"/>
+  <circle cx="700" cy="250" r="1.5" fill="#ffffff"/>
+  <circle cx="1100" cy="280" r="2" fill="#ffffff"/>
+  <circle cx="1500" cy="220" r="1.5" fill="#ffffff"/>
+
+  <!-- Moon -->
+  <circle cx="1600" cy="200" r="80" fill="#F4E4C1" opacity="0.95"/>
+  <circle cx="1640" cy="190" r="75" fill="#1e3a8a" opacity="0.3"/>
+
+  <!-- Forest silhouette -->
+  <path d="M 0 800 L 0 600 L 100 700 L 200 600 L 300 700 L 400 650 L 500 750 L 600 700 L 700 800 L 800 750 L 900 800 L 1000 700 L 1100 800 L 1200 750 L 1300 800 L 1400 700 L 1500 750 L 1600 800 L 1700 750 L 1800 800 L 1920 750 L 1920 1080 L 0 1080 Z" fill="#0a1628"/>
+
+  <!-- Ground -->
+  <rect y="800" width="1920" height="280" fill="#1a2332"/>
+
+  <!-- Campfire -->
+  <ellipse cx="960" cy="900" rx="120" ry="30" fill="#4a3020"/>
+
+  <!-- Fire -->
+  <polygon points="920,900 960,800 1000,900" fill="url(#campfire)"/>
+  <polygon points="930,900 960,820 990,900" fill="#FFD700" opacity="0.8"/>
+  <polygon points="940,900 960,840 980,900" fill="#FFA500" opacity="0.9"/>
+
+  <!-- Fire glow -->
+  <ellipse cx="960" cy="850" rx="200" ry="150" fill="#FF8C00" opacity="0.2"/>
+  <ellipse cx="960" cy="870" rx="160" ry="120" fill="#FF8C00" opacity="0.3"/>
+
+  <!-- Tent silhouette -->
+  <path d="M 400 850 L 500 700 L 600 850 Z" fill="#2C1810" opacity="0.8"/>
+  <path d="M 1400 870 L 1500 730 L 1600 870 Z" fill="#2C1810" opacity="0.8"/>
+</svg>

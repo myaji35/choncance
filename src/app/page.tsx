@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { SearchBar } from "@/components/search-bar";
+import { HeroCarousel } from "@/components/hero-carousel";
+import { AdvancedSearchBar } from "@/components/advanced-search-bar";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ArrowDown } from 'lucide-react';
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
+  const router = useRouter();
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
 
   useEffect(() => {
@@ -39,8 +43,17 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex h-20 items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-primary flex-shrink-0">
-              촌캉스
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <Image
+                src="/choncance-logo.png"
+                alt="촌캉스"
+                width={120}
+                height={40}
+                className={`h-10 w-auto transition-all duration-300 ${
+                  isHeaderVisible ? '' : 'brightness-0 invert'
+                }`}
+                priority
+              />
             </Link>
 
             {/* Search Bar - visible when header is visible */}
@@ -133,17 +146,14 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center text-center overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute z-0 w-auto min-w-full min-h-full max-w-none"
-        >
-          <source src="/placeholder-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20"></div>
+        <HeroCarousel
+          images={[
+            "/hero-1.svg",
+            "/hero-2.svg",
+            "/hero-3.svg",
+          ]}
+          interval={5000}
+        />
         <div className="relative z-10 text-white p-6 max-w-5xl w-full flex flex-col items-center">
           <h1 className="text-5xl md:text-7xl font-extralight mb-6 leading-tight tracking-wide animate-fade-in-up">
             도시의 소음은 잠시 끄고, <br />
@@ -152,15 +162,17 @@ export default function LandingPage() {
           <p className="text-xl md:text-2xl mb-12 font-light tracking-wide animate-fade-in-up animation-delay-300">
             촌캉스가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-2xl w-full animate-fade-in-up animation-delay-600">
-            <Input
-              type="text"
-              placeholder="어떤 쉼을 찾고 있나요?"
-              className="w-full sm:flex-1 p-4 rounded-full text-lg text-gray-900 border-0 shadow-lg"
+          <div className="w-full max-w-4xl animate-fade-in-up animation-delay-600">
+            <AdvancedSearchBar
+              onSearch={(params) => {
+                const searchParams = new URLSearchParams();
+                if (params.location) searchParams.set("location", params.location);
+                if (params.checkIn) searchParams.set("checkIn", params.checkIn);
+                if (params.checkOut) searchParams.set("checkOut", params.checkOut);
+                if (params.guests) searchParams.set("guests", params.guests.toString());
+                router.push(`/explore?${searchParams.toString()}`);
+              }}
             />
-            <Button size="lg" className="sm:w-auto px-8 rounded-full text-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg">
-              쉼 찾기
-            </Button>
           </div>
           <div className="absolute bottom-10 animate-bounce">
             <ArrowDown className="w-8 h-8" />

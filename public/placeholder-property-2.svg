@@ -1,0 +1,45 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="fire" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8C00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF4500;stop-opacity:0.8" />
+    </radialGradient>
+    <linearGradient id="night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#000428;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004e92;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Night sky -->
+  <rect width="800" height="600" fill="url(#night)"/>
+
+  <!-- Stars -->
+  <circle cx="100" cy="80" r="2" fill="#ffffff"/>
+  <circle cx="200" cy="120" r="1.5" fill="#ffffff"/>
+  <circle cx="350" cy="60" r="2" fill="#ffffff"/>
+  <circle cx="500" cy="100" r="1.5" fill="#ffffff"/>
+  <circle cx="650" cy="90" r="2" fill="#ffffff"/>
+  <circle cx="720" cy="140" r="1.5" fill="#ffffff"/>
+  <circle cx="150" cy="180" r="1" fill="#ffffff"/>
+  <circle cx="580" cy="150" r="1" fill="#ffffff"/>
+
+  <!-- Moon -->
+  <circle cx="650" cy="120" r="40" fill="#F4E4C1" opacity="0.9"/>
+
+  <!-- Ground -->
+  <rect y="450" width="800" height="150" fill="#2F4F2F"/>
+
+  <!-- Campfire -->
+  <ellipse cx="400" cy="500" rx="60" ry="15" fill="#8B4513"/>
+  <polygon points="370,500 400,420 430,500" fill="url(#fire)"/>
+  <polygon points="380,500 400,440 420,500" fill="#FFD700" opacity="0.8"/>
+
+  <!-- Fire glow -->
+  <ellipse cx="400" cy="460" rx="80" ry="60" fill="#FF8C00" opacity="0.3"/>
+
+  <!-- Text overlay -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.4"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle">불멍과 별멍</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" opacity="0.9">모닥불과 별이 있는 힐링 캠핑</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="table" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D2691E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background - traditional kitchen -->
+  <rect width="800" height="600" fill="#F5E6D3"/>
+
+  <!-- Wall -->
+  <rect width="800" height="400" fill="#E8DCC8"/>
+
+  <!-- Traditional window -->
+  <rect x="100" y="80" width="180" height="180" fill="#FFF8DC" stroke="#8B4513" stroke-width="8"/>
+  <line x1="190" y1="80" x2="190" y2="260" stroke="#8B4513" stroke-width="4"/>
+  <line x1="100" y1="170" x2="280" y2="170" stroke="#8B4513" stroke-width="4"/>
+
+  <!-- Table -->
+  <rect x="150" y="400" width="500" height="30" fill="url(#table)"/>
+  <rect x="150" y="430" width="500" height="120" fill="#CD853F"/>
+
+  <!-- Bowls and dishes -->
+  <ellipse cx="250" cy="460" rx="40" ry="15" fill="#DC143C"/>
+  <ellipse cx="250" cy="455" rx="40" ry="15" fill="#FF6347"/>
+
+  <ellipse cx="380" cy="470" rx="50" ry="18" fill="#228B22"/>
+  <ellipse cx="380" cy="464" rx="50" ry="18" fill="#32CD32"/>
+
+  <ellipse cx="520" cy="465" rx="45" ry="16" fill="#DAA520"/>
+  <ellipse cx="520" cy="460" rx="45" ry="16" fill="#FFD700"/>
+
+  <!-- Chopsticks -->
+  <rect x="420" y="480" width="3" height="60" fill="#8B4513" transform="rotate(-20 421 510)"/>
+  <rect x="428" y="480" width="3" height="60" fill="#8B4513" transform="rotate(-15 429 510)"/>
+
+  <!-- Steam -->
+  <path d="M 240 440 Q 235 420 240 400" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 255 435 Q 260 415 255 395" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 375 450 Q 370 430 375 410" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 390 445 Q 395 425 390 405" stroke="#B0B0B0" stroke-width="2" fill="none" opacity="0.6"/>
+
+  <!-- Text overlay -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.3"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle">찐할머니손맛</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" opacity="0.9">할머니의 정성이 담긴 시골 밥상</text>
+</svg>

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -25,17 +25,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if user exists
-    const user = await prisma.user.findUnique({
+    // Check if user exists, if not create from Clerk data
+    let user = await prisma.user.findUnique({
       where: { id: userId },
       include: { hostProfile: true },
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "사용자를 찾을 수 없습니다" },
-        { status: 404 }
-      );
+      // Fetch user data from Clerk
+      const client = await clerkClient();
+      const clerkUser = await client.users.getUser(userId);
+
+      // Create user in database
+      user = await prisma.user.create({
+        data: {
+          id: userId,
+          email: clerkUser.emailAddresses[0]?.emailAddress || "",
+          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null,
+        },
+        include: { hostProfile: true },
+      });
     }
 
     // Check if host profile already exists
@@ -88,7 +97,8 @@ export async function GET() {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    // Check if user exists, if not create from Clerk data
+    let user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
         hostProfile: true,
@@ -96,10 +106,18 @@ export async function GET() {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "사용자를 찾을 수 없습니다" },
-        { status: 404 }
-      );
+      // Fetch user data from Clerk and create in database
+      const client = await clerkClient();
+      const clerkUser = await client.users.getUser(userId);
+
+      user = await prisma.user.create({
+        data: {
+          id: userId,
+          email: clerkUser.emailAddresses[0]?.emailAddress || "",
+          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null,
+        },
+        include: { hostProfile: true },
+      });
     }
 
     return NextResponse.json({

@@ -2,6 +2,7 @@
 
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
 import { useRouter, usePathname } from "next/navigation";
@@ -20,8 +21,15 @@ export function SiteHeader() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-primary">
-            촌캉스
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/choncance-logo.png"
+              alt="촌캉스"
+              width={120}
+              height={40}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Search Bar - Desktop */}

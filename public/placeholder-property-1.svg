@@ -1,0 +1,30 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="400" fill="url(#sky1)"/>
+
+  <!-- Mountains -->
+  <path d="M 0 250 L 200 150 L 400 250 L 600 180 L 800 280 L 800 400 L 0 400 Z" fill="#8FBC8F"/>
+  <path d="M 100 280 L 300 200 L 500 280 L 700 220 L 800 300 L 800 400 L 0 400 Z" fill="#9ACD32"/>
+
+  <!-- Rice field -->
+  <rect y="400" width="800" height="200" fill="#F4E4C1"/>
+  <path d="M 0 420 L 800 410 L 800 430 L 0 440 Z" fill="#E8D4A8" opacity="0.7"/>
+  <path d="M 0 450 L 800 445 L 800 465 L 0 470 Z" fill="#E8D4A8" opacity="0.7"/>
+  <path d="M 0 480 L 800 475 L 800 495 L 0 500 Z" fill="#E8D4A8" opacity="0.7"/>
+
+  <!-- Traditional house -->
+  <rect x="320" y="350" width="160" height="100" fill="#8B7355"/>
+  <path d="M 300 350 L 400 310 L 500 350 Z" fill="#A0522D"/>
+
+  <!-- Text overlay -->
+  <rect y="530" width="800" height="70" fill="#000000" opacity="0.3"/>
+  <text x="50%" y="565" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle">논뷰 맛집</text>
+  <text x="50%" y="590" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" opacity="0.9">황금빛 논밭이 펼쳐진 전원 풍경</text>
+</svg>

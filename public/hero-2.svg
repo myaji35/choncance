@@ -1,0 +1,37 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hero2-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFA07A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD93D;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sunset sky -->
+  <rect width="1920" height="1080" fill="url(#hero2-sky)"/>
+
+  <!-- Sun setting -->
+  <circle cx="960" cy="400" r="120" fill="#FF4500" opacity="0.9"/>
+  <circle cx="960" cy="400" r="140" fill="#FF6347" opacity="0.4"/>
+
+  <!-- Water/lake -->
+  <ellipse cx="960" cy="900" rx="900" ry="120" fill="#4682B4" opacity="0.6"/>
+
+  <!-- Reflection -->
+  <ellipse cx="960" cy="900" rx="60" ry="180" fill="#FF6347" opacity="0.3"/>
+
+  <!-- Silhouette of mountains -->
+  <path d="M 0 700 L 300 500 L 600 650 L 900 550 L 1200 650 L 1500 500 L 1800 600 L 1920 650 L 1920 1080 L 0 1080 Z" fill="#1a1a1a" opacity="0.7"/>
+
+  <!-- Boat -->
+  <ellipse cx="700" cy="880" rx="80" ry="20" fill="#2C1810"/>
+  <rect x="690" y="820" width="4" height="60" fill="#2C1810"/>
+  <path d="M 690 820 L 690 850 L 650 840 Z" fill="#8B4513" opacity="0.8"/>
+
+  <!-- Birds -->
+  <path d="M 400 300 Q 410 290 420 300" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+  <path d="M 420 300 Q 430 290 440 300" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+
+  <path d="M 1400 250 Q 1410 240 1420 250" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+  <path d="M 1420 250 Q 1430 240 1440 250" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+</svg>
