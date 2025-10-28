@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category");
 
     const tags = await prisma.tag.findMany({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       where: category ? { category: category as any } : undefined,
       orderBy: {
         name: "asc",

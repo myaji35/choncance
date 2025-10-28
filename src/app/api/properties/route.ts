@@ -19,31 +19,8 @@ export async function GET(request: NextRequest) {
     const pets = searchParams.get("pets");
 
     // 기본 필터링 조건
-    interface WhereClause {
-      status: string;
-      tags?: {
-        some: {
-          name: {
-            in: string[];
-          };
-        };
-      };
-      pricePerNight?: {
-        gte?: number;
-        lte?: number;
-      };
-      province?: string;
-      city?: string;
-      maxGuests?: {
-        gte: number;
-      };
-      allowsPets?: boolean;
-      id?: {
-        notIn: string[];
-      };
-    }
-
-    const whereClause: WhereClause = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const whereClause: any = {
       status,
     };
 

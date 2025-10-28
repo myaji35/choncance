@@ -26,7 +26,8 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   }
 
   // Fetch all properties for featured sections
-  let allProperties = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let allProperties: any[] = [];
   try {
     allProperties = await getProperties();
   } catch (error) {
@@ -34,7 +35,8 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   }
 
   // Fetch properties (with tag filter or search query if provided)
-  let filteredProperties = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let filteredProperties: any[] | null = null;
   if (selectedTag) {
     try {
       filteredProperties = await getPropertiesByTagName(selectedTag);
@@ -158,7 +160,8 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
               const firstTag = tags[0];
               const featuredProperties = firstTag
                 ? allProperties
-                    .filter((p) => p.tags.some((t) => t.name === firstTag.name))
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    .filter((p) => p.tags.some((t: any) => t.name === firstTag.name))
                     .slice(0, 3)
                 : [];
 

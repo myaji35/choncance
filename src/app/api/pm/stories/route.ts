@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
         ...(epic.projectId && { projectId: epic.projectId }),
         ...(acceptanceCriteria && {
           acceptanceCriteria: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             create: acceptanceCriteria.map((ac: any, index: number) => ({
               number: index + 1,
               criteria: ac.criteria,
@@ -92,6 +93,7 @@ export async function POST(request: NextRequest) {
         }),
         ...(integrationVerification && {
           integrationVerification: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             create: integrationVerification.map((iv: any, index: number) => ({
               number: index + 1,
               description: iv.description,

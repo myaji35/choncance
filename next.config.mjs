@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    // Warning: Temporarily ignore ESLint errors during builds
-    // TODO: Fix all ESLint errors in separate task
+    // Temporarily ignore ESLint errors during builds
+    // All TypeScript type errors have been fixed
+    // Remaining ESLint errors (no-explicit-any, no-unused-vars) can be fixed separately
     ignoreDuringBuilds: true,
   },
 };

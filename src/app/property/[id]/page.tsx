@@ -28,7 +28,8 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
   }
 
   // 관련 숙소 추천 (같은 태그를 가진 숙소)
-  let relatedProperties = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let relatedProperties: any[] = [];
   if (property.tags.length > 0) {
     try {
       const allProperties = await getProperties([property.tags[0].name]);

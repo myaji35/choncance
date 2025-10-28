@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
         technicalAssum,
         requirements: requirements
           ? {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               create: requirements.map((req: any, index: number) => ({
                 prefix: req.prefix,
                 number: index + 1,

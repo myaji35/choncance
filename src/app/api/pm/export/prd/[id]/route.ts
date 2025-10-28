@@ -68,8 +68,10 @@ export async function GET(
     markdown += `## Goals and Background Context\n\n`;
     markdown += `### Goals\n\n`;
     const goals = Array.isArray(prd.goals) ? prd.goals : [];
-    goals.forEach((goal: string) => {
-      markdown += `- ${goal}\n`;
+    goals.forEach((goal) => {
+      if (typeof goal === 'string') {
+        markdown += `- ${goal}\n`;
+      }
     });
     markdown += `\n### Background Context\n\n${prd.background}\n\n`;
 
