@@ -1,0 +1,8 @@
+<svg width="500" height="500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="500" height="500" fill="#e5e7eb"/>
+  <circle cx="250" cy="200" r="60" fill="#d1d5db"/>
+  <path d="M 150 350 Q 250 280 350 350" fill="#d1d5db"/>
+  <text x="50%" y="85%" font-family="Arial, sans-serif" font-size="18" fill="#9ca3af" text-anchor="middle">
+    호스트 프로필
+  </text>
+</svg>
