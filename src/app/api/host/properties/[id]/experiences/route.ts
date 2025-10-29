@@ -34,11 +34,6 @@ export async function GET(
 
     const property = await prisma.property.findUnique({
       where: { id: propertyId },
-      include: {
-        experiences: {
-          orderBy: { createdAt: "desc" },
-        },
-      },
     });
 
     if (!property) {
@@ -55,7 +50,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ experiences: property.experiences });
+    // Get experiences for this property
+    const experiences = await prisma.experience.findMany({
+      where: { propertyId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ experiences });
   } catch (error) {
     console.error("Failed to fetch experiences:", error);
     return NextResponse.json(
