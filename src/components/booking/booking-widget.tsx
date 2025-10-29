@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,29 @@ export function BookingWidget({
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityError, setAvailabilityError] = useState<string | null>(null);
   const [priceBreakdown, setPriceBreakdown] = useState<any>(null);
+  const [bookedDates, setBookedDates] = useState<string[]>([]);
+
+  // Fetch booked dates on mount
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      try {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+
+        const response = await fetch(`/api/properties/${propertyId}/calendar?year=${year}&month=${month}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setBookedDates(data.bookedDates || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch booked dates:", error);
+      }
+    };
+
+    fetchBookedDates();
+  }, [propertyId]);
 
   const handleDateSelect = async (range: DateRange | undefined) => {
     setDateRange(range);
@@ -152,7 +175,14 @@ export function BookingWidget({
                 mode="range"
                 selected={dateRange}
                 onSelect={handleDateSelect}
-                disabled={(date) => date < new Date()}
+                disabled={(date) => {
+                  // Disable past dates
+                  if (date < new Date()) return true;
+
+                  // Disable booked dates
+                  const dateStr = date.toISOString().split("T")[0];
+                  return bookedDates.includes(dateStr);
+                }}
                 numberOfMonths={2}
                 locale={ko}
               />
