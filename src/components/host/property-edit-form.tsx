@@ -65,7 +65,7 @@ export function PropertyEditForm({ property, tags }: PropertyEditFormProps) {
           maxGuests: parseInt(formData.maxGuests),
           minNights: parseInt(formData.minNights),
           maxNights: parseInt(formData.maxNights),
-          images: formData.images ? formData.images.split(",").map((url) => url.trim()) : [],
+          images: formData.images ? formData.images.split(",").map((url: string) => url.trim()) : [],
           amenities: formData.amenities,
           tags: formData.selectedTags,
         }),
@@ -90,7 +90,7 @@ export function PropertyEditForm({ property, tags }: PropertyEditFormProps) {
     setFormData((prev) => ({
       ...prev,
       selectedTags: prev.selectedTags.includes(tagName)
-        ? prev.selectedTags.filter((t) => t !== tagName)
+        ? prev.selectedTags.filter((t: string) => t !== tagName)
         : [...prev.selectedTags, tagName],
     }));
   };
@@ -326,7 +326,7 @@ export function PropertyEditForm({ property, tags }: PropertyEditFormProps) {
                     } else {
                       setFormData({
                         ...formData,
-                        amenities: formData.amenities.filter((a) => a !== amenity),
+                        amenities: formData.amenities.filter((a: string) => a !== amenity),
                       });
                     }
                   }}
