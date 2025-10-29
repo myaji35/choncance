@@ -90,7 +90,7 @@ export async function GET(
     return NextResponse.json({
       year: targetYear,
       month: targetMonth + 1, // Return 1-indexed month
-      bookedDates: [...new Set(bookedDates)].sort(), // Remove duplicates and sort
+      bookedDates: Array.from(new Set(bookedDates)).sort(), // Remove duplicates and sort
       bookings: bookings.map((b) => ({
         checkIn: b.checkIn.toISOString().split("T")[0],
         checkOut: b.checkOut.toISOString().split("T")[0],
