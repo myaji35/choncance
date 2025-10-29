@@ -3,12 +3,14 @@ import Link from "next/link";
 import { getPropertyById, getProperties } from "@/lib/api/properties";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, MapPin, Users, Home } from "lucide-react";
+import { ArrowLeft, MapPin, Users, Home, Star } from "lucide-react";
 import { PropertyGallery } from "@/components/property/property-gallery";
 import { TagList } from "@/components/tag-badge";
 import { PropertyCard } from "@/components/property/property-card";
 import { BookingWidget } from "@/components/booking/booking-widget";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
+import { ReviewCard } from "@/components/review/review-card";
+import { prisma } from "@/lib/prisma";
 
 interface PropertyDetailPageProps {
   params: {
@@ -40,6 +42,46 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
     } catch (error) {
       console.error("Failed to fetch related properties:", error);
     }
+  }
+
+  // Fetch reviews
+  let reviews: any[] = [];
+  let averageRating = { average: 0, count: 0 };
+  try {
+    const reviewData = await prisma.review.findMany({
+      where: { propertyId: params.id },
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    });
+
+    reviews = reviewData;
+
+    if (reviewData.length > 0) {
+      const stats = await prisma.review.aggregate({
+        where: { propertyId: params.id },
+        _avg: {
+          rating: true,
+        },
+        _count: {
+          id: true,
+        },
+      });
+
+      averageRating = {
+        average: stats._avg.rating || 0,
+        count: stats._count.id,
+      };
+    }
+  } catch (error) {
+    console.error("Failed to fetch reviews:", error);
   }
 
   return (
@@ -195,6 +237,39 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
 
         {/* Add padding at bottom for mobile sticky CTA */}
         <div className="h-20 lg:hidden" />
+
+        {/* Reviews Section */}
+        {averageRating.count > 0 && (
+          <section className="py-12 border-t">
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-6 h-6 fill-yellow-400 text-yellow-400" />
+                  <h2 className="text-2xl font-bold">
+                    {averageRating.average.toFixed(1)}
+                  </h2>
+                </div>
+                <div className="text-gray-600">
+                  <p className="font-semibold">리뷰 {averageRating.count}개</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {reviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </div>
+
+            {averageRating.count > 5 && (
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-500">
+                  {averageRating.count - 5}개의 리뷰가 더 있습니다
+                </p>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Related Properties Section */}
         {relatedProperties.length > 0 && (

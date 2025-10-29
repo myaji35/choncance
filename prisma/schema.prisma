@@ -53,6 +53,7 @@ model User {
   pmProjects    PMProject[]
   bookings      Booking[]
   wishlists     Wishlist[]
+  reviews       Review[]
 }
 
 model HostProfile {
@@ -311,6 +312,7 @@ model Property {
   bookings      Booking[]
   calendar      Calendar[]
   wishlists     Wishlist[]
+  reviews       Review[]
 
   // 타임스탬프
   createdAt     DateTime @default(now())
@@ -400,6 +402,7 @@ model Booking {
   // 관계
   items               BookingItem[]
   payment             Payment?
+  review              Review?
 
   @@index([userId, status])
   @@index([propertyId, checkIn, checkOut])
@@ -517,4 +520,32 @@ model Wishlist {
   @@unique([userId, propertyId])
   @@index([userId])
   @@index([propertyId])
+}
+
+// ============================================
+// Review Model
+// ============================================
+
+model Review {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  bookingId   String   @unique
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  rating      Int      // 1-5
+  content     String   @db.Text
+  images      String[] // Image URLs
+  
+  hostReply   String?  @db.Text
+  repliedAt   DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([propertyId])
+  @@index([userId])
+  @@index([rating])
 }

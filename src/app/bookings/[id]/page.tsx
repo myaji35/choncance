@@ -9,6 +9,7 @@ import { ko } from "date-fns/locale";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { CancelBookingDialog } from "@/components/booking/cancel-booking-dialog";
+import { WriteReviewDialog } from "@/components/review/write-review-dialog";
 
 interface BookingDetailPageProps {
   params: {
@@ -331,10 +332,19 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                     </>
                   )}
 
-                  {booking.status === "COMPLETED" && (
-                    <Link href={`/property/${booking.property.id}`}>
+                  {booking.status === "COMPLETED" && !booking.review && (
+                    <WriteReviewDialog
+                      bookingId={booking.id}
+                      propertyName={booking.property.name}
+                    >
                       <Button className="w-full">리뷰 작성하기</Button>
-                    </Link>
+                    </WriteReviewDialog>
+                  )}
+
+                  {booking.status === "COMPLETED" && booking.review && (
+                    <div className="text-center text-sm text-gray-600 py-2">
+                      리뷰 작성 완료
+                    </div>
                   )}
                 </div>
               </CardContent>
