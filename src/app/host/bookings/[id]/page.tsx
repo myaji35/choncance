@@ -19,6 +19,8 @@ import {
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
+import { ConfirmBookingDialog } from "@/components/host/confirm-booking-dialog";
+import { RejectBookingDialog } from "@/components/host/reject-booking-dialog";
 
 interface BookingDetailPageProps {
   params: Promise<{ id: string }>;
@@ -58,7 +60,7 @@ const statusInfo: Record<string, { label: string; color: string; icon: any }> =
     },
   };
 
-export default async function BookingDetailPage({
+export default async function HostBookingDetailPage({
   params,
 }: BookingDetailPageProps) {
   const { userId } = await auth();
@@ -69,17 +71,28 @@ export default async function BookingDetailPage({
 
   const { id } = await params;
 
+  // Get host profile
+  const hostProfile = await prisma.hostProfile.findUnique({
+    where: { userId },
+  });
+
+  if (!hostProfile) {
+    redirect("/");
+  }
+
   // Get booking with all details
   const booking = await prisma.booking.findUnique({
     where: { id },
     include: {
       property: {
         include: {
-          host: {
-            select: {
-              contact: true,
-            },
-          },
+          host: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          email: true,
         },
       },
       payment: true,
@@ -103,8 +116,8 @@ export default async function BookingDetailPage({
             <p className="text-gray-600 mb-4">
               요청하신 예약 정보를 찾을 수 없습니다.
             </p>
-            <Link href="/profile/bookings">
-              <Button>내 예약으로 돌아가기</Button>
+            <Link href="/host/bookings">
+              <Button>예약 목록으로 돌아가기</Button>
             </Link>
           </CardContent>
         </Card>
@@ -113,8 +126,8 @@ export default async function BookingDetailPage({
   }
 
   // Check ownership
-  if (booking.userId !== userId) {
-    redirect("/profile/bookings");
+  if (booking.property.host.userId !== userId) {
+    redirect("/host/bookings");
   }
 
   const StatusIcon = statusInfo[booking.status]?.icon || Clock;
@@ -124,9 +137,9 @@ export default async function BookingDetailPage({
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/profile/bookings">
+          <Link href="/host/bookings">
             <Button variant="ghost" size="sm" className="mb-4">
-              ← 내 예약으로
+              ← 예약 목록으로
             </Button>
           </Link>
           <div className="flex items-center justify-between">
@@ -157,32 +170,24 @@ export default async function BookingDetailPage({
                 <CardTitle>숙소 정보</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Link
-                  href={`/property/${booking.property.id}`}
-                  className="block hover:opacity-80 transition"
-                >
-                  <div className="flex items-start gap-4">
-                    {booking.property.thumbnailUrl && (
-                      <img
-                        src={booking.property.thumbnailUrl}
-                        alt={booking.property.name}
-                        className="w-32 h-32 object-cover rounded-lg"
-                      />
-                    )}
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {booking.property.name}
-                      </h3>
-                      <div className="flex items-center text-sm text-gray-600 mt-1">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        {booking.property.address}
-                      </div>
-                      <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                        {booking.property.description}
-                      </p>
+                <div className="flex items-start gap-4">
+                  {booking.property.thumbnailUrl && (
+                    <img
+                      src={booking.property.thumbnailUrl}
+                      alt={booking.property.name}
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                  )}
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      {booking.property.name}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-600 mt-1">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {booking.property.address}
                     </div>
                   </div>
-                </Link>
+                </div>
               </CardContent>
             </Card>
 
@@ -280,64 +285,22 @@ export default async function BookingDetailPage({
               </Card>
             )}
 
-            {/* Status Messages */}
-            {booking.status === "PENDING" && (
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3 text-yellow-800 bg-yellow-50 p-4 rounded-lg">
-                    <Clock className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">호스트 확인 대기 중</p>
-                      <p className="text-sm mt-1">
-                        호스트가 예약을 확인하고 있습니다. 확정되면 알림을
-                        보내드립니다.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {booking.status === "CONFIRMED" && (
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-3 text-green-800 bg-green-50 p-4 rounded-lg">
-                    <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">예약이 확정되었습니다</p>
-                      <p className="text-sm mt-1">
-                        체크인 날짜에 맞춰 방문해주세요. 즐거운 여행 되세요!
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
+            {/* Rejection/Cancellation Reason */}
             {booking.rejectionReason && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-red-600">예약 거절 안내</CardTitle>
+                  <CardTitle className="text-red-600">거절 사유</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-red-50 p-4 rounded-lg">
-                    <p className="text-gray-900 mb-2">
-                      {booking.rejectionReason}
+                  <p className="text-gray-900">{booking.rejectionReason}</p>
+                  {booking.rejectedAt && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      거절 일시:{" "}
+                      {format(new Date(booking.rejectedAt), "PPP p", {
+                        locale: ko,
+                      })}
                     </p>
-                    {booking.rejectedAt && (
-                      <p className="text-sm text-gray-600">
-                        거절 일시:{" "}
-                        {format(new Date(booking.rejectedAt), "PPP p", {
-                          locale: ko,
-                        })}
-                      </p>
-                    )}
-                    {booking.payment?.status === "CANCELLED" && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        결제 금액은 전액 환불되었습니다.
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -345,22 +308,18 @@ export default async function BookingDetailPage({
             {booking.cancellationReason && (
               <Card>
                 <CardHeader>
-                  <CardTitle>취소 내역</CardTitle>
+                  <CardTitle className="text-red-600">취소 사유</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-900 mb-2">
-                      {booking.cancellationReason}
+                  <p className="text-gray-900">{booking.cancellationReason}</p>
+                  {booking.cancelledAt && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      취소 일시:{" "}
+                      {format(new Date(booking.cancelledAt), "PPP p", {
+                        locale: ko,
+                      })}
                     </p>
-                    {booking.cancelledAt && (
-                      <p className="text-sm text-gray-600">
-                        취소 일시:{" "}
-                        {format(new Date(booking.cancelledAt), "PPP p", {
-                          locale: ko,
-                        })}
-                      </p>
-                    )}
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -368,34 +327,10 @@ export default async function BookingDetailPage({
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Host Contact */}
-            <Card>
-              <CardHeader>
-                <CardTitle>호스트 연락처</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <div className="flex items-center text-sm text-gray-600 mb-1">
-                    <Phone className="w-4 h-4 mr-2" />
-                    전화번호
-                  </div>
-                  <a
-                    href={`tel:${booking.property.host.contact}`}
-                    className="font-medium text-primary hover:underline"
-                  >
-                    {booking.property.host.contact}
-                  </a>
-                </div>
-                <p className="text-xs text-gray-500">
-                  * 예약 관련 문의사항이 있으시면 호스트에게 직접 연락해주세요.
-                </p>
-              </CardContent>
-            </Card>
-
             {/* Guest Info */}
             <Card>
               <CardHeader>
-                <CardTitle>예약자 정보</CardTitle>
+                <CardTitle>게스트 정보</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
@@ -407,14 +342,24 @@ export default async function BookingDetailPage({
                     <Phone className="w-4 h-4 mr-2" />
                     전화번호
                   </div>
-                  <p className="font-medium">{booking.guestPhone}</p>
+                  <a
+                    href={`tel:${booking.guestPhone}`}
+                    className="font-medium text-primary hover:underline"
+                  >
+                    {booking.guestPhone}
+                  </a>
                 </div>
                 <div>
                   <div className="flex items-center text-sm text-gray-600 mb-1">
                     <Mail className="w-4 h-4 mr-2" />
                     이메일
                   </div>
-                  <p className="font-medium break-all">{booking.guestEmail}</p>
+                  <a
+                    href={`mailto:${booking.guestEmail}`}
+                    className="font-medium text-primary hover:underline break-all"
+                  >
+                    {booking.guestEmail}
+                  </a>
                 </div>
               </CardContent>
             </Card>
@@ -424,7 +369,7 @@ export default async function BookingDetailPage({
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <CreditCard className="w-5 h-5 mr-2" />
-                  결제 정보
+                  가격 정보
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -473,7 +418,7 @@ export default async function BookingDetailPage({
                 <Separator />
 
                 <div className="flex items-center justify-between font-bold text-lg">
-                  <span>총 결제 금액</span>
+                  <span>총 금액</span>
                   <span>
                     ₩
                     {(typeof booking.totalAmount === "number"
@@ -507,36 +452,34 @@ export default async function BookingDetailPage({
                         <span>{booking.payment.paymentMethod}</span>
                       </div>
                     )}
-                    {booking.payment.refundedAt && (
-                      <div className="flex items-center justify-between text-sm mt-2">
-                        <span className="text-gray-600">환불 일시</span>
-                        <span>
-                          {format(
-                            new Date(booking.payment.refundedAt),
-                            "PPP",
-                            { locale: ko }
-                          )}
-                        </span>
-                      </div>
-                    )}
                   </div>
                 )}
               </CardContent>
             </Card>
 
             {/* Actions */}
-            {booking.status === "COMPLETED" && !booking.review && (
+            {booking.status === "PENDING" && (
               <Card>
                 <CardHeader>
-                  <CardTitle>리뷰 작성</CardTitle>
+                  <CardTitle>예약 관리</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">
-                    숙박 경험은 어떠셨나요? 리뷰를 남겨주세요!
-                  </p>
-                  <Link href={`/property/${booking.property.id}?writeReview=true&bookingId=${booking.id}`}>
-                    <Button className="w-full">리뷰 작성하기</Button>
-                  </Link>
+                <CardContent className="space-y-3">
+                  <ConfirmBookingDialog bookingId={booking.id}>
+                    <Button className="w-full" size="lg">
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      예약 확정
+                    </Button>
+                  </ConfirmBookingDialog>
+                  <RejectBookingDialog bookingId={booking.id}>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      size="lg"
+                    >
+                      <XCircle className="w-4 h-4 mr-2" />
+                      예약 거절
+                    </Button>
+                  </RejectBookingDialog>
                 </CardContent>
               </Card>
             )}
