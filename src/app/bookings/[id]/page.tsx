@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { CancelBookingDialog } from "@/components/booking/cancel-booking-dialog";
 
 interface BookingDetailPageProps {
   params: {
@@ -318,9 +319,15 @@ export default async function BookingDetailPage({ params }: BookingDetailPagePro
                           숙소 정보 보기
                         </Button>
                       </Link>
-                      <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
-                        예약 취소하기
-                      </Button>
+                      <CancelBookingDialog
+                        bookingId={booking.id}
+                        checkInDate={checkIn}
+                        totalAmount={Number(booking.totalAmount)}
+                      >
+                        <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
+                          예약 취소하기
+                        </Button>
+                      </CancelBookingDialog>
                     </>
                   )}
 

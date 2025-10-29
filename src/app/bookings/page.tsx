@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { CancelBookingDialog } from "@/components/booking/cancel-booking-dialog";
 
 async function getBookings(userId: string) {
   try {
@@ -180,9 +181,15 @@ export default async function BookingsPage() {
                           </Link>
 
                           {booking.status === "CONFIRMED" && (
-                            <Button variant="outline" className="text-red-600 hover:text-red-700">
-                              취소하기
-                            </Button>
+                            <CancelBookingDialog
+                              bookingId={booking.id}
+                              checkInDate={checkIn}
+                              totalAmount={Number(booking.totalAmount)}
+                            >
+                              <Button variant="outline" className="text-red-600 hover:text-red-700">
+                                취소하기
+                              </Button>
+                            </CancelBookingDialog>
                           )}
                         </div>
                       </div>
