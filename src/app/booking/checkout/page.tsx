@@ -120,21 +120,26 @@ function CheckoutForm() {
         throw new Error(data.error || "예약에 실패했습니다");
       }
 
-      // Launch Toss Payments
+      // Launch Toss Payments using SDK
+      const { loadTossPayments } = await import("@tosspayments/payment-sdk");
       const tossClientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
+
+      const tossPayments = await loadTossPayments(tossClientKey);
+
       const successUrl = `${window.location.origin}/booking/success`;
       const failUrl = `${window.location.origin}/booking/fail`;
 
-      // Open Toss Payments window
-      const paymentUrl = `https://pay.toss.im/web/checkout?` +
-        `clientKey=${tossClientKey}&` +
-        `orderId=${data.payment.orderId}&` +
-        `orderName=${encodeURIComponent(data.payment.orderName)}&` +
-        `amount=${data.payment.amount}&` +
-        `successUrl=${encodeURIComponent(successUrl)}&` +
-        `failUrl=${encodeURIComponent(failUrl)}`;
-
-      window.location.href = paymentUrl;
+      // Request payment
+      await tossPayments.requestPayment("카드", {
+        amount: data.payment.amount,
+        orderId: data.payment.orderId,
+        orderName: data.payment.orderName,
+        customerName: guestName,
+        customerEmail: guestEmail,
+        customerMobilePhone: guestPhone.replace(/-/g, ""),
+        successUrl,
+        failUrl,
+      });
     } catch (err: any) {
       setError(err.message);
       setIsSubmitting(false);
