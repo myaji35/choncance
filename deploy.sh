@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# ChonCance Google Cloud Run 배포 스크립트
+# ChonCance Google Cloud Run 배포 스크립트 (소스 기반)
 set -e
 
-echo "🚀 ChonCance Google Cloud Run 배포 시작..."
+echo "🚀 ChonCance Google Cloud Run 배포 시작 (소스 기반)..."
 
 # 프로젝트 ID 확인
 PROJECT_ID=$(gcloud config get-value project)
@@ -19,18 +19,12 @@ echo "📦 프로젝트 ID: $PROJECT_ID"
 # 리전 설정
 REGION="asia-northeast3"
 SERVICE_NAME="choncance"
-REPO_NAME="choncance-repo"
-IMAGE_NAME="asia-northeast3-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME:latest"
 
-echo "🏗️  Docker 이미지 빌드 중... (AMD64 플랫폼)"
-docker build --platform linux/amd64 -t $IMAGE_NAME .
+echo "☁️  Cloud Build로 빌드 및 배포 중..."
+echo "   (GitHub에서 소스를 가져와 GCP에서 빌드합니다)"
 
-echo "📤 Docker 이미지 푸시 중..."
-docker push $IMAGE_NAME
-
-echo "☁️  Cloud Run에 배포 중..."
 gcloud run deploy $SERVICE_NAME \
-  --image $IMAGE_NAME \
+  --source . \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
