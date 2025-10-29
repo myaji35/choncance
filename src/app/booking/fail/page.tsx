@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { XCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function BookingFailPage() {
+function BookingFail() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -41,5 +42,13 @@ export default function BookingFailPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function BookingFailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingFail />
+    </Suspense>
   );
 }

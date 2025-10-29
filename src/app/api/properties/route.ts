@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/properties - 숙소 목록 조회 (다양한 필터링 지원)
 export async function GET(request: NextRequest) {
   try {

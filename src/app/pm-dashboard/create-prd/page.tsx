@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
-export default function CreatePRDPage() {
+function CreatePRDForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("projectId");
@@ -180,5 +180,13 @@ export default function CreatePRDPage() {
         </Card>
       </form>
     </div>
+  );
+}
+
+export default function CreatePRDPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreatePRDForm />
+    </Suspense>
   );
 }

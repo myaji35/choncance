@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 
-export default function BookingSuccessPage() {
+function BookingConfirmation() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isConfirming, setIsConfirming] = useState(true);
@@ -130,3 +130,12 @@ export default function BookingSuccessPage() {
     </div>
   );
 }
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingConfirmation />
+    </Suspense>
+  );
+}
+
