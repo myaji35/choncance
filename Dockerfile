@@ -1,5 +1,5 @@
 # Base image
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -19,8 +19,9 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Build Next.js app
-ENV NEXT_TELEMETRY_DISABLED 1
+# Build Next.js app with environment variables
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ
 RUN npm run build
 
 # Production image, copy all the files and run next

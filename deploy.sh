@@ -22,8 +22,8 @@ SERVICE_NAME="choncance"
 REPO_NAME="choncance-repo"
 IMAGE_NAME="asia-northeast3-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME:latest"
 
-echo "🏗️  Docker 이미지 빌드 중..."
-docker build -t $IMAGE_NAME .
+echo "🏗️  Docker 이미지 빌드 중... (AMD64 플랫폼)"
+docker build --platform linux/amd64 -t $IMAGE_NAME .
 
 echo "📤 Docker 이미지 푸시 중..."
 docker push $IMAGE_NAME
