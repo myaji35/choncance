@@ -2,8 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// POST /api/host/bookings/[id]/reject - Reject booking
-export async function POST(
+/**
+ * PATCH /api/host/bookings/:id/reject
+ * Reject a booking
+ */
+export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -11,93 +14,164 @@ export async function POST(
     const { userId } = await auth();
 
     if (!userId) {
-      return NextResponse.json({ error: "인증이 필요합니다" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = await params;
-    const body = await request.json();
-    const { reason } = body;
-
-    // Get user and host profile
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { hostProfile: true },
+    // Check if user is a host
+    const hostProfile = await prisma.hostProfile.findUnique({
+      where: { userId },
     });
 
-    if (!user?.hostProfile) {
+    if (!hostProfile) {
       return NextResponse.json(
-        { error: "호스트 프로필이 필요합니다" },
+        { error: "Not a host" },
         { status: 403 }
       );
     }
 
-    // Get booking with property
+    // Get rejection reason from request body
+    const { id } = await params;
+    const body = await request.json();
+    const { reason } = body;
+
+    if (!reason || reason.trim().length < 10) {
+      return NextResponse.json(
+        { error: "Rejection reason must be at least 10 characters" },
+        { status: 400 }
+      );
+    }
+
+    // Find booking and verify ownership
     const booking = await prisma.booking.findUnique({
       where: { id },
       include: {
-        property: true,
-        user: true,
+        property: {
+          include: {
+            host: true,
+          },
+        },
         payment: true,
       },
     });
 
     if (!booking) {
       return NextResponse.json(
-        { error: "예약을 찾을 수 없습니다" },
+        { error: "Booking not found" },
         { status: 404 }
       );
     }
 
-    // Check if property belongs to this host
-    if (booking.property.hostId !== user.hostProfile.id) {
+    // Check if host owns this property
+    if (booking.property.host.userId !== userId) {
       return NextResponse.json(
-        { error: "이 예약을 거부할 권한이 없습니다" },
+        { error: "You don't own this property" },
         { status: 403 }
       );
     }
 
-    // Check if booking is in pending status
+    // Check if booking can be rejected
     if (booking.status !== "PENDING") {
       return NextResponse.json(
-        { error: "대기 중인 예약만 거부할 수 있습니다" },
+        { error: "Only pending bookings can be rejected" },
         { status: 400 }
       );
     }
 
-    // Update booking status to REJECTED
-    const updatedBooking = await prisma.booking.update({
-      where: { id },
-      data: {
-        status: "REJECTED",
-      },
-      include: {
-        property: true,
-        user: true,
-      },
+    // Update booking status and issue refund if payment exists
+    const updatedBooking = await prisma.$transaction(async (tx) => {
+      // Update booking status
+      const updated = await tx.booking.update({
+        where: { id },
+        data: {
+          status: "REJECTED",
+          rejectionReason: reason,
+          rejectedAt: new Date(),
+        },
+        include: {
+          property: true,
+          payment: true,
+        },
+      });
+
+      // If payment exists and is completed, process refund
+      if (booking.payment && booking.payment.status === "DONE") {
+        // Check if running in development mode
+        const isDevelopment = process.env.NODE_ENV === "development";
+
+        if (isDevelopment) {
+          // Development mode: Just update payment status to CANCELLED
+          await tx.payment.update({
+            where: { id: booking.payment.id },
+            data: {
+              status: "CANCELLED",
+              refundedAt: new Date(),
+            },
+          });
+
+          await tx.paymentTransaction.create({
+            data: {
+              paymentId: booking.payment.id,
+              type: "REFUND",
+              amount: booking.totalAmount,
+              status: "SUCCESS",
+              method: "DEVELOPMENT_MODE",
+            },
+          });
+        } else {
+          // Production mode: Use Toss Payments API
+          const refundResponse = await fetch(
+            `https://api.tosspayments.com/v1/payments/${booking.payment.paymentKey}/cancel`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Basic ${Buffer.from(
+                  process.env.TOSS_SECRET_KEY + ":"
+                ).toString("base64")}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                cancelReason: `호스트 거절: ${reason}`,
+                cancelAmount: Number(booking.totalAmount),
+              }),
+            }
+          );
+
+          if (!refundResponse.ok) {
+            throw new Error("Failed to process refund");
+          }
+
+          // Update payment status
+          await tx.payment.update({
+            where: { id: booking.payment.id },
+            data: {
+              status: "CANCELLED",
+              refundedAt: new Date(),
+            },
+          });
+
+          // Record refund transaction
+          await tx.paymentTransaction.create({
+            data: {
+              paymentId: booking.payment.id,
+              type: "REFUND",
+              amount: booking.totalAmount,
+              status: "SUCCESS",
+              method: booking.payment.method,
+            },
+          });
+        }
+      }
+
+      return updated;
     });
 
-    // TODO: Process refund if payment was made
-    if (booking.payment && booking.payment.status === "DONE") {
-      console.log(
-        `Process refund for booking ${id}, payment ${booking.payment.id}`
-      );
-      // Implement Toss Payments refund API call here
-    }
+    // TODO: Send rejection notification email to guest
 
-    // TODO: Send email notification to guest with rejection reason
-    console.log(
-      `Booking ${id} rejected. Send notification email to ${booking.user.email}`
-    );
-    console.log(`Rejection reason: ${reason || "No reason provided"}`);
-
-    return NextResponse.json({
-      booking: updatedBooking,
-      message: "예약이 거부되었습니다",
-    });
+    return NextResponse.json({ booking: updatedBooking });
   } catch (error) {
-    console.error("Failed to reject booking:", error);
+    console.error("Reject booking error:", error);
     return NextResponse.json(
-      { error: "예약 거부에 실패했습니다" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

@@ -398,6 +398,8 @@ model Booking {
   confirmedAt         DateTime?
   cancelledAt         DateTime?
   cancellationReason  String?  @db.Text
+  rejectedAt          DateTime?
+  rejectionReason     String?  @db.Text
 
   // 관계
   items               BookingItem[]
@@ -471,6 +473,7 @@ model Payment {
   requestedAt   DateTime @default(now())
   approvedAt    DateTime?
   cancelledAt   DateTime?
+  refundedAt    DateTime?
 
   // 환불 정보
   refundAmount  Decimal? @db.Decimal(10, 2)
@@ -498,8 +501,10 @@ model PaymentTransaction {
   payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
   externalId  String?  // 외부 거래 ID
-  type        String   // "payment", "refund"
+  type        String   // "PAYMENT", "REFUND"
   amount      Decimal  @db.Decimal(10, 2)
+  status      String   // "SUCCESS", "FAILED", "PENDING"
+  method      String?  // "card", "transfer", "kakao_pay", "DEVELOPMENT_MODE"
   metadata    Json?    // 추가 메타데이터
 
   createdAt   DateTime @default(now())
