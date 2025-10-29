@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable standalone output for Docker
+  output: 'standalone',
   eslint: {
     // Temporarily ignore ESLint errors during builds
     // All TypeScript type errors have been fixed
