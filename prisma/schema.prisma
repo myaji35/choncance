@@ -52,6 +52,7 @@ model User {
   hostProfile   HostProfile?
   pmProjects    PMProject[]
   bookings      Booking[]
+  wishlists     Wishlist[]
 }
 
 model HostProfile {
@@ -309,6 +310,7 @@ model Property {
   // 관계
   bookings      Booking[]
   calendar      Calendar[]
+  wishlists     Wishlist[]
 
   // 타임스탬프
   createdAt     DateTime @default(now())
@@ -498,4 +500,21 @@ model PaymentTransaction {
   metadata    Json?    // 추가 메타데이터
 
   createdAt   DateTime @default(now())
+}
+// ============================================
+// Wishlist Model
+// ============================================
+
+model Wishlist {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+  @@index([userId])
+  @@index([propertyId])
 }

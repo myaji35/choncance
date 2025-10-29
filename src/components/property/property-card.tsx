@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TagList } from "@/components/tag-badge";
+import { WishlistButton } from "@/components/wishlist/wishlist-button";
 
 interface PropertyCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,6 +24,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+          <WishlistButton
+            propertyId={property.id}
+            variant="overlay"
+            size="default"
           />
         </div>
         <CardHeader className="space-y-2">

@@ -8,6 +8,7 @@ import { PropertyGallery } from "@/components/property/property-gallery";
 import { TagList } from "@/components/tag-badge";
 import { PropertyCard } from "@/components/property/property-card";
 import { BookingWidget } from "@/components/booking/booking-widget";
+import { WishlistButton } from "@/components/wishlist/wishlist-button";
 
 interface PropertyDetailPageProps {
   params: {
@@ -62,9 +63,16 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
 
             {/* Property Header */}
             <div className="space-y-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                {property.name}
-              </h1>
+              <div className="flex items-start justify-between gap-4">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex-1">
+                  {property.name}
+                </h1>
+                <WishlistButton
+                  propertyId={property.id}
+                  variant="default"
+                  size="lg"
+                />
+              </div>
 
               <div className="flex items-center gap-2 text-gray-600">
                 <MapPin className="w-4 h-4" />
