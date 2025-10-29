@@ -21,14 +21,19 @@ REGION="asia-northeast3"
 SERVICE_NAME="choncance"
 
 echo "☁️  Cloud Build로 빌드 및 배포 중..."
-echo "   (GitHub에서 소스를 가져와 GCP에서 빌드합니다)"
+echo "   (GCP Cloud SQL PostgreSQL 사용)"
+
+# Cloud SQL 연결 이름 가져오기
+INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe choncance-db --format='value(connectionName)')
+echo "   Cloud SQL: $INSTANCE_CONNECTION_NAME"
 
 gcloud run deploy $SERVICE_NAME \
   --source . \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
-  --set-env-vars "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,DATABASE_URL=postgresql://neondb_owner:npg_d9OoK2qQlTXH@ep-proud-fog-a100b0a9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require" \
+  --add-cloudsql-instances=$INSTANCE_CONNECTION_NAME \
+  --set-env-vars "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,DATABASE_URL=postgresql://postgres:ChonCance2025!@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
   --port 8080 \
   --memory 512Mi \
   --cpu 1 \
