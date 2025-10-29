@@ -9,6 +9,7 @@ import { Plus, Home, Calendar, Settings } from "lucide-react";
 import { PropertyListTable } from "@/components/host/property-list-table";
 import { BookingListTable } from "@/components/host/booking-list-table";
 import { DashboardStats } from "@/components/host/dashboard-stats";
+import { BookingCalendar } from "@/components/host/booking-calendar";
 
 export default async function HostDashboardPage() {
   const { userId } = await auth();
@@ -154,17 +155,23 @@ export default async function HostDashboardPage() {
         </TabsContent>
 
         <TabsContent value="bookings" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>최근 예약</CardTitle>
-              <CardDescription>
-                숙소에 대한 예약을 확인하고 관리할 수 있습니다
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <BookingListTable bookings={recentBookings} />
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            {/* Calendar View */}
+            <BookingCalendar />
+
+            {/* Recent Bookings Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>최근 예약</CardTitle>
+                <CardDescription>
+                  숙소에 대한 예약을 확인하고 관리할 수 있습니다
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <BookingListTable bookings={recentBookings} />
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="settings" className="mt-6">
