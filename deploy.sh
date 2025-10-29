@@ -33,7 +33,7 @@ gcloud run deploy $SERVICE_NAME \
   --region $REGION \
   --allow-unauthenticated \
   --add-cloudsql-instances=$INSTANCE_CONNECTION_NAME \
-  --set-env-vars "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,DATABASE_URL=postgresql://postgres:ChonCance2025!@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
+  --update-env-vars="NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,DATABASE_URL=postgresql://postgres:ChonCance2025!@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
   --port 8080 \
   --memory 512Mi \
   --cpu 1 \
