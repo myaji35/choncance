@@ -122,13 +122,6 @@ export async function PATCH(
       );
     }
 
-    if (booking.status === "CANCELLED") {
-      return NextResponse.json(
-        { error: "이미 취소된 예약입니다" },
-        { status: 400 }
-      );
-    }
-
     // Calculate refund amount based on cancellation policy
     const policy = getCancellationPolicy(
       new Date(booking.checkIn),
@@ -169,8 +162,10 @@ export async function PATCH(
           data: {
             paymentId: booking.payment.id,
             externalId: `REFUND-${Date.now()}`,
-            type: "refund",
+            type: "REFUND",
             amount: refundAmount,
+            status: "SUCCESS",
+            method: booking.payment.paymentMethod || "GUEST_CANCEL",
             metadata: {
               reason,
               policy: policy.description,

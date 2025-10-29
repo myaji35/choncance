@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Heart } from "lucide-react";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { TagBadge } from "@/components/property/tag-badge";
+import { TagBadge } from "@/components/tag/tag-badge";
 
 async function getWishlist(userId: string) {
   try {
@@ -122,7 +122,7 @@ export default async function WishlistPage() {
                           {property.tags && property.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-3">
                               {property.tags.slice(0, 2).map((tag: any) => (
-                                <TagBadge key={tag.id} tag={tag} size="sm" />
+                                <TagBadge key={tag.id} tag={tag} className="text-xs px-2 py-0.5" />
                               ))}
                               {property.tags.length > 2 && (
                                 <span className="text-xs text-gray-500">

@@ -156,7 +156,7 @@ export async function PATCH(
               type: "REFUND",
               amount: booking.totalAmount,
               status: "SUCCESS",
-              method: booking.payment.method,
+              method: booking.payment.paymentMethod || "HOST_REJECT",
             },
           });
         }

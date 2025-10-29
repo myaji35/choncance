@@ -34,7 +34,7 @@ interface Property {
 
 interface Payment {
   status: string;
-  amount: number;
+  amount: number | { toNumber: () => number };
 }
 
 interface Booking {
@@ -46,7 +46,7 @@ interface Booking {
   guestName: string;
   guestEmail: string;
   guestPhone: string;
-  totalAmount: number;
+  totalAmount: number | { toNumber: () => number };
   createdAt: Date;
   property: Property;
   payment: Payment | null;
@@ -208,7 +208,7 @@ export function BookingManagementTable({
                     </TableCell>
                     <TableCell>{booking.guests}명</TableCell>
                     <TableCell>
-                      ₩{Number(booking.totalAmount).toLocaleString()}
+                      ₩{(typeof booking.totalAmount === 'number' ? booking.totalAmount : booking.totalAmount.toNumber()).toLocaleString()}
                     </TableCell>
                     <TableCell>
                       <Badge

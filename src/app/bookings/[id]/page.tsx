@@ -46,6 +46,7 @@ async function getBookingDetails(bookingId: string, userId: string) {
           },
         },
         payment: true,
+        review: true,
       },
     });
 
