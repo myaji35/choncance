@@ -34,14 +34,7 @@ gcloud run deploy $SERVICE_NAME \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
-  --set-env-vars "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ" \
-  --set-env-vars "CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV" \
-  --set-env-vars "NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login" \
-  --set-env-vars "NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup" \
-  --set-env-vars "DATABASE_URL=postgresql://neondb_owner:npg_d9OoK2qQlTXH@ep-proud-fog-a100b0a9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require" \
-  --set-env-vars "NEXTAUTH_SECRET=your-nextauth-secret-key-change-this-in-production" \
-  --set-env-vars "KAKAO_CLIENT_ID=83022bf07d136c31285491b85c6ee6aa" \
-  --set-env-vars "KAKAO_CLIENT_SECRET=A0PIZLG3vhO9CmS5J1hsgu9T0LhRnWSS" \
+  --set-env-vars "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,DATABASE_URL=postgresql://neondb_owner:npg_d9OoK2qQlTXH@ep-proud-fog-a100b0a9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require" \
   --port 8080 \
   --memory 512Mi \
   --cpu 1 \
