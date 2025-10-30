@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
 
     // 필터 파라미터
     const tagsParam = searchParams.get("tags"); // 쉼표로 구분된 태그명
+    const search = searchParams.get("search");
     const status = searchParams.get("status") || "APPROVED";
     const minPrice = searchParams.get("min_price");
     const maxPrice = searchParams.get("max_price");
@@ -25,6 +26,42 @@ export async function GET(request: NextRequest) {
     const whereClause: any = {
       status,
     };
+
+    // 검색 필터링 (name, description, address 등에서 검색)
+    if (search) {
+      whereClause.OR = [
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          description: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          address: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          province: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          city: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ];
+    }
 
     // 태그 필터링
     if (tagsParam) {
