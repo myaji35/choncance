@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
       ) {
         acc[propertyId].confirmedBookings += 1;
 
-        if (b.payment?.status === "SUCCESS") {
+        if (b.payment?.status === PaymentStatus.DONE) {
           const amount =
             typeof b.totalAmount === "number"
               ? b.totalAmount
