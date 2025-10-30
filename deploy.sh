@@ -24,7 +24,7 @@ echo "☁️  Cloud Build로 빌드 및 배포 중..."
 echo "   (GCP Cloud SQL PostgreSQL 사용)"
 
 # Cloud SQL 연결 이름 가져오기
-INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe marketsphere-db --format='value(connectionName)')
+INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe choncance-db --format='value(connectionName)')
 echo "   Cloud SQL: $INSTANCE_CONNECTION_NAME"
 
 gcloud run deploy $SERVICE_NAME \
@@ -33,7 +33,7 @@ gcloud run deploy $SERVICE_NAME \
   --region $REGION \
   --allow-unauthenticated \
   --add-cloudsql-instances=$INSTANCE_CONNECTION_NAME \
-  --update-env-vars="NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,NEXT_PUBLIC_TOSS_CLIENT_KEY=test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq,TOSS_SECRET_KEY=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R,GCP_STORAGE_BUCKET=choncance-images,DATABASE_URL=postgresql://postgres:ChonCance2025!@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
+  --update-env-vars="NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,NEXT_PUBLIC_TOSS_CLIENT_KEY=test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq,TOSS_SECRET_KEY=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R,GCP_STORAGE_BUCKET=choncance-images,DATABASE_URL=postgresql://postgres:socdnjs!00@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
   --port 8080 \
   --memory 512Mi \
   --cpu 1 \
