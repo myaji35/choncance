@@ -2,10 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
-/**
- * POST /api/wishlist
- * Add property to wishlist
- */
+// GET /api/wishlist - Get user's wishlist
+export async function GET() {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const wishlists = await prisma.wishlist.findMany({
+      where: { userId },
+      include: {
+        property: {
+          include: {
+            tags: true,
+            host: {
+              select: {
+                businessName: true,
+              },
+            },
+            _count: {
+              select: {
+                reviews: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ wishlists });
+  } catch (error: any) {
+    console.error("Error fetching wishlists:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch wishlists" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/wishlist - Add property to wishlist
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
@@ -19,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     if (!propertyId) {
       return NextResponse.json(
-        { error: "propertyId is required" },
+        { error: "Property ID is required" },
         { status: 400 }
       );
     }
@@ -48,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       return NextResponse.json(
-        { error: "Already in wishlist" },
+        { error: "Property already in wishlist" },
         { status: 400 }
       );
     }
@@ -59,35 +97,20 @@ export async function POST(request: NextRequest) {
         userId,
         propertyId,
       },
-      include: {
-        property: {
-          select: {
-            id: true,
-            name: true,
-            thumbnailUrl: true,
-            images: true,
-            pricePerNight: true,
-            address: true,
-          },
-        },
-      },
     });
 
     return NextResponse.json({ wishlist }, { status: 201 });
-  } catch (error) {
-    console.error("Add to wishlist error:", error);
+  } catch (error: any) {
+    console.error("Error adding to wishlist:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to add to wishlist" },
       { status: 500 }
     );
   }
 }
 
-/**
- * GET /api/wishlist
- * Get user's wishlist
- */
-export async function GET(request: NextRequest) {
+// DELETE /api/wishlist - Remove property from wishlist
+export async function DELETE(request: NextRequest) {
   try {
     const { userId } = await auth();
 
@@ -95,50 +118,48 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const searchParams = request.nextUrl.searchParams;
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
-    const skip = (page - 1) * limit;
+    const { searchParams } = new URL(request.url);
+    const propertyId = searchParams.get("propertyId");
 
-    const [wishlists, total] = await Promise.all([
-      prisma.wishlist.findMany({
-        where: { userId },
-        include: {
-          property: {
-            include: {
-              tags: true,
-              host: {
-                include: {
-                  user: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
+    if (!propertyId) {
+      return NextResponse.json(
+        { error: "Property ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if in wishlist
+    const wishlist = await prisma.wishlist.findUnique({
+      where: {
+        userId_propertyId: {
+          userId,
+          propertyId,
         },
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.wishlist.count({ where: { userId } }),
-    ]);
-
-    return NextResponse.json({
-      wishlists,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
-    console.error("Get wishlist error:", error);
+
+    if (!wishlist) {
+      return NextResponse.json(
+        { error: "Property not in wishlist" },
+        { status: 404 }
+      );
+    }
+
+    // Remove from wishlist
+    await prisma.wishlist.delete({
+      where: {
+        userId_propertyId: {
+          userId,
+          propertyId,
+        },
+      },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Error removing from wishlist:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to remove from wishlist" },
       { status: 500 }
     );
   }
