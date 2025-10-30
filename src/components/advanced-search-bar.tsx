@@ -5,6 +5,8 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GuestSelector } from "@/components/guest-selector";
 import { LocationSelector } from "@/components/location-selector";
+import { DateRangePicker } from "@/components/date-range-picker";
+import { DateRange } from "react-day-picker";
 
 interface GuestCounts {
   adults: number;
@@ -25,8 +27,7 @@ interface AdvancedSearchBarProps {
 
 export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBarProps) {
   const [location, setLocation] = useState("");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [guests, setGuests] = useState<GuestCounts>({
     adults: 1,
     children: 0,
@@ -37,6 +38,8 @@ export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBa
 
   const handleSearch = () => {
     if (onSearch) {
+      const checkIn = dateRange?.from ? dateRange.from.toISOString().split('T')[0] : "";
+      const checkOut = dateRange?.to ? dateRange.to.toISOString().split('T')[0] : "";
       onSearch({ location, checkIn, checkOut, guests });
     }
   };
@@ -67,48 +70,17 @@ export function AdvancedSearchBar({ onSearch, className = "" }: AdvancedSearchBa
         {/* Divider */}
         <div className="w-px h-8 bg-gray-300" />
 
-        {/* Check-in Date */}
+        {/* Date Range */}
         <div
           className={`flex-1 px-6 py-3 transition-colors ${
-            focusedField === "checkIn" ? "bg-gray-50" : "hover:bg-gray-50"
+            focusedField === "dates" ? "bg-gray-50" : "hover:bg-gray-50"
           }`}
         >
-          <label htmlFor="checkIn" className="block text-xs font-semibold text-gray-900 mb-1">
-            체크인
-          </label>
-          <input
-            id="checkIn"
-            type="date"
-            value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
-            onFocus={() => setFocusedField("checkIn")}
+          <DateRangePicker
+            value={dateRange}
+            onChange={setDateRange}
+            onFocus={() => setFocusedField("dates")}
             onBlur={() => setFocusedField(null)}
-            onKeyDown={handleKeyDown}
-            className="w-full text-sm bg-transparent border-none outline-none text-gray-500"
-          />
-        </div>
-
-        {/* Divider */}
-        <div className="w-px h-8 bg-gray-300" />
-
-        {/* Check-out Date */}
-        <div
-          className={`flex-1 px-6 py-3 transition-colors ${
-            focusedField === "checkOut" ? "bg-gray-50" : "hover:bg-gray-50"
-          }`}
-        >
-          <label htmlFor="checkOut" className="block text-xs font-semibold text-gray-900 mb-1">
-            체크아웃
-          </label>
-          <input
-            id="checkOut"
-            type="date"
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-            onFocus={() => setFocusedField("checkOut")}
-            onBlur={() => setFocusedField(null)}
-            onKeyDown={handleKeyDown}
-            className="w-full text-sm bg-transparent border-none outline-none text-gray-500"
           />
         </div>
 

@@ -39,7 +39,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Desktop: Search, Nav, Auth in one flex container */}
-          <div className="hidden lg:flex items-center gap-6 flex-1">
+          <div className="hidden md:flex items-center gap-4 flex-1">
             {/* Search Bar */}
             <div className="flex-1 max-w-md">
               <SearchBar
@@ -51,12 +51,24 @@ export function SiteHeader() {
             </div>
 
             {/* Navigation */}
-            <nav className="flex items-center gap-6 shrink-0">
+            <nav className="flex items-center gap-3 shrink-0">
               <Link
                 href="/explore"
                 className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
               >
                 숙소 둘러보기
+              </Link>
+              <Link
+                href="/recommendations"
+                className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+              >
+                추천
+              </Link>
+              <Link
+                href="/how-to-use"
+                className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+              >
+                이용방법
               </Link>
               <Link
                 href="/become-a-host"
@@ -107,7 +119,7 @@ export function SiteHeader() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
             aria-label="메뉴"
           >
             {mobileMenuOpen ? (
@@ -121,7 +133,7 @@ export function SiteHeader() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t bg-white">
+        <div className="md:hidden border-t bg-white">
           <nav className="container mx-auto px-4 py-4 space-y-3">
             <Link
               href="/explore"
@@ -129,6 +141,20 @@ export function SiteHeader() {
               onClick={() => setMobileMenuOpen(false)}
             >
               숙소 둘러보기
+            </Link>
+            <Link
+              href="/recommendations"
+              className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              추천
+            </Link>
+            <Link
+              href="/how-to-use"
+              className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              이용방법
             </Link>
             <Link
               href="/become-a-host"
