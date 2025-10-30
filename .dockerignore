@@ -47,7 +47,6 @@ next-env.d.ts
 README.md
 
 # Docker
-Dockerfile
 .dockerignore
 
 # Documentation
