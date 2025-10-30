@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { PaymentStatus } from "@prisma/client";
 
 /**
  * POST /api/payments/confirm
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
             externalId: paymentKey,
             type: "PAYMENT",
             amount: payment.amount,
-            status: "SUCCESS",
+            status: PaymentStatus.DONE,
             method: "SIMULATED",
             metadata: {
               orderId,
@@ -143,7 +144,7 @@ export async function POST(request: NextRequest) {
           externalId: tossData.transactionKey || paymentKey,
           type: "PAYMENT",
           amount: payment.amount,
-          status: "SUCCESS",
+          status: PaymentStatus.DONE,
           method: tossData.method || "UNKNOWN",
           metadata: tossData,
         },

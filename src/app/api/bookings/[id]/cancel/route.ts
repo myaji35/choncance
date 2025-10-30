@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingCancelled } from "@/lib/notifications";
+import { PaymentStatus } from "@prisma/client";
 
 /**
  * Calculate cancellation policy
@@ -175,7 +176,7 @@ export async function PATCH(
             externalId: `REFUND-${Date.now()}`,
             type: "REFUND",
             amount: refundAmount,
-            status: "SUCCESS",
+            status: PaymentStatus.DONE,
             method: booking.payment.paymentMethod || "GUEST_CANCEL",
             metadata: {
               reason,

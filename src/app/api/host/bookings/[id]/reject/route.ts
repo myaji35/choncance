@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingRejected } from "@/lib/notifications";
+import { PaymentStatus } from "@prisma/client";
 
 /**
  * PATCH /api/host/bookings/:id/reject
@@ -114,7 +115,7 @@ export async function PATCH(
               paymentId: booking.payment.id,
               type: "REFUND",
               amount: booking.totalAmount,
-              status: "SUCCESS",
+              status: PaymentStatus.DONE,
               method: "DEVELOPMENT_MODE",
             },
           });
@@ -156,7 +157,7 @@ export async function PATCH(
               paymentId: booking.payment.id,
               type: "REFUND",
               amount: booking.totalAmount,
-              status: "SUCCESS",
+              status: PaymentStatus.DONE,
               method: booking.payment.paymentMethod || "HOST_REJECT",
             },
           });

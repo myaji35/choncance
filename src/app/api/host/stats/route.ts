@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { BookingStatus } from "@prisma/client";
+import { BookingStatus, PaymentStatus } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
         (b) =>
           (b.status === BookingStatus.CONFIRMED ||
             b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === "SUCCESS"
+          b.payment?.status === PaymentStatus.DONE
       )
       .reduce((sum, b) => {
         const amount =
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
         (b) =>
           (b.status === BookingStatus.CONFIRMED ||
             b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === "SUCCESS"
+          b.payment?.status === PaymentStatus.DONE
       )
       .reduce((acc, b) => {
         const date = b.createdAt.toISOString().split("T")[0];
@@ -220,7 +220,7 @@ export async function GET(request: NextRequest) {
         (b) =>
           (b.status === BookingStatus.CONFIRMED ||
             b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === "SUCCESS"
+          b.payment?.status === PaymentStatus.DONE
       )
       .reduce((sum, b) => {
         const amount =
