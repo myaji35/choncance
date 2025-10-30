@@ -19,7 +19,8 @@ export async function GET() {
             tags: true,
             host: {
               select: {
-                businessName: true,
+                businessNumber: true,
+                contact: true,
               },
             },
             _count: {
