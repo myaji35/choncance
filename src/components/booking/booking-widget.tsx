@@ -10,14 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Calendar as CalendarIcon, Users } from "lucide-react";
+import { Calendar as CalendarIcon, Users, Minus, Plus } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { ko } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
@@ -110,15 +103,6 @@ export function BookingWidget({
     }
   };
 
-  const handleGuestsChange = (value: string) => {
-    const guestCount = parseInt(value);
-    setGuests(guestCount);
-
-    if (dateRange?.from && dateRange?.to) {
-      checkAvailability(dateRange.from, dateRange.to, guestCount);
-    }
-  };
-
   const handleReserve = () => {
     if (!dateRange?.from || !dateRange?.to || !priceBreakdown) {
       return;
@@ -193,23 +177,45 @@ export function BookingWidget({
         {/* Guests Selector */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">게스트</label>
-          <Select value={guests.toString()} onValueChange={handleGuestsChange}>
-            <SelectTrigger>
-              <SelectValue>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span>게스트 {guests}명</span>
-                </div>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: maxGuests }, (_, i) => i + 1).map((count) => (
-                <SelectItem key={count} value={count.toString()}>
-                  게스트 {count}명
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex items-center justify-between border rounded-lg p-3">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-gray-500" />
+              <span className="text-sm">게스트 {guests}명</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => {
+                  const newGuests = Math.max(1, guests - 1);
+                  setGuests(newGuests);
+                  if (dateRange?.from && dateRange?.to) {
+                    checkAvailability(dateRange.from, dateRange.to, newGuests);
+                  }
+                }}
+                disabled={guests <= 1}
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => {
+                  const newGuests = Math.min(maxGuests, guests + 1);
+                  setGuests(newGuests);
+                  if (dateRange?.from && dateRange?.to) {
+                    checkAvailability(dateRange.from, dateRange.to, newGuests);
+                  }
+                }}
+                disabled={guests >= maxGuests}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <p className="text-xs text-gray-500">최대 {maxGuests}명까지 가능</p>
         </div>
 
         {/* Availability Check Status */}
