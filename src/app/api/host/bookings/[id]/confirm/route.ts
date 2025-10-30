@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { notifyBookingConfirmed } from "@/lib/notifications";
 
 /**
  * PATCH /api/host/bookings/:id/confirm
@@ -79,7 +80,17 @@ export async function PATCH(
       },
     });
 
-    // TODO: Send confirmation email to guest
+    // Send notification to guest
+    try {
+      await notifyBookingConfirmed(
+        booking.userId,
+        booking.id,
+        booking.property.name
+      );
+    } catch (error) {
+      console.error("Failed to send notification:", error);
+      // Don't fail the request if notification fails
+    }
 
     return NextResponse.json({ booking: updatedBooking });
   } catch (error) {

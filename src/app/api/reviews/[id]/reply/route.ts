@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { notifyHostReply } from "@/lib/notifications";
 
 /**
  * POST /api/reviews/:id/reply
@@ -77,6 +78,18 @@ export async function POST(
         },
       },
     });
+
+    // Send notification to review author
+    try {
+      await notifyHostReply(
+        review.userId,
+        review.propertyId,
+        review.property.name
+      );
+    } catch (error) {
+      console.error("Failed to send notification:", error);
+      // Don't fail the request if notification fails
+    }
 
     return NextResponse.json({ review: updatedReview });
   } catch (error) {

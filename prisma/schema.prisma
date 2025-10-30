@@ -54,6 +54,7 @@ model User {
   bookings      Booking[]
   wishlists     Wishlist[]
   reviews       Review[]
+  notifications Notification[]
 }
 
 model HostProfile {
@@ -553,4 +554,38 @@ model Review {
   @@index([propertyId])
   @@index([userId])
   @@index([rating])
+}
+
+// ============================================
+// Notification Model
+// ============================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      NotificationType
+  title     String
+  message   String   @db.Text
+  link      String?  // Optional link to related resource
+
+  read      Boolean  @default(false)
+  readAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_REJECTED
+  BOOKING_CANCELLED
+  REVIEW_RECEIVED
+  HOST_REPLY
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
 }

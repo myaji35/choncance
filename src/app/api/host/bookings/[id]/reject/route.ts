@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { notifyBookingRejected } from "@/lib/notifications";
 
 /**
  * PATCH /api/host/bookings/:id/reject
@@ -165,7 +166,17 @@ export async function PATCH(
       return updated;
     });
 
-    // TODO: Send rejection notification email to guest
+    // Send notification to guest
+    try {
+      await notifyBookingRejected(
+        booking.userId,
+        booking.id,
+        booking.property.name
+      );
+    } catch (error) {
+      console.error("Failed to send notification:", error);
+      // Don't fail the request if notification fails
+    }
 
     return NextResponse.json({ booking: updatedBooking });
   } catch (error) {

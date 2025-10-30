@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
+import { NotificationButton } from "@/components/notifications/notification-button";
 import { useRouter, usePathname } from "next/navigation";
 
 export function SiteHeader() {
@@ -76,6 +77,7 @@ export function SiteHeader() {
             </SignedOut>
 
             <SignedIn>
+              <NotificationButton />
               <Link href="/bookings">
                 <Button variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                   내 예약

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { notifyBookingCancelled } from "@/lib/notifications";
 
 /**
  * Calculate cancellation policy
@@ -104,6 +105,16 @@ export async function PATCH(
       },
       include: {
         payment: true,
+        property: {
+          select: {
+            name: true,
+            host: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -177,6 +188,18 @@ export async function PATCH(
 
       return { updatedBooking, updatedPayment };
     });
+
+    // Send notification to host
+    try {
+      await notifyBookingCancelled(
+        booking.property.host.userId,
+        booking.id,
+        booking.property.name
+      );
+    } catch (error) {
+      console.error("Failed to send notification:", error);
+      // Don't fail the request if notification fails
+    }
 
     // Request refund from Toss Payments (outside transaction)
     if (
