@@ -27,10 +27,6 @@ export default async function HostPropertiesPage() {
   const properties = await prisma.property.findMany({
     where: { hostId: hostProfile.id },
     include: {
-      images: {
-        orderBy: { order: "asc" },
-        take: 1,
-      },
       _count: {
         select: {
           bookings: true,
@@ -88,9 +84,9 @@ export default async function HostPropertiesPage() {
             <Card key={property.id} className="overflow-hidden">
               {/* Property Image */}
               <div className="relative h-48 bg-gray-200">
-                {property.images[0] ? (
+                {property.thumbnailUrl || property.images[0] ? (
                   <Image
-                    src={property.images[0].url}
+                    src={property.thumbnailUrl || property.images[0]}
                     alt={property.name}
                     fill
                     className="object-cover"
@@ -104,12 +100,18 @@ export default async function HostPropertiesPage() {
                 <div className="absolute top-3 right-3">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      property.isActive
+                      property.status === "APPROVED"
                         ? "bg-green-100 text-green-800"
+                        : property.status === "PENDING"
+                        ? "bg-yellow-100 text-yellow-800"
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    {property.isActive ? "활성" : "비활성"}
+                    {property.status === "APPROVED"
+                      ? "활성"
+                      : property.status === "PENDING"
+                      ? "검토중"
+                      : "비활성"}
                   </span>
                 </div>
               </div>

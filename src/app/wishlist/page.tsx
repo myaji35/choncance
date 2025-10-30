@@ -24,7 +24,7 @@ export default async function WishlistPage() {
           tags: true,
           host: {
             select: {
-              businessName: true,
+              businessNumber: true,
             },
           },
           reviews: {

@@ -24,7 +24,7 @@ echo "☁️  Cloud Build로 빌드 및 배포 중..."
 echo "   (GCP Cloud SQL PostgreSQL 사용)"
 
 # Cloud SQL 연결 이름 가져오기
-INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe choncance-db --format='value(connectionName)')
+INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe marketsphere-db --format='value(connectionName)')
 echo "   Cloud SQL: $INSTANCE_CONNECTION_NAME"
 
 gcloud run deploy $SERVICE_NAME \
