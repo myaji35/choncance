@@ -38,15 +38,15 @@ export function ReviewDialog({
         {trigger || (
           <Button>
             <Star className="w-4 h-4 mr-2" />
-            �� �1X0
+            리뷰 작성
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>�� �1</DialogTitle>
+          <DialogTitle>리뷰 작성</DialogTitle>
           <DialogDescription>
-             ��D � X� �x ����Ќ ��D �8�
+            숙소에 대한 경험을 공유해주세요
           </DialogDescription>
         </DialogHeader>
         <ReviewForm
