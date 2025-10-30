@@ -19,6 +19,7 @@ import {
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
+import { ReviewDialog } from "@/components/review/review-dialog";
 
 interface BookingDetailPageProps {
   params: Promise<{ id: string }>;
@@ -534,9 +535,12 @@ export default async function BookingDetailPage({
                   <p className="text-sm text-gray-600 mb-4">
                     숙박 경험은 어떠셨나요? 리뷰를 남겨주세요!
                   </p>
-                  <Link href={`/property/${booking.property.id}?writeReview=true&bookingId=${booking.id}`}>
-                    <Button className="w-full">리뷰 작성하기</Button>
-                  </Link>
+                  <ReviewDialog
+                    bookingId={booking.id}
+                    propertyId={booking.property.id}
+                    propertyName={booking.property.name}
+                    trigger={<Button className="w-full">리뷰 작성하기</Button>}
+                  />
                 </CardContent>
               </Card>
             )}

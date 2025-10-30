@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Star, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import { HostReplyForm } from "./host-reply-form";
 
 interface ReviewCardProps {
   review: {
@@ -24,10 +27,12 @@ interface ReviewCardProps {
   property?: {
     name: string;
   };
+  isHost?: boolean;
 }
 
-export function ReviewCard({ review, showProperty = false, property }: ReviewCardProps) {
+export function ReviewCard({ review, showProperty = false, property, isHost = false }: ReviewCardProps) {
   const createdDate = new Date(review.createdAt);
+  const [showReplyForm, setShowReplyForm] = useState(false);
 
   return (
     <Card>
@@ -107,7 +112,7 @@ export function ReviewCard({ review, showProperty = false, property }: ReviewCar
         )}
 
         {/* Host Reply */}
-        {review.hostReply && (
+        {review.hostReply ? (
           <div className="mt-4 pl-4 border-l-2 border-green-500 bg-green-50 p-4 rounded-r-lg">
             <div className="flex items-center gap-2 mb-2">
               <p className="text-sm font-semibold text-gray-900">
@@ -123,6 +128,32 @@ export function ReviewCard({ review, showProperty = false, property }: ReviewCar
               {review.hostReply}
             </p>
           </div>
+        ) : (
+          isHost && (
+            <div className="mt-4">
+              {showReplyForm ? (
+                <div className="pl-4 border-l-2 border-gray-300 bg-gray-50 p-4 rounded-r-lg">
+                  <p className="text-sm font-semibold text-gray-900 mb-3">
+                    호스트 답변 작성
+                  </p>
+                  <HostReplyForm
+                    reviewId={review.id}
+                    onSuccess={() => setShowReplyForm(false)}
+                    onCancel={() => setShowReplyForm(false)}
+                  />
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowReplyForm(true)}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  답변 달기
+                </Button>
+              )}
+            </div>
+          )
         )}
       </CardContent>
     </Card>
