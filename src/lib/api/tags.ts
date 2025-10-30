@@ -3,7 +3,20 @@
  */
 import type { Tag, TagCategory } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window === 'undefined' ? 'http://localhost:3000/api' : '/api');
+// Determine base URL based on environment
+function getBaseUrl() {
+  // Browser
+  if (typeof window !== 'undefined') return '';
+
+  // Server-side with custom URL
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+
+  // Vercel/Production
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+
+  // Local development
+  return 'http://localhost:3000';
+}
 
 export interface TagListResponse {
   tags: Tag[];
@@ -15,7 +28,8 @@ export interface TagListResponse {
  * @returns List of tags
  */
 export async function getTags(category?: TagCategory): Promise<Tag[]> {
-  const url = new URL(`${API_BASE_URL}/tags`);
+  const baseUrl = getBaseUrl();
+  const url = new URL('/api/tags', baseUrl);
 
   if (category) {
     url.searchParams.append("category", category);

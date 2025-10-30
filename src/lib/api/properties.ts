@@ -42,7 +42,20 @@ export interface Property {
   updatedAt: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window === 'undefined' ? 'http://localhost:3000' : '');
+// Determine base URL based on environment
+function getBaseUrl() {
+  // Browser
+  if (typeof window !== 'undefined') return '';
+
+  // Server-side with custom URL
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+
+  // Vercel/Production
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+
+  // Local development
+  return 'http://localhost:3000';
+}
 
 export interface PropertyListResponse {
   properties: Property[];
@@ -54,7 +67,8 @@ export interface PropertyListResponse {
  * @returns List of properties
  */
 export async function getProperties(tags?: string[]): Promise<Property[]> {
-  const url = new URL(`${API_BASE_URL}/api/properties`);
+  const baseUrl = getBaseUrl();
+  const url = new URL('/api/properties', baseUrl);
 
   if (tags && tags.length > 0) {
     url.searchParams.append("tags", tags.join(","));
@@ -88,7 +102,10 @@ export async function getPropertiesByTagName(tagName: string): Promise<Property[
  * Fetch single property by ID
  */
 export async function getPropertyById(id: string): Promise<Property> {
-  const response = await fetch(`${API_BASE_URL}/api/properties/${id}`, {
+  const baseUrl = getBaseUrl();
+  const url = new URL(`/api/properties/${id}`, baseUrl);
+
+  const response = await fetch(url.toString(), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
