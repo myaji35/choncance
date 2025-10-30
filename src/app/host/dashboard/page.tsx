@@ -210,7 +210,9 @@ export default async function HostDashboardPage() {
                       : "거부됨"}
                   </p>
                 </div>
-                <Button variant="outline">프로필 수정</Button>
+                <Link href="/host/profile/edit">
+                  <Button variant="outline">프로필 수정</Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
