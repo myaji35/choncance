@@ -79,7 +79,7 @@ export function SiteHeader() {
             <SignedIn>
               <NotificationButton />
               <Link href="/bookings">
-                <Button variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-50">
+                <Button variant="outline" size="sm" className="border-gray-300 bg-white text-gray-900 hover:bg-gray-50 hover:text-primary">
                   내 예약
                 </Button>
               </Link>
