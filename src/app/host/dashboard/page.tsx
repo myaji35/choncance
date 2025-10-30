@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { Plus, Home, Calendar, Settings } from "lucide-react";
+import { Plus, Home, Calendar, Settings, BarChart3 } from "lucide-react";
 import { PropertyListTable } from "@/components/host/property-list-table";
 import { BookingListTable } from "@/components/host/booking-list-table";
 import { DashboardStats } from "@/components/host/dashboard-stats";
@@ -107,12 +107,20 @@ export default async function HostDashboardPage() {
             환영합니다, {user.name || user.email}님
           </p>
         </div>
-        <Link href="/host/properties/new">
-          <Button size="lg">
-            <Plus className="mr-2 h-4 w-4" />
-            숙소 등록하기
-          </Button>
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/host/stats">
+            <Button size="lg" variant="outline">
+              <BarChart3 className="mr-2 h-4 w-4" />
+              통계 보기
+            </Button>
+          </Link>
+          <Link href="/host/properties/new">
+            <Button size="lg">
+              <Plus className="mr-2 h-4 w-4" />
+              숙소 등록하기
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}
