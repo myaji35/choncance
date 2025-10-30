@@ -3,7 +3,7 @@
  */
 import type { Tag, TagCategory } from "@/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (typeof window === 'undefined' ? 'http://localhost:3000/api' : '/api');
 
 export interface TagListResponse {
   tags: Tag[];
