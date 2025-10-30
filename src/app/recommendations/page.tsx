@@ -15,7 +15,7 @@ async function getRecommendations() {
       where: { status: "APPROVED" },
       include: {
         host: { select: { user: { select: { name: true } } } },
-        tags: { include: { tag: true } },
+        tags: true,
         _count: { select: { bookings: true, reviews: true } },
       },
       orderBy: { bookings: { _count: "desc" } },
@@ -178,16 +178,16 @@ export default async function RecommendationsPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {property.tags.slice(0, 3).map((pt) => (
-                        <Badge key={pt.tagId} variant="outline" className="text-xs">
-                          {pt.tag.name}
+                      {property.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag.id} variant="outline" className="text-xs">
+                          {tag.name}
                         </Badge>
                       ))}
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-lg font-bold text-primary">
-                          {property.basePrice.toLocaleString()}원
+                          {Number(property.pricePerNight).toLocaleString()}원
                         </span>
                         <span className="text-sm text-gray-500"> / 박</span>
                       </div>
