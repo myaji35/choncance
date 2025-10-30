@@ -23,9 +23,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 relative">
+          <Link href="/" className="flex items-center gap-2 relative shrink-0">
             <Image
               src="/choncance-logo.png"
               alt="촌캉스"
@@ -35,37 +35,39 @@ export function SiteHeader() {
               style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
               priority
             />
-            <span className="text-xl md:text-2xl font-bold text-primary">촌캉스</span>
+            <span className="text-xl md:text-2xl font-bold text-primary whitespace-nowrap">촌캉스</span>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:block flex-1 max-w-md mx-8">
-            <SearchBar
-              placeholder="어떤 쉼을 찾고 있나요?"
-              onSearch={(query) => {
-                router.push(`/explore?search=${encodeURIComponent(query)}`);
-              }}
-            />
-          </div>
+          {/* Desktop: Search, Nav, Auth in one flex container */}
+          <div className="hidden lg:flex items-center gap-6 flex-1">
+            {/* Search Bar */}
+            <div className="flex-1 max-w-md">
+              <SearchBar
+                placeholder="어떤 쉼을 찾고 있나요?"
+                onSearch={(query) => {
+                  router.push(`/explore?search=${encodeURIComponent(query)}`);
+                }}
+              />
+            </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              href="/explore"
-              className="text-sm font-medium text-gray-600 hover:text-primary transition-colors"
-            >
-              숙소 둘러보기
-            </Link>
-            <Link
-              href="/become-a-host"
-              className="text-sm font-medium text-gray-600 hover:text-primary transition-colors"
-            >
-              호스트 되기
-            </Link>
-          </nav>
+            {/* Navigation */}
+            <nav className="flex items-center gap-6 shrink-0">
+              <Link
+                href="/explore"
+                className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+              >
+                숙소 둘러보기
+              </Link>
+              <Link
+                href="/become-a-host"
+                className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+              >
+                호스트 되기
+              </Link>
+            </nav>
 
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-2 ml-4">
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-2 shrink-0">
             <SignedOut>
               <SignInButton mode="modal">
                 <Button variant="outline" size="sm" className="border-gray-300">
@@ -85,7 +87,7 @@ export function SiteHeader() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-2 border-gray-400 bg-white text-gray-900 font-medium hover:bg-primary hover:text-white hover:border-primary transition-all"
+                  className="border-2 border-gray-400 bg-white text-gray-900 font-medium hover:bg-primary hover:text-white hover:border-primary transition-all whitespace-nowrap"
                 >
                   내 예약
                 </Button>
@@ -99,12 +101,13 @@ export function SiteHeader() {
                 }}
               />
             </SignedIn>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
             aria-label="메뉴"
           >
             {mobileMenuOpen ? (
@@ -118,7 +121,7 @@ export function SiteHeader() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t bg-white">
+        <div className="lg:hidden border-t bg-white">
           <nav className="container mx-auto px-4 py-4 space-y-3">
             <Link
               href="/explore"
