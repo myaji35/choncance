@@ -7,6 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, TrendingUp, MapPin, Calendar, Star } from "lucide-react";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // 추천 카테고리별 데이터 가져오기
 async function getRecommendations() {
   const [popularProperties, viewTags, activityTags, facilityTags, vibeTags] = await Promise.all([
