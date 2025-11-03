@@ -22,6 +22,8 @@ RUN npx prisma generate
 # Build Next.js app with environment variables
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ
+# Set a dummy DATABASE_URL for build time (Prisma requires it)
+ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 RUN npm run build
 
 # Production image, copy all the files and run next
