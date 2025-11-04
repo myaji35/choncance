@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingConfirmed } from "@/lib/notifications";
+import { sendBookingConfirmedAlimtalk } from "@/lib/kakao-alimtalk";
+import { format } from "date-fns";
 
 /**
  * PATCH /api/host/bookings/:id/confirm
@@ -80,7 +82,13 @@ export async function PATCH(
       },
     });
 
-    // Send notification to guest
+    // Get user info for alimtalk
+    const user = await prisma.user.findUnique({
+      where: { id: booking.userId },
+      select: { name: true, phone: true },
+    });
+
+    // Send in-app notification to guest
     try {
       await notifyBookingConfirmed(
         booking.userId,
@@ -90,6 +98,24 @@ export async function PATCH(
     } catch (error) {
       console.error("Failed to send notification:", error);
       // Don't fail the request if notification fails
+    }
+
+    // Send AlimTalk (KakaoTalk) message to guest
+    if (user?.phone) {
+      try {
+        await sendBookingConfirmedAlimtalk(user.phone, {
+          guestName: user.name || "고객",
+          propertyName: booking.property.name,
+          checkIn: format(booking.checkIn, "yyyy년 M월 d일"),
+          checkOut: format(booking.checkOut, "yyyy년 M월 d일"),
+          guests: booking.guests,
+          totalAmount: Number(booking.totalAmount),
+          bookingId: booking.id,
+        });
+      } catch (error) {
+        console.error("Failed to send AlimTalk:", error);
+        // Don't fail the request if AlimTalk fails
+      }
     }
 
     return NextResponse.json({ booking: updatedBooking });

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { bookingId, rating, content, images } = body;
+    const { bookingId, rating, content, images, snsShareConsent = false } = body;
 
     // Validation
     if (!bookingId || !rating || !content) {
@@ -67,36 +67,66 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create review
-    const review = await prisma.review.create({
-      data: {
-        userId,
-        propertyId: booking.propertyId,
-        bookingId,
-        rating,
-        content,
-        images: images || [],
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
+    // Create review and award credits in a transaction
+    const review = await prisma.$transaction(async (tx) => {
+      // Create the review
+      const newReview = await tx.review.create({
+        data: {
+          userId,
+          propertyId: booking.propertyId,
+          bookingId,
+          rating,
+          content,
+          images: images || [],
+          snsShareConsent,
+          creditAwarded: snsShareConsent, // Award credits immediately if consent given
         },
-        property: {
-          select: {
-            id: true,
-            name: true,
-            host: {
-              select: {
-                userId: true,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+          property: {
+            select: {
+              id: true,
+              name: true,
+              host: {
+                select: {
+                  userId: true,
+                },
               },
             },
           },
         },
-      },
+      });
+
+      // Award 1000 credits if SNS consent is given
+      if (snsShareConsent) {
+        // Update user credits
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            credits: { increment: 1000 },
+            totalEarned: { increment: 1000 },
+          },
+        });
+
+        // Create credit history record
+        await tx.creditHistory.create({
+          data: {
+            userId,
+            amount: 1000,
+            type: "EARNED_REVIEW_SNS",
+            reviewId: newReview.id,
+            description: `SNS 공유 동의 리뷰 작성: ${newReview.property.name}`,
+          },
+        });
+      }
+
+      return newReview;
     });
 
     // Send notification to property host
@@ -112,7 +142,11 @@ export async function POST(request: NextRequest) {
       // Don't fail the request if notification fails
     }
 
-    return NextResponse.json({ review }, { status: 201 });
+    return NextResponse.json({
+      review,
+      creditsAwarded: snsShareConsent ? 1000 : 0,
+      message: snsShareConsent ? "리뷰가 작성되었고 1000 크레딧이 지급되었습니다." : "리뷰가 작성되었습니다."
+    }, { status: 201 });
   } catch (error) {
     console.error("Create review error:", error);
     return NextResponse.json(

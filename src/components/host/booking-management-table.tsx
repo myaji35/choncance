@@ -208,7 +208,7 @@ export function BookingManagementTable({
                     </TableCell>
                     <TableCell>{booking.guests}명</TableCell>
                     <TableCell>
-                      ₩{(typeof booking.totalAmount === 'number' ? booking.totalAmount : booking.totalAmount.toNumber()).toLocaleString()}
+                      ₩{Number(booking.totalAmount).toLocaleString()}
                     </TableCell>
                     <TableCell>
                       <Badge

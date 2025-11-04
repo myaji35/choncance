@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { createBookingCard } from "@/lib/trello/booking-sync";
 
 /**
  * POST /api/bookings
@@ -148,22 +147,6 @@ export async function POST(request: NextRequest) {
       });
 
       return { booking, payment };
-    });
-
-    // Trello 카드 생성 (비동기, 실패해도 예약은 정상 처리)
-    createBookingCard({
-      id: result.booking.id,
-      propertyName: property.name,
-      guestName: guestInfo.name,
-      guestEmail: guestInfo.email,
-      checkIn,
-      checkOut,
-      guests,
-      totalAmount,
-      status: result.booking.status,
-    }).catch((error) => {
-      console.error("Trello sync failed:", error);
-      // 에러가 나도 예약은 정상 처리
     });
 
     // TODO: Generate Toss Payments checkout URL

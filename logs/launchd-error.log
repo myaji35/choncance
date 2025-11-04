@@ -1,0 +1,2 @@
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: Operation not permitted
+/bin/bash: /Users/gangseungsig/Documents/GitHub/choncance/scripts/auto-deploy-10pm.sh: Operation not permitted

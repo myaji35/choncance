@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
 import { ReviewDialog } from "@/components/review/review-dialog";
+import { RefundDialog } from "@/components/payments/refund-dialog";
 
 interface BookingDetailPageProps {
   params: Promise<{ id: string }>;
@@ -522,6 +523,28 @@ export default async function BookingDetailPage({
                     )}
                   </div>
                 )}
+
+                {/* Cancellation Button */}
+                {booking.payment &&
+                  booking.payment.status === "DONE" &&
+                  (booking.status === "CONFIRMED" || booking.status === "PENDING") &&
+                  new Date(booking.checkIn) > new Date() && (
+                    <div className="mt-4 pt-4 border-t">
+                      <RefundDialog
+                        paymentId={booking.payment.id}
+                        amount={
+                          typeof booking.totalAmount === "number"
+                            ? booking.totalAmount
+                            : booking.totalAmount.toNumber()
+                        }
+                        trigger={
+                          <Button variant="destructive" className="w-full">
+                            예약 취소
+                          </Button>
+                        }
+                      />
+                    </div>
+                  )}
               </CardContent>
             </Card>
 

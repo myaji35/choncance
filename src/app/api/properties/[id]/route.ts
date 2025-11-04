@@ -38,7 +38,13 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ property });
+    // Convert Decimal to Number for JSON serialization
+    const serializedProperty = {
+      ...property,
+      pricePerNight: Number(property.pricePerNight),
+    };
+
+    return NextResponse.json({ property: serializedProperty });
   } catch (error) {
     console.error("숙소 조회 오류:", error);
     return NextResponse.json(

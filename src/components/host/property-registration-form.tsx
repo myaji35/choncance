@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Upload, X, Star } from "lucide-react";
+import Image from "next/image";
 import type { Tag, TagCategory } from "@/types";
 
 interface PropertyRegistrationFormProps {
@@ -18,6 +20,9 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [thumbnailIndex, setThumbnailIndex] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -27,6 +32,8 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
     province: "",
     city: "",
     pricePerNight: "",
+    discountRate: "",
+    discountedPrice: "",
     maxGuests: "2",
     allowsPets: false,
     amenities: [] as string[],
@@ -36,8 +43,6 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
     maxNights: "30",
     hostStory: "",
     rules: "",
-    images: "",
-    thumbnailUrl: "",
     selectedTags: [] as string[],
   });
 
@@ -61,10 +66,13 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
         body: JSON.stringify({
           ...formData,
           pricePerNight: parseFloat(formData.pricePerNight),
+          discountRate: formData.discountRate ? parseInt(formData.discountRate) : null,
+          discountedPrice: formData.discountedPrice ? parseFloat(formData.discountedPrice) : null,
           maxGuests: parseInt(formData.maxGuests),
           minNights: parseInt(formData.minNights),
           maxNights: parseInt(formData.maxNights),
-          images: formData.images ? formData.images.split(",").map((url) => url.trim()) : [],
+          images: uploadedImages,
+          thumbnailUrl: uploadedImages[thumbnailIndex] || uploadedImages[0] || null,
           amenities: formData.amenities,
           tags: formData.selectedTags,
         }),
@@ -92,6 +100,52 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
         ? prev.selectedTags.filter((t) => t !== tagName)
         : [...prev.selectedTags, tagName],
     }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "파일 업로드에 실패했습니다");
+      }
+
+      setUploadedImages((prev) => [...prev, ...data.urls]);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsUploading(false);
+      // Reset input
+      e.target.value = "";
+    }
+  };
+
+  const handleImageRemove = (index: number) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    // Adjust thumbnail index if needed
+    if (thumbnailIndex >= uploadedImages.length - 1) {
+      setThumbnailIndex(Math.max(0, uploadedImages.length - 2));
+    }
+  };
+
+  const handleSetThumbnail = (index: number) => {
+    setThumbnailIndex(index);
   };
 
   const amenityOptions = [
@@ -221,6 +275,42 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
               placeholder="예: 150000"
               required
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="discountRate">할인율 (%)</Label>
+              <Input
+                id="discountRate"
+                type="number"
+                value={formData.discountRate}
+                onChange={(e) => {
+                  const rate = e.target.value;
+                  setFormData({ ...formData, discountRate: rate });
+                  // Auto-calculate discounted price
+                  if (rate && formData.pricePerNight) {
+                    const discounted = parseFloat(formData.pricePerNight) * (1 - parseInt(rate) / 100);
+                    setFormData(prev => ({ ...prev, discountedPrice: discounted.toString() }));
+                  }
+                }}
+                placeholder="예: 20"
+                min="0"
+                max="100"
+              />
+              <p className="text-xs text-gray-500">선택사항: 할인을 적용하려면 입력하세요</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="discountedPrice">할인가 (원)</Label>
+              <Input
+                id="discountedPrice"
+                type="number"
+                value={formData.discountedPrice}
+                onChange={(e) => setFormData({ ...formData, discountedPrice: e.target.value })}
+                placeholder="자동 계산됨"
+              />
+              <p className="text-xs text-gray-500">할인율 입력 시 자동 계산</p>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -373,26 +463,97 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
           <CardTitle>이미지</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Upload Button */}
           <div className="space-y-2">
-            <Label htmlFor="thumbnailUrl">대표 이미지 URL</Label>
-            <Input
-              id="thumbnailUrl"
-              value={formData.thumbnailUrl}
-              onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-              placeholder="https://example.com/image.jpg"
-            />
+            <Label htmlFor="image-upload">숙소 이미지 업로드</Label>
+            <div className="flex items-center gap-3">
+              <Input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                disabled={isUploading}
+                className="hidden"
+              />
+              <Label
+                htmlFor="image-upload"
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md cursor-pointer hover:bg-primary/90 transition-colors"
+              >
+                <Upload className="w-4 h-4" />
+                {isUploading ? "업로드 중..." : "이미지 선택"}
+              </Label>
+              <span className="text-sm text-gray-500">
+                {uploadedImages.length}개 이미지 업로드됨
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              JPG, PNG, WebP 형식 지원. 여러 이미지를 한번에 선택할 수 있습니다.
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="images">추가 이미지 URL (쉼표로 구분)</Label>
-            <Textarea
-              id="images"
-              value={formData.images}
-              onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-              placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-              rows={3}
-            />
-          </div>
+          {/* Image Preview Grid */}
+          {uploadedImages.length > 0 && (
+            <div className="space-y-2">
+              <Label>업로드된 이미지</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {uploadedImages.map((url, index) => (
+                  <div
+                    key={index}
+                    className={`relative group rounded-lg overflow-hidden border-2 ${
+                      thumbnailIndex === index
+                        ? "border-primary ring-2 ring-primary ring-offset-2"
+                        : "border-gray-200"
+                    }`}
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-video bg-gray-100">
+                      <Image
+                        src={url}
+                        alt={`업로드 이미지 ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* Overlay Actions */}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => handleSetThumbnail(index)}
+                        className="gap-1"
+                      >
+                        <Star
+                          className={`w-3 h-3 ${
+                            thumbnailIndex === index ? "fill-yellow-400 text-yellow-400" : ""
+                          }`}
+                        />
+                        대표
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleImageRemove(index)}
+                      >
+                        <X className="w-3 h-3" />
+                      </Button>
+                    </div>
+
+                    {/* Thumbnail Badge */}
+                    {thumbnailIndex === index && (
+                      <div className="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-white" />
+                        대표 이미지
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

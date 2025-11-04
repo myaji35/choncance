@@ -5,27 +5,26 @@ interface TagSectionProps {
   title: string;
   description?: string;
   tags: Tag[];
-  onTagClick?: (tag: Tag) => void;
 }
 
 /**
  * TagSection component - displays a section of tags with title
  * Server Component
  */
-export function TagSection({ title, description, tags, onTagClick }: TagSectionProps) {
+export function TagSection({ title, description, tags }: TagSectionProps) {
   if (tags.length === 0) {
     return null;
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-3 sm:space-y-4 px-2 sm:px-0">
       <div>
-        <h3 className="text-2xl font-light text-gray-800 dark:text-gray-100">{title}</h3>
+        <h3 className="text-lg sm:text-xl md:text-2xl font-light text-gray-800 dark:text-gray-100">{title}</h3>
         {description && (
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{description}</p>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">{description}</p>
         )}
       </div>
-      <TagList tags={tags} onTagClick={onTagClick} />
+      <TagList tags={tags} />
     </section>
   );
 }
@@ -52,13 +51,12 @@ const CATEGORY_LABELS: Record<TagCategory, { title: string; description: string 
 interface TagCategorySectionProps {
   category: TagCategory;
   tags: Tag[];
-  onTagClick?: (tag: Tag) => void;
 }
 
 /**
  * TagCategorySection - displays tags for a specific category
  */
-export function TagCategorySection({ category, tags, onTagClick }: TagCategorySectionProps) {
+export function TagCategorySection({ category, tags }: TagCategorySectionProps) {
   const { title, description } = CATEGORY_LABELS[category];
 
   return (
@@ -66,7 +64,6 @@ export function TagCategorySection({ category, tags, onTagClick }: TagCategorySe
       title={title}
       description={description}
       tags={tags}
-      onTagClick={onTagClick}
     />
   );
 }

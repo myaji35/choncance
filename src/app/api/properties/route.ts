@@ -172,7 +172,13 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ properties });
+    // Convert Decimal to Number for JSON serialization
+    const serializedProperties = properties.map(property => ({
+      ...property,
+      pricePerNight: Number(property.pricePerNight),
+    }));
+
+    return NextResponse.json({ properties: serializedProperties });
   } catch (error) {
     console.error("숙소 조회 오류:", error);
     return NextResponse.json(

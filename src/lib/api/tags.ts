@@ -5,17 +5,24 @@ import type { Tag, TagCategory } from "@/types";
 
 // Determine base URL based on environment
 function getBaseUrl() {
-  // Browser
-  if (typeof window !== 'undefined') return '';
+  // Browser - use relative URLs
+  if (typeof window !== 'undefined') {
+    return '';
+  }
 
   // Server-side with custom URL
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
 
   // Vercel/Production
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
 
-  // Local development
-  return 'http://localhost:3000';
+  // Local development - check PORT env or default to 3010
+  const port = process.env.PORT || '3010';
+  return `http://localhost:${port}`;
 }
 
 export interface TagListResponse {

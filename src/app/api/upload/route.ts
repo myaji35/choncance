@@ -1,139 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { uploadImage, uploadImages, isValidImageFile, isValidFileSize } from "@/lib/storage";
+import { writeFile, mkdir } from "fs/promises";
+import { join } from "path";
+import { existsSync } from "fs";
+import { optimizeImageWithAI } from "@/lib/image-optimizer";
 
-/**
- * POST /api/upload
- * 이미지 업로드 API
- *
- * Form Data:
- * - file: File (단일 파일) 또는 files: File[] (다중 파일)
- * - folder: string (저장할 폴더, 기본값: 'uploads')
- */
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // FormData 파싱
     const formData = await request.formData();
-    const folder = (formData.get("folder") as string) || "uploads";
-
-    // 단일 파일 업로드
-    const file = formData.get("file") as File | null;
-    if (file) {
-      return await handleSingleUpload(file, folder);
-    }
-
-    // 다중 파일 업로드
     const files = formData.getAll("files") as File[];
-    if (files.length > 0) {
-      return await handleMultipleUpload(files, folder);
-    }
 
-    return NextResponse.json(
-      { error: "No file(s) provided" },
-      { status: 400 }
-    );
-  } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-async function handleSingleUpload(file: File, folder: string) {
-  try {
-    // 파일 검증
-    if (!isValidImageFile(file.name)) {
+    if (!files || files.length === 0) {
       return NextResponse.json(
-        { error: "Invalid file type. Only images are allowed." },
+        { error: "파일이 없습니다" },
         { status: 400 }
       );
     }
 
-    if (!isValidFileSize(file.size)) {
-      return NextResponse.json(
-        { error: "File size exceeds 5MB limit" },
-        { status: 400 }
-      );
-    }
-
-    // File을 Buffer로 변환
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Cloud Storage에 업로드
-    const url = await uploadImage(buffer, folder, file.name);
-
-    return NextResponse.json({
-      success: true,
-      url,
-      fileName: file.name,
-    });
-  } catch (error) {
-    console.error("Single upload error:", error);
-    return NextResponse.json(
-      { error: "Failed to upload image" },
-      { status: 500 }
-    );
-  }
-}
-
-async function handleMultipleUpload(files: File[], folder: string) {
-  try {
-    // 최대 10개 파일 제한
-    if (files.length > 10) {
-      return NextResponse.json(
-        { error: "Maximum 10 files can be uploaded at once" },
-        { status: 400 }
-      );
-    }
-
-    // 모든 파일 검증
+    // Validate file types
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/svg+xml"];
     for (const file of files) {
-      if (!isValidImageFile(file.name)) {
+      if (!allowedTypes.includes(file.type)) {
         return NextResponse.json(
-          { error: `Invalid file type: ${file.name}. Only images are allowed.` },
-          { status: 400 }
-        );
-      }
-
-      if (!isValidFileSize(file.size)) {
-        return NextResponse.json(
-          { error: `File size exceeds 5MB limit: ${file.name}` },
+          { error: `지원하지 않는 파일 형식입니다: ${file.type}` },
           { status: 400 }
         );
       }
     }
 
-    // 모든 파일을 Buffer로 변환
-    const buffers = await Promise.all(
-      files.map(async (file) => {
-        const bytes = await file.arrayBuffer();
-        return Buffer.from(bytes);
-      })
-    );
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = join(process.cwd(), "public", "uploads");
+    if (!existsSync(uploadsDir)) {
+      await mkdir(uploadsDir, { recursive: true });
+    }
 
-    const fileNames = files.map((file) => file.name);
+    const uploadedUrls: string[] = [];
 
-    // Cloud Storage에 업로드
-    const urls = await uploadImages(buffers, folder, fileNames);
+    for (const file of files) {
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
 
-    return NextResponse.json({
-      success: true,
-      urls,
-      fileNames,
-    });
+      // Optimize image with Gemini AI
+      console.log(`[Upload API] Processing: ${file.name}`);
+      const optimized = await optimizeImageWithAI(buffer, file.name);
+
+      // Generate unique filename with optimized format
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(2, 15);
+      const filename = `${timestamp}-${randomString}.${optimized.format}`;
+
+      // Save optimized file
+      const filepath = join(uploadsDir, filename);
+      await writeFile(filepath, optimized.buffer);
+
+      console.log(`[Upload API] Saved: ${filename} (${optimized.width}x${optimized.height})`);
+
+      // Return public URL
+      uploadedUrls.push(`/uploads/${filename}`);
+    }
+
+    return NextResponse.json({ urls: uploadedUrls });
   } catch (error) {
-    console.error("Multiple upload error:", error);
+    console.error("파일 업로드 오류:", error);
     return NextResponse.json(
-      { error: "Failed to upload images" },
+      { error: "파일 업로드에 실패했습니다" },
       { status: 500 }
     );
   }

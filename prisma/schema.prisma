@@ -49,12 +49,18 @@ model User {
   kakaoId       String?   @unique
   provider      String?   @default("email")
   role          Role      @default(USER)
+
+  // Credit System
+  credits       Int       @default(0) // 사용 가능한 크레딧
+  totalEarned   Int       @default(0) // 누적 획득 크레딧
+
   hostProfile   HostProfile?
   pmProjects    PMProject[]
   bookings      Booking[]
   wishlists     Wishlist[]
   reviews       Review[]
   notifications Notification[]
+  creditHistory CreditHistory[]
 }
 
 model HostProfile {
@@ -285,6 +291,8 @@ model Property {
 
   // 가격 및 수용 인원
   pricePerNight Decimal  @db.Decimal(10, 2)
+  discountRate  Int?     // 할인율 (% 단위, 예: 20 = 20% 할인)
+  discountedPrice Decimal? @db.Decimal(10, 2) // 할인된 가격 (자동 계산되거나 수동 설정)
   maxGuests     Int
   allowsPets    Boolean  @default(false) // 반려동물 동반 가능
 
@@ -540,20 +548,27 @@ model Review {
   property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   bookingId   String   @unique
   booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  
-  rating      Int      // 1-5
+
+  rating      Int      // 1-5 stars
   content     String   @db.Text
   images      String[] // Image URLs
-  
+
+  // SNS Sharing
+  snsShareConsent Boolean  @default(false) // SNS 공유 동의 여부
+  snsShared       Boolean  @default(false) // 실제 SNS 공유 완료 여부
+  snsSharedAt     DateTime? // SNS 공유 시간
+  creditAwarded   Boolean  @default(false) // 크레딧 지급 완료 여부
+
   hostReply   String?  @db.Text
   repliedAt   DateTime?
-  
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([propertyId])
   @@index([userId])
   @@index([rating])
+  @@index([snsShareConsent])
 }
 
 // ============================================
@@ -588,4 +603,103 @@ enum NotificationType {
   HOST_REPLY
   PAYMENT_SUCCESS
   PAYMENT_FAILED
+  CREDIT_EARNED
+  PROPERTY_APPROVED
+  PROPERTY_REJECTED
+}
+
+// ============================================
+// Credit System
+// ============================================
+
+model CreditHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount      Int      // +1000 for SNS share
+  type        CreditType
+  description String?  @db.Text
+
+  // Related entities
+  reviewId    String?  // If earned from review
+  bookingId   String?  // If used for booking discount
+
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum CreditType {
+  EARNED_REVIEW_SNS   // SNS 공유 동의한 리뷰 작성
+  EARNED_REFERRAL     // 친구 추천 (추후 추가)
+  EARNED_EVENT        // 이벤트 참여 (추후 추가)
+  USED_BOOKING        // 예약 할인 사용
+  USED_COUPON         // 쿠폰으로 전환 (추후 추가)
+  EXPIRED             // 크레딧 만료 (추후 추가)
+}
+
+// ============================================
+// SNS Integration
+// ============================================
+
+model SNSAccount {
+  id            String   @id @default(cuid())
+  platform      SNSPlatform
+  accountName   String   // Account username or page name
+  accountUrl    String   // Full URL to the account/page
+  accessToken   String?  @db.Text // For API integration (encrypted)
+  refreshToken  String?  @db.Text // For token refresh
+  isActive      Boolean  @default(true)
+
+  // Metadata
+  followerCount Int?
+  lastPostAt    DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([platform, accountName])
+  @@index([platform])
+  @@index([isActive])
+}
+
+enum SNSPlatform {
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+  THREADS
+}
+
+// ============================================
+// SNS Post Tracking
+// ============================================
+
+model SNSPost {
+  id          String   @id @default(cuid())
+  platform    SNSPlatform
+  postUrl     String   // URL to the actual post
+  postId      String?  // Platform-specific post ID
+
+  // Content
+  content     String   @db.Text
+  images      String[] // Image URLs
+
+  // Related
+  reviewId    String   // Source review
+  propertyId  String   // Property being reviewed
+
+  // Engagement
+  likes       Int      @default(0)
+  comments    Int      @default(0)
+  shares      Int      @default(0)
+
+  publishedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([reviewId])
+  @@index([platform])
+  @@index([publishedAt])
 }

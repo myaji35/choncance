@@ -1,8 +1,8 @@
-# ChonCance (촌캉스)
+# VINTEE (VINTEE)
 
-> 도시 생활에 지친 MZ세대를 위한 진정성 있는 촌캉스 경험 큐레이션 및 예약 플랫폼
+> 도시 생활에 지친 MZ세대를 위한 진정성 있는 VINTEE 경험 큐레이션 및 예약 플랫폼
 
-ChonCance는 단순한 숙소 예약을 넘어, 감성적이고 진정성 있는 농촌 휴양 경험을 제공하는 플랫폼입니다.
+VINTEE는 단순한 숙소 예약을 넘어, 감성적이고 진정성 있는 농촌 휴양 경험을 제공하는 플랫폼입니다.
 
 ## 🌾 주요 특징
 
@@ -106,7 +106,7 @@ Backend는 http://localhost:8000 에서 실행됩니다.
 
 ## 🔐 인증 시스템
 
-ChonCance는 **Clerk**를 사용하여 안전하고 편리한 인증을 제공합니다:
+VINTEE는 **Clerk**를 사용하여 안전하고 편리한 인증을 제공합니다:
 
 - **이메일/비밀번호 로그인**
 - **소셜 로그인**: Google, GitHub, 카카오 등
@@ -120,7 +120,7 @@ ChonCance는 **Clerk**를 사용하여 안전하고 편리한 인증을 제공�
 ## 🏗️ 프로젝트 구조
 
 ```
-choncance/
+vintee/
 ├── src/                      # Frontend (Next.js)
 │   ├── app/                  # App Router 페이지
 │   │   ├── login/           # 로그인 (Clerk)
@@ -214,4 +214,4 @@ pytest
 
 ---
 
-**ChonCance** - 진정성 있는 촌캉스 경험을 위한 플랫폼
+**VINTEE** - 진정성 있는 VINTEE 경험을 위한 플랫폼

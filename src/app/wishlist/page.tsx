@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
-import { TagList } from "@/components/tag-badge";
+import { TagList } from "@/components/tag/tag-badge";
 
 export default async function WishlistPage() {
   const { userId } = await auth();

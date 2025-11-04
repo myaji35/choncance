@@ -81,17 +81,28 @@ interface TagListProps {
 /**
  * TagList component - displays a list of tags
  */
-export function TagList({ tags, variant = "default", className, onTagClick }: TagListProps) {
+export function TagList({ tags, variant = "default", className, onTagClick, maxTags, size = "default" }: TagListProps & { maxTags?: number; size?: "sm" | "default" }) {
+  const displayedTags = maxTags ? tags.slice(0, maxTags) : tags;
+  const remainingCount = maxTags && tags.length > maxTags ? tags.length - maxTags : 0;
+
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
-      {tags.map((tag) => (
+    <div className={cn("flex flex-wrap gap-1.5 sm:gap-2", className)}>
+      {displayedTags.map((tag) => (
         <TagBadge
           key={tag.id}
           tag={tag}
           variant={variant}
+          className={cn(
+            size === "sm" && "text-xs px-2 py-0.5"
+          )}
           onClick={onTagClick ? () => onTagClick(tag) : undefined}
         />
       ))}
+      {remainingCount > 0 && (
+        <Badge variant="outline" className={cn("text-gray-500", size === "sm" && "text-xs px-2 py-0.5")}>
+          +{remainingCount}
+        </Badge>
+      )}
     </div>
   );
 }

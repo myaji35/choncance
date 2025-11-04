@@ -18,6 +18,8 @@ import { DateRange } from "react-day-picker";
 interface BookingWidgetProps {
   propertyId: string;
   pricePerNight: number;
+  discountRate?: number;
+  discountedPrice?: number;
   maxGuests: number;
   minNights: number;
   maxNights: number;
@@ -26,6 +28,8 @@ interface BookingWidgetProps {
 export function BookingWidget({
   propertyId,
   pricePerNight,
+  discountRate,
+  discountedPrice,
   maxGuests,
   minNights,
   maxNights,
@@ -125,9 +129,27 @@ export function BookingWidget({
         {/* Price */}
         <div className="pb-6 border-b">
           <p className="text-sm text-gray-600 mb-1">1박 기준</p>
-          <p className="text-3xl font-bold text-gray-900">
-            ₩{pricePerNight.toLocaleString()}
-          </p>
+          {discountRate && discountRate > 0 ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                  {discountRate}% 할인
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-xl text-gray-400 line-through">
+                  ₩{pricePerNight.toLocaleString()}
+                </p>
+              </div>
+              <p className="text-3xl font-bold text-red-600">
+                ₩{(discountedPrice || (pricePerNight * (1 - discountRate / 100))).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p className="text-3xl font-bold text-gray-900">
+              ₩{pricePerNight.toLocaleString()}
+            </p>
+          )}
         </div>
 
         {/* Date Range Picker */}

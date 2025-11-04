@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { requireHost, getCurrentUser } from "@/lib/auth-utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,27 +13,26 @@ import { DashboardStats } from "@/components/host/dashboard-stats";
 import { BookingCalendar } from "@/components/host/booking-calendar";
 
 export default async function HostDashboardPage() {
-  const { userId } = await auth();
+  // HOST 역할만 접근 가능
+  await requireHost();
 
-  if (!userId) {
+  const user = await getCurrentUser();
+
+  if (!user) {
     redirect("/login");
   }
 
-  // Get user and host profile
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
+  // Get host profile with properties
+  const hostProfile = await prisma.hostProfile.findUnique({
+    where: { userId: user.id },
     include: {
-      hostProfile: {
+      properties: {
         include: {
-          properties: {
-            include: {
-              tags: true,
-              bookings: {
-                where: {
-                  status: {
-                    in: ["PENDING", "CONFIRMED"],
-                  },
-                },
+          tags: true,
+          bookings: {
+            where: {
+              status: {
+                in: ["PENDING", "CONFIRMED"],
               },
             },
           },
@@ -41,19 +41,19 @@ export default async function HostDashboardPage() {
     },
   });
 
-  if (!user?.hostProfile) {
+  if (!hostProfile) {
     return (
       <div className="container mx-auto px-4 py-12">
         <Card>
           <CardHeader>
-            <CardTitle>호스트 등록 필요</CardTitle>
+            <CardTitle>호스트 프로필 오류</CardTitle>
             <CardDescription>
-              호스트 대시보드를 이용하려면 먼저 호스트로 등록해야 합니다.
+              호스트 프로필을 찾을 수 없습니다. 관리자에게 문의해주세요.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/become-a-host">
-              <Button>호스트 등록하기</Button>
+            <Link href="/dashboard">
+              <Button>대시보드로 돌아가기</Button>
             </Link>
           </CardContent>
         </Card>
@@ -61,7 +61,6 @@ export default async function HostDashboardPage() {
     );
   }
 
-  const hostProfile = user.hostProfile;
   const properties = hostProfile.properties;
 
   // Calculate stats

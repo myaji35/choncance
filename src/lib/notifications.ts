@@ -121,3 +121,34 @@ export async function notifyPaymentFailed(
     link: `/bookings/${bookingId}`,
   });
 }
+
+export async function notifyPropertyApproved(
+  userId: string,
+  propertyId: string,
+  propertyName: string
+) {
+  return createNotification({
+    userId,
+    type: "PROPERTY_APPROVED",
+    title: "숙소가 승인되었습니다 🎉",
+    message: `${propertyName}이(가) 관리자에 의해 승인되었습니다. 이제 게스트들이 숙소를 예약할 수 있습니다.`,
+    link: `/property/${propertyId}`,
+  });
+}
+
+export async function notifyPropertyRejected(
+  userId: string,
+  propertyId: string,
+  propertyName: string,
+  reason?: string
+) {
+  return createNotification({
+    userId,
+    type: "PROPERTY_REJECTED",
+    title: "숙소 등록이 거절되었습니다",
+    message: reason
+      ? `${propertyName}의 등록이 거절되었습니다. 사유: ${reason}`
+      : `${propertyName}의 등록이 거절되었습니다.`,
+    link: `/host/properties/${propertyId}/edit`,
+  });
+}

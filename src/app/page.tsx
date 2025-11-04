@@ -13,9 +13,32 @@ import { ArrowDown } from 'lucide-react';
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
+interface Property {
+  id: string;
+  name: string;
+  description: string;
+  pricePerNight: number;
+  thumbnailUrl: string | null;
+  images: string[];
+  province: string;
+  city: string;
+  tags: Array<{
+    name: string;
+    category: string;
+  }>;
+  host: {
+    user: {
+      name: string | null;
+      image: string | null;
+    };
+  };
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
+  const [loadingProperties, setLoadingProperties] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +56,24 @@ export default function LandingPage() {
     };
   }, []);
 
+  // Fetch featured properties
+  useEffect(() => {
+    async function fetchFeaturedProperties() {
+      try {
+        const response = await fetch('/api/properties?status=APPROVED');
+        const data = await response.json();
+        // 최대 6개만 표시
+        setFeaturedProperties(data.properties.slice(0, 6));
+      } catch (error) {
+        console.error('Failed to fetch featured properties:', error);
+      } finally {
+        setLoadingProperties(false);
+      }
+    }
+
+    fetchFeaturedProperties();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
@@ -41,15 +82,15 @@ export default function LandingPage() {
           isHeaderVisible ? "bg-white/95 backdrop-blur-md shadow-md dark:bg-gray-900/95" : "bg-black/30 backdrop-blur-sm"
         }`}
       >
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex h-20 items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex h-16 sm:h-20 items-center justify-between">
             <Link href="/" className="flex items-center gap-2 flex-shrink-0 relative">
               <Image
-                src="/choncance-logo.png"
-                alt="촌캉스"
-                width={40}
-                height={40}
-                className={`h-10 w-10 transition-all duration-300 ${
+                src="/vintee-logo.png"
+                alt="VINTEE"
+                width={32}
+                height={32}
+                className={`h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300 ${
                   isHeaderVisible
                     ? 'drop-shadow-sm'
                     : 'drop-shadow-[0_2px_4px_rgba(255,255,255,0.8)]'
@@ -61,15 +102,15 @@ export default function LandingPage() {
                 }}
                 priority
               />
-              <span className={`text-2xl font-bold transition-colors duration-300 ${
+              <span className={`text-xl sm:text-2xl font-bold transition-colors duration-300 ${
                 isHeaderVisible ? 'text-primary' : 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'
               }`}>
-                촌캉스
+                VINTEE
               </span>
             </Link>
 
             {/* Search Bar - visible when header is visible */}
-            <div className={`hidden md:block flex-1 max-w-md mx-8 transition-all duration-300 ${
+            <div className={`hidden md:block flex-1 max-w-md mx-4 lg:mx-8 transition-all duration-300 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
             }`}>
               <SearchBar
@@ -81,10 +122,10 @@ export default function LandingPage() {
               />
             </div>
 
-            <nav className="hidden items-center space-x-6 lg:flex">
+            <nav className="hidden items-center gap-4 lg:gap-8 lg:flex">
               <Link
                 href="#how-it-works"
-                className={`transition-colors ${
+                className={`transition-colors whitespace-nowrap text-sm lg:text-base ${
                   isHeaderVisible
                     ? "text-gray-600 hover:text-primary dark:text-gray-300"
                     : "text-white hover:text-white/80"
@@ -94,17 +135,17 @@ export default function LandingPage() {
               </Link>
               <Link
                 href="#featured-experiences"
-                className={`transition-colors ${
+                className={`transition-colors whitespace-nowrap text-sm lg:text-base ${
                   isHeaderVisible
                     ? "text-gray-600 hover:text-primary dark:text-gray-300"
                     : "text-white hover:text-white/80"
                 }`}
               >
-                추천 촌캉스
+                추천 시골 여행
               </Link>
               <Link
                 href="#stories"
-                className={`transition-colors ${
+                className={`transition-colors whitespace-nowrap text-sm lg:text-base ${
                   isHeaderVisible
                     ? "text-gray-600 hover:text-primary dark:text-gray-300"
                     : "text-white hover:text-white/80"
@@ -114,19 +155,21 @@ export default function LandingPage() {
               </Link>
             </nav>
 
-            <div className="flex items-center space-x-2 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <SignedOut>
                 <SignInButton mode="modal">
                   <Button
-                    variant={isHeaderVisible ? "ghost" : "outline"}
-                    className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/95 text-gray-900 border-gray-300 hover:bg-white shadow-sm backdrop-blur-sm text-xs sm:text-sm px-3 sm:px-4"
                   >
                     로그인
                   </Button>
                 </SignInButton>
-                <Link href="/signup">
+                <Link href="/signup" className="hidden sm:inline-block">
                   <Button
-                    className={isHeaderVisible ? "" : "bg-white text-gray-900 hover:bg-white/90 shadow-md"}
+                    size="sm"
+                    className="bg-primary text-white hover:bg-primary/90 shadow-md text-xs sm:text-sm px-3 sm:px-4"
                   >
                     회원가입
                   </Button>
@@ -134,10 +177,11 @@ export default function LandingPage() {
               </SignedOut>
 
               <SignedIn>
-                <Link href="/bookings">
+                <Link href="/bookings" className="hidden sm:inline-block">
                   <Button
-                    variant={isHeaderVisible ? "ghost" : "outline"}
-                    className={isHeaderVisible ? "" : "text-white border-white hover:bg-white hover:text-gray-900"}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/95 text-gray-900 border-gray-300 hover:bg-white shadow-sm backdrop-blur-sm text-xs sm:text-sm"
                   >
                     내 예약
                   </Button>
@@ -146,7 +190,7 @@ export default function LandingPage() {
                   afterSignOutUrl="/"
                   appearance={{
                     elements: {
-                      avatarBox: "w-10 h-10",
+                      avatarBox: "w-8 h-8 sm:w-10 sm:h-10 ring-2 ring-white shadow-md",
                     },
                   }}
                 />
@@ -166,15 +210,15 @@ export default function LandingPage() {
           ]}
           interval={5000}
         />
-        <div className="relative z-10 text-white p-6 max-w-5xl w-full flex flex-col items-center">
-          <h1 className="text-5xl md:text-7xl font-extralight mb-6 leading-tight tracking-wide animate-fade-in-up">
-            도시의 소음은 잠시 끄고, <br />
+        <div className="relative z-10 text-white px-4 sm:px-6 py-8 max-w-5xl w-full flex flex-col items-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight mb-4 sm:mb-6 leading-tight tracking-wide animate-fade-in-up">
+            도시의 소음은 잠시 끄고, <br className="hidden sm:block" />
             당신의 진짜 쉼을 켜세요
           </h1>
-          <p className="text-xl md:text-2xl mb-12 font-light tracking-wide animate-fade-in-up animation-delay-300">
-            촌캉스가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 font-light tracking-wide animate-fade-in-up animation-delay-300 px-4">
+            시골 여행가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
           </p>
-          <div className="w-full max-w-4xl animate-fade-in-up animation-delay-600">
+          <div className="w-full max-w-4xl px-2 sm:px-0 animate-fade-in-up animation-delay-600">
             <AdvancedSearchBar
               onSearch={(params) => {
                 const searchParams = new URLSearchParams();
@@ -191,38 +235,38 @@ export default function LandingPage() {
               }}
             />
           </div>
-          <div className="absolute bottom-10 animate-bounce">
-            <ArrowDown className="w-8 h-8" />
+          <div className="absolute bottom-6 sm:bottom-10 animate-bounce">
+            <ArrowDown className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
         </div>
       </section>
 
       {/* How it Works Section */}
-      <section id="how-it-works" className="py-24 px-6 md:px-12 lg:px-20">
+      <section id="how-it-works" className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">촌캉스 이용방법</h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">세상 가장 쉬운 쉼을 찾는 여정</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto text-center">
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
-                <span className="text-5xl">🎨</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-center mb-3 sm:mb-4 md:mb-6 text-gray-800 dark:text-gray-100">시골 여행 이용방법</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-12 md:mb-20 text-base sm:text-lg md:text-xl">세상 가장 쉬운 쉼을 찾는 여정</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16 max-w-6xl mx-auto text-center">
+            <div className="flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-4xl sm:text-4xl md:text-5xl">🎨</span>
               </div>
-              <h3 className="text-3xl font-light mb-4">테마 발견</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">#논뷰맛집 #불멍과별멍 #찐할머니손맛<br/>당신을 위한 테마를 찾아보세요.</p>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">테마 발견</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">#논뷰맛집 #불멍과별멍 #찐할머니손맛<br/>당신을 위한 테마를 찾아보세요.</p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
-                <span className="text-5xl">📖</span>
+            <div className="flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-4xl sm:text-4xl md:text-5xl">📖</span>
               </div>
-              <h3 className="text-3xl font-light mb-4">스토리 탐색</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">호스트의 진솔한 이야기를 통해<br/>공간에 대한 깊은 이해를 더하세요.</p>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">스토리 탐색</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">호스트의 진솔한 이야기를 통해<br/>공간에 대한 깊은 이해를 더하세요.</p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center justify-center w-28 h-28 mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
-                <span className="text-5xl">🏡</span>
+            <div className="flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+                <span className="text-4xl sm:text-4xl md:text-5xl">🏡</span>
               </div>
-              <h3 className="text-3xl font-light mb-4">경험 예약</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-lg">단 몇 번의 클릭으로<br/>당신만의 촌캉스를 예약하세요.</p>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">경험 예약</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">단 몇 번의 클릭으로<br/>당신만의 시골 여행를 예약하세요.</p>
             </div>
           </div>
         </div>
@@ -230,59 +274,97 @@ export default function LandingPage() {
 
       <section id="featured-experiences" className="py-24 px-6 md:px-12 lg:px-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">추천 촌캉스</h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">지금 가장 인기있는 촌캉스를 만나보세요</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
-              <CardContent className="p-0">
-                <div className="relative h-72">
-                  <Image src="/rice-field-view.svg" alt="논뷰 맛집" fill className="object-cover" />
-                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
-                    <span className="text-2xl">❤️</span>
-                  </Button>
-                </div>
-                <div className="p-6">
-                  <CardTitle className="text-2xl mb-3 font-light">#논뷰맛집</CardTitle>
-                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">멍때리기 좋은 황금빛 논밭 풍경</CardDescription>
-                </div>
-              </CardContent>
-            </Card>
+          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">추천 시골 여행</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">지금 가장 인기있는 인증된 숙소를 만나보세요</p>
 
-            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
-              <CardContent className="p-0">
-                <div className="relative h-72">
-                  <Image src="/campfire-stars.svg" alt="불멍과 별멍" fill className="object-cover" />
-                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
-                    <span className="text-2xl">❤️</span>
-                  </Button>
-                </div>
-                <div className="p-6">
-                  <CardTitle className="text-2xl mb-3 font-light">#불멍과별멍</CardTitle>
-                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">모닥불 앞에서 누리는 완벽한 단절</CardDescription>
-                </div>
-              </CardContent>
-            </Card>
+          {loadingProperties ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="overflow-hidden border-0 shadow-lg rounded-xl">
+                  <CardContent className="p-0">
+                    <div className="relative h-72 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                    <div className="p-6 space-y-3">
+                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : featuredProperties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {featuredProperties.map((property) => (
+                <Link key={property.id} href={`/property/${property.id}`}>
+                  <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl cursor-pointer h-full">
+                    <CardContent className="p-0">
+                      <div className="relative h-72">
+                        <Image
+                          src={property.thumbnailUrl || property.images[0] || '/placeholder-property.svg'}
+                          alt={property.name}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                        {/* Tags overlay */}
+                        {property.tags.length > 0 && (
+                          <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                            {property.tags.slice(0, 2).map((tag) => (
+                              <span
+                                key={tag.name}
+                                className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-medium rounded-full text-gray-800"
+                              >
+                                #{tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <CardTitle className="text-2xl mb-2 font-light line-clamp-1">
+                          {property.name}
+                        </CardTitle>
+                        <CardDescription className="text-base text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                          {property.description}
+                        </CardDescription>
 
-            <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl">
-              <CardContent className="p-0">
-                <div className="relative h-72">
-                  <Image
-                    src="/grandma-food.svg"
-                    alt="찐할머니손맛"
-                    fill
-                    className="object-cover"
-                  />
-                  <Button variant="ghost" size="icon" className="absolute top-4 right-4 bg-white/80 rounded-full hover:bg-white">
-                    <span className="text-2xl">❤️</span>
-                  </Button>
-                </div>
-                <div className="p-6">
-                  <CardTitle className="text-2xl mb-3 font-light">#찐할머니손맛</CardTitle>
-                  <CardDescription className="text-base text-gray-600 dark:text-gray-400">할머니의 손맛이 담긴 시골 밥상</CardDescription>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                        {/* Host info */}
+                        <div className="flex items-center gap-2 mb-3 text-sm text-gray-500">
+                          <span>호스트: {property.host.user.name || '익명'}</span>
+                        </div>
+
+                        {/* Location and Price */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">
+                            {property.province} {property.city}
+                          </span>
+                          <span className="text-lg font-semibold text-primary">
+                            ₩{property.pricePerNight.toLocaleString()}<span className="text-sm font-normal text-gray-500">/박</span>
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400 text-lg">
+                아직 승인된 숙소가 없습니다.
+              </p>
+            </div>
+          )}
+
+          {/* View All Button */}
+          {!loadingProperties && featuredProperties.length > 0 && (
+            <div className="text-center mt-12">
+              <Link href="/explore">
+                <Button size="lg" variant="outline" className="px-8 py-6 text-lg rounded-full">
+                  모든 숙소 둘러보기
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
       
@@ -309,7 +391,7 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-24 px-6 bg-primary text-primary-foreground text-center">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-light mb-6">당신만의 촌캉스를 시작하세요</h2>
+          <h2 className="text-4xl md:text-5xl font-light mb-6">당신만의 시골 여행를 시작하세요</h2>
           <p className="text-xl md:text-2xl mb-10 font-light">SNS에 공유하고 싶은 순간들이 기다리고 있습니다</p>
           <Button size="lg" variant="secondary" className="px-12 py-8 text-xl rounded-full" asChild>
             <Link href="/explore">지금 탐색하기</Link>
@@ -321,21 +403,21 @@ export default function LandingPage() {
       <footer className="py-16 px-6 md:px-12 lg:px-20 bg-gray-900 text-gray-400">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <h3 className="text-2xl font-bold text-white mb-4">촌캉스</h3>
-            <p className="text-sm">진짜 촌캉스를 찾아서</p>
+            <h3 className="text-2xl font-bold text-white mb-4">시골 여행</h3>
+            <p className="text-sm">진짜 시골 여행를 찾아서</p>
           </div>
           <div>
             <h4 className="font-semibold text-white mb-4">탐색</h4>
             <ul>
               <li className="mb-2"><Link href="#" className="hover:text-white">테마별</Link></li>
               <li className="mb-2"><Link href="#" className="hover:text-white">지역별</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">인기 촌캉스</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">인기 시골 여행</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-white mb-4">소개</h4>
             <ul>
-              <li className="mb-2"><Link href="#" className="hover:text-white">촌캉스 스토리</Link></li>
+              <li className="mb-2"><Link href="#" className="hover:text-white">시골 여행 스토리</Link></li>
               <li className="mb-2"><Link href="#" className="hover:text-white">호스트 되기</Link></li>
               <li className="mb-2"><Link href="#" className="hover:text-white">채용</Link></li>
             </ul>
@@ -350,7 +432,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="container mx-auto text-center mt-12 border-t border-gray-800 pt-8">
-          <p className="text-sm">&copy; 2025 ChonCance. All rights reserved.</p>
+          <p className="text-sm">&copy; 2025 VINTEE. All rights reserved.</p>
         </div>
       </footer>
     </div>

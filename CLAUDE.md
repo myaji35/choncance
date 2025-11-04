@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**ChonCance** is a platform for curating and booking authentic rural vacation experiences (촌캉스) for the MZ generation in Korea. The platform focuses on providing unique local stories and experiences beyond simple accommodation booking, emphasizing healing, relaxation, and SNS-shareable content.
+**VINTEE** is a platform for curating and booking authentic rural vacation experiences (VINTEE) for the MZ generation in Korea. The platform focuses on providing unique local stories and experiences beyond simple accommodation booking, emphasizing healing, relaxation, and SNS-shareable content.
 
 ## Common Development Commands
 
@@ -89,7 +89,7 @@ The project includes configuration for multiple development methodologies:
 
 1. **BMAD-METHOD** (`src/bmad/config.ts`): Defines project structure using the Team Fullstack approach with roles like bmad-orchestrator, analyst, PM, UX expert, architect, and PO.
 
-2. **Context7** (`src/context7/config.ts`): Legacy configuration for ProTask (an earlier iteration). Note that some files still reference "ProTask" and may need migration to ChonCance branding.
+2. **Context7** (`src/context7/config.ts`): Legacy configuration for ProTask (an earlier iteration). Note that some files still reference "ProTask" and may need migration to VINTEE branding.
 
 ### Authentication Flow
 
@@ -139,7 +139,7 @@ Database connection and Prisma schema are not yet implemented.
 ## Important Notes
 
 ### Branding Migration
-Some files still reference "ProTask" (an earlier project iteration). When working on these files, update branding to "ChonCance" for consistency:
+Some files still reference "ProTask" (an earlier project iteration). When working on these files, update branding to "VINTEE" for consistency:
 - Landing page hero text (src/app/page.tsx)
 - Context7 config (src/context7/config.ts)
 
@@ -149,7 +149,7 @@ Some files still reference "ProTask" (an earlier project iteration). When workin
 - The HTML lang attribute is set to "ko"
 
 ### Design Philosophy
-Per the PRD, ChonCance emphasizes:
+Per the PRD, VINTEE emphasizes:
 - Minimalist, refined design with whitespace
 - Lyrical typography conveying a "slow" aesthetic
 - High-quality visual content (photos, short videos)
