@@ -36,30 +36,6 @@ export async function GET(request: NextRequest) {
     const [history, total] = await Promise.all([
       prisma.creditHistory.findMany({
         where: { userId },
-        include: {
-          review: {
-            select: {
-              id: true,
-              property: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-          booking: {
-            select: {
-              id: true,
-              property: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
         orderBy: { createdAt: "desc" },
         skip,
         take: limit,

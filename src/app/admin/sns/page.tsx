@@ -26,8 +26,15 @@ export default function AdminSNSPage() {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    platform: "FACEBOOK" as const,
+  const [formData, setFormData] = useState<{
+    platform: "FACEBOOK" | "INSTAGRAM" | "TIKTOK" | "THREADS";
+    accountName: string;
+    accountUrl: string;
+    followerCount: string;
+    accessToken: string;
+    refreshToken: string;
+  }>({
+    platform: "FACEBOOK",
     accountName: "",
     accountUrl: "",
     followerCount: "",

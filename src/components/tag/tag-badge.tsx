@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface TagBadgeProps {
-  tag: Tag;
+  tag: Pick<Tag, 'id' | 'name' | 'category' | 'icon' | 'color'>;
   variant?: "default" | "outline";
   className?: string;
   onClick?: () => void;
@@ -40,9 +40,9 @@ export function TagBadge({ tag, variant = "default", className, onClick }: TagBa
           className
         )}
         style={{
-          backgroundColor: variant === "default" ? tag.color : "transparent",
-          borderColor: tag.color,
-          color: variant === "default" ? "#ffffff" : tag.color,
+          backgroundColor: variant === "default" ? (tag.color ?? undefined) : "transparent",
+          borderColor: tag.color ?? undefined,
+          color: variant === "default" ? "#ffffff" : (tag.color ?? undefined),
         }}
         onClick={handleClick}
       >
@@ -60,9 +60,9 @@ export function TagBadge({ tag, variant = "default", className, onClick }: TagBa
           className
         )}
         style={{
-          backgroundColor: variant === "default" ? tag.color : "transparent",
-          borderColor: tag.color,
-          color: variant === "default" ? "#ffffff" : tag.color,
+          backgroundColor: variant === "default" ? (tag.color ?? undefined) : "transparent",
+          borderColor: tag.color ?? undefined,
+          color: variant === "default" ? "#ffffff" : (tag.color ?? undefined),
         }}
       >
         {badgeContent}
@@ -72,10 +72,10 @@ export function TagBadge({ tag, variant = "default", className, onClick }: TagBa
 }
 
 interface TagListProps {
-  tags: Tag[];
+  tags: Pick<Tag, 'id' | 'name' | 'category' | 'icon' | 'color'>[];
   variant?: "default" | "outline";
   className?: string;
-  onTagClick?: (tag: Tag) => void;
+  onTagClick?: (tag: any) => void;
 }
 
 /**

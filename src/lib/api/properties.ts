@@ -12,6 +12,8 @@ export interface Property {
     lng: number;
   };
   pricePerNight: number;
+  discountRate?: number | null;
+  discountedPrice?: number | null;
   maxGuests: number;
   images: string[];
   thumbnailUrl?: string | null;

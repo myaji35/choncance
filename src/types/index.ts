@@ -39,7 +39,7 @@ export interface Tag {
   name: string;
   category: TagCategory;
   icon: string | null;
-  color: string;
+  color: string | null;
   description: string | null;
   display_order: number;
   created_at: string;

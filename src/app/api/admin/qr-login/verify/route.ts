@@ -119,15 +119,7 @@ export async function POST(request: NextRequest) {
       where: {
         OR: phonePatterns.map(pattern => ({
           phone: { contains: pattern }
-        })).concat(
-          // Also check if DB phone is contained in any pattern
-          phonePatterns.map(pattern => ({
-            phone: { not: null },
-            AND: {
-              phone: { not: '' },
-            }
-          }))
-        ),
+        })),
       },
     });
 

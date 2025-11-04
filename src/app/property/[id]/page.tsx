@@ -145,10 +145,10 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
               </div>
 
               {serializedProperty.tags && serializedProperty.tags.length > 0 && (
-                <TagList tags={serializedProperty.tags} size="sm" className="sm:hidden" />
+                <TagList tags={serializedProperty.tags as any} size="sm" className="sm:hidden" />
               )}
               {serializedProperty.tags && serializedProperty.tags.length > 0 && (
-                <TagList tags={serializedProperty.tags} size="default" className="hidden sm:flex" />
+                <TagList tags={serializedProperty.tags as any} size="default" className="hidden sm:flex" />
               )}
             </div>
 
@@ -227,8 +227,8 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
               <BookingWidget
                 propertyId={serializedProperty.id}
                 pricePerNight={serializedProperty.pricePerNight}
-                discountRate={serializedProperty.discountRate}
-                discountedPrice={serializedProperty.discountedPrice}
+                discountRate={serializedProperty.discountRate ?? undefined}
+                discountedPrice={serializedProperty.discountedPrice ?? undefined}
                 maxGuests={serializedProperty.maxGuests}
                 minNights={serializedProperty.minNights}
                 maxNights={serializedProperty.maxNights}
