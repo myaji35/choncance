@@ -101,7 +101,8 @@ class QRLoginStore {
 
   cleanup(): void {
     const now = new Date();
-    for (const [sessionId, session] of this.sessions.entries()) {
+    const sessionsArray = Array.from(this.sessions.entries());
+    for (const [sessionId, session] of sessionsArray) {
       if (now > session.expiresAt) {
         this.sessions.delete(sessionId);
       }

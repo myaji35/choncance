@@ -1,6 +1,6 @@
 "use client";
 
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,37 @@ import { NotificationButton } from "@/components/notifications/notification-butt
 import { UserRoleButton } from "@/components/layout/user-role-button";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Role } from "@prisma/client";
 
 export function SiteHeader() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function checkAdminRole() {
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/user/role");
+        if (response.ok) {
+          const data = await response.json();
+          setIsAdmin(data.role === Role.ADMIN);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user role:", error);
+        setIsAdmin(false);
+      }
+    }
+
+    checkAdminRole();
+  }, [user]);
 
   // Hide header on landing page (it has its own custom header)
   if (pathname === "/") {
@@ -94,7 +119,7 @@ export function SiteHeader() {
             </SignedOut>
 
             <SignedIn>
-              <NotificationButton />
+              {isAdmin && <NotificationButton />}
               <Link href="/bookings">
                 <Button
                   variant="outline"
@@ -128,7 +153,7 @@ export function SiteHeader() {
           {/* Auth and Menu */}
           <div className="flex items-center gap-2">
             <SignedIn>
-              <NotificationButton />
+              {isAdmin && <NotificationButton />}
             </SignedIn>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -201,7 +226,7 @@ export function SiteHeader() {
                   </Button>
                 </Link>
                 <div className="flex items-center gap-3 pt-2">
-                  <NotificationButton />
+                  {isAdmin && <NotificationButton />}
                   <UserRoleButton />
                 </div>
               </div>

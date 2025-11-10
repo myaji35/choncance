@@ -1,0 +1,153 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e6]:
+        - link "VINTEE VINTEE" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "VINTEE" [ref=e8]
+          - generic [ref=e9]: VINTEE
+        - generic:
+          - generic:
+            - generic:
+              - searchbox "어떤 쉼을 찾고 있나요?"
+              - button "검색":
+                - img
+        - navigation [ref=e10]:
+          - link "이용방법" [ref=e11] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "추천 시골 여행" [ref=e12] [cursor=pointer]:
+            - /url: "#featured-experiences"
+          - link "스토리" [ref=e13] [cursor=pointer]:
+            - /url: "#stories"
+        - generic [ref=e14]:
+          - button "로그인" [ref=e15] [cursor=pointer]
+          - link "회원가입" [ref=e16] [cursor=pointer]:
+            - /url: /signup
+            - button "회원가입" [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - img "호스트 이미지 1" [ref=e21]
+          - img "호스트 이미지 2" [ref=e23]
+          - img "호스트 이미지 3" [ref=e25]
+          - generic [ref=e27]:
+            - button "이미지 1로 이동" [ref=e28] [cursor=pointer]
+            - button "이미지 2로 이동" [ref=e29] [cursor=pointer]
+            - button "이미지 3로 이동" [ref=e30] [cursor=pointer]
+        - generic [ref=e31]:
+          - heading "도시의 소음은 잠시 끄고, 당신의 진짜 쉼을 켜세요" [level=1] [ref=e32]:
+            - text: 도시의 소음은 잠시 끄고,
+            - text: 당신의 진짜 쉼을 켜세요
+          - paragraph [ref=e33]: 시골 여행가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
+          - generic [ref=e36]:
+            - button "여행지" [ref=e38] [cursor=pointer]:
+              - generic [ref=e39]: 여행지
+              - textbox "어디로 검색" [ref=e40]
+            - generic [ref=e43]:
+              - generic [ref=e44]: 숙박 기간
+              - button "날짜 선택" [ref=e45] [cursor=pointer]:
+                - generic [ref=e46]: 날짜 선택
+            - button "여행자 게스트 1명" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 여행자
+              - generic [ref=e51]: 게스트 1명
+            - button "검색" [ref=e53] [cursor=pointer]:
+              - img
+              - generic [ref=e54]: 검색
+          - img [ref=e56]
+      - generic [ref=e59]:
+        - heading "시골 여행 이용방법" [level=2] [ref=e60]
+        - paragraph [ref=e61]: 세상 가장 쉬운 쉼을 찾는 여정
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e65]: 🎨
+            - heading "테마 발견" [level=3] [ref=e66]
+            - paragraph [ref=e67]:
+              - text: "#논뷰맛집 #불멍과별멍 #찐할머니손맛"
+              - text: 당신을 위한 테마를 찾아보세요.
+          - generic [ref=e68]:
+            - generic [ref=e70]: 📖
+            - heading "스토리 탐색" [level=3] [ref=e71]
+            - paragraph [ref=e72]:
+              - text: 호스트의 진솔한 이야기를 통해
+              - text: 공간에 대한 깊은 이해를 더하세요.
+          - generic [ref=e73]:
+            - generic [ref=e75]: 🏡
+            - heading "경험 예약" [level=3] [ref=e76]
+            - paragraph [ref=e77]:
+              - text: 단 몇 번의 클릭으로
+              - text: 당신만의 시골 여행를 예약하세요.
+      - generic [ref=e79]:
+        - heading "추천 시골 여행" [level=2] [ref=e80]
+        - paragraph [ref=e81]: 지금 가장 인기있는 인증된 숙소를 만나보세요
+      - generic [ref=e121]:
+        - img "강원도 어느 한옥 스테이 호스트" [ref=e123]
+        - generic [ref=e124]:
+          - heading "진정성 있는 이야기" [level=2] [ref=e125]
+          - paragraph [ref=e126]: 호스트의 삶과 공간이 만나는 곳
+          - blockquote [ref=e127]:
+            - text: “와이파이가 잘 안 터지고, 가끔 벌레도 나와요.
+            - text: 하지만 그게 바로 이곳의 매력이에요.
+            - text: 완벽한 단절, 진짜 쉼이 여기 있습니다.”
+          - paragraph [ref=e128]: "- 강원도 어느 한옥 스테이 호스트"
+      - generic [ref=e130]:
+        - heading "당신만의 시골 여행를 시작하세요" [level=2] [ref=e131]
+        - paragraph [ref=e132]: SNS에 공유하고 싶은 순간들이 기다리고 있습니다
+        - link "지금 탐색하기" [ref=e133] [cursor=pointer]:
+          - /url: /explore
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - heading "시골 여행" [level=3] [ref=e137]
+            - paragraph [ref=e138]: 진짜 시골 여행를 찾아서
+          - generic [ref=e139]:
+            - heading "탐색" [level=4] [ref=e140]
+            - list [ref=e141]:
+              - listitem [ref=e142]:
+                - link "테마별" [ref=e143] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e144]:
+                - link "지역별" [ref=e145] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e146]:
+                - link "인기 시골 여행" [ref=e147] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e148]:
+            - heading "소개" [level=4] [ref=e149]
+            - list [ref=e150]:
+              - listitem [ref=e151]:
+                - link "시골 여행 스토리" [ref=e152] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e153]:
+                - link "호스트 되기" [ref=e154] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e155]:
+                - link "채용" [ref=e156] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e157]:
+            - heading "지원" [level=4] [ref=e158]
+            - list [ref=e159]:
+              - listitem [ref=e160]:
+                - link "도움말 센터" [ref=e161] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e162]:
+                - link "이용약관" [ref=e163] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e164]:
+                - link "개인정보처리방침" [ref=e165] [cursor=pointer]:
+                  - /url: "#"
+        - paragraph [ref=e167]: © 2025 VINTEE. All rights reserved.
+  - region "Notifications (F8)":
+    - list
+  - contentinfo [ref=e168]:
+    - paragraph [ref=e169]: © 2025 VINTEE. All rights reserved.
+    - generic [ref=e170]:
+      - link "개인정보처리방침" [ref=e171] [cursor=pointer]:
+        - /url: /privacy
+        - button "개인정보처리방침" [ref=e172]
+      - link "이용약관" [ref=e173] [cursor=pointer]:
+        - /url: /terms
+        - button "이용약관" [ref=e174]
+  - alert [ref=e175]
+```
