@@ -79,6 +79,14 @@ export function SiteHeader() {
             >
               추천
             </Link>
+            <SignedIn>
+              <Link
+                href="/wishlist"
+                className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+              >
+                찜한 숙소
+              </Link>
+            </SignedIn>
             <Link
               href="/how-to-use"
               className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
@@ -188,6 +196,15 @@ export function SiteHeader() {
             >
               추천
             </Link>
+            <SignedIn>
+              <Link
+                href="/wishlist"
+                className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                찜한 숙소
+              </Link>
+            </SignedIn>
             <Link
               href="/how-to-use"
               className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
