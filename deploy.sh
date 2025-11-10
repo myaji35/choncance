@@ -20,25 +20,24 @@ echo "📦 프로젝트 ID: $PROJECT_ID"
 REGION="asia-northeast3"
 SERVICE_NAME="choncance"
 
-echo "☁️  Cloud Build로 빌드 및 배포 중..."
-echo "   (GCP Cloud SQL PostgreSQL 사용)"
+# Neon PostgreSQL DATABASE_URL
+DATABASE_URL="postgresql://neondb_owner:npg_d9OoK2qQlTXH@ep-proud-fog-a100b0a9-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
-# Cloud SQL 연결 이름 가져오기
-INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe choncance-db --format='value(connectionName)')
-echo "   Cloud SQL: $INSTANCE_CONNECTION_NAME"
+echo "☁️  Cloud Build로 빌드 및 배포 중..."
+echo "   (Neon PostgreSQL 사용)"
 
 gcloud run deploy $SERVICE_NAME \
   --source . \
   --platform managed \
   --region $REGION \
   --allow-unauthenticated \
-  --add-cloudsql-instances=$INSTANCE_CONNECTION_NAME \
-  --update-env-vars="NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,NEXT_PUBLIC_TOSS_CLIENT_KEY=test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq,TOSS_SECRET_KEY=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R,GCP_STORAGE_BUCKET=choncance-images,DATABASE_URL=postgresql://postgres:socdnjs!00@localhost/choncance?host=/cloudsql/$INSTANCE_CONNECTION_NAME" \
+  --update-env-vars="NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ,CLERK_SECRET_KEY=sk_test_QGq3SR7xnY2fjnzeZhVVhUqOovPKfPgzYurXtJqfNV,NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login,NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup,NEXT_PUBLIC_TOSS_CLIENT_KEY=test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq,TOSS_SECRET_KEY=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R,GEMINI_API_KEY=AIzaSyCVE2Y-APnkuH5a4vvkW6LMuxv8HtifiV0,KAKAO_CLIENT_ID=83022bf07d136c31285491b85c6ee6aa,KAKAO_CLIENT_SECRET=A0PIZLG3vhO9CmS5J1hsgu9T0LhRnWSS,KAKAO_ALIMTALK_ENABLED=false,DATABASE_URL=$DATABASE_URL" \
   --port 8080 \
-  --memory 512Mi \
+  --memory 1Gi \
   --cpu 1 \
   --min-instances 0 \
-  --max-instances 10
+  --max-instances 10 \
+  --timeout 300
 
 echo "✅ 배포 완료!"
 
