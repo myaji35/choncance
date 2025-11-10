@@ -17,11 +17,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
           user: true,
         },
       },
-      tags: {
-        include: {
-          tag: true,
-        },
-      },
+      tags: true,
     },
   });
 
