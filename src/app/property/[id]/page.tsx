@@ -307,10 +307,10 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
           <section className="mt-12 sm:mt-16 md:mt-20">
             <div className="mb-6 sm:mb-8">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                비슷한 촌캉스
+                비슷한 VINTEE 숙소
               </h2>
               <p className="text-sm sm:text-base text-gray-600">
-                이 숙소와 비슷한 테마의 촌캉스를 추천합니다
+                이 숙소와 비슷한 빈티지 감성의 숙소를 추천합니다
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">

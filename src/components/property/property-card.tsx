@@ -12,12 +12,26 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property }: PropertyCardProps) {
-  const imageUrl = property.thumbnailUrl || property.images[0] || '/placeholder-property.jpg';
+  // Use real photos for demo, fallback to placeholder
+  const getFallbackImage = () => {
+    const propertyImages = [
+      '/images/properties/property-1.jpg',
+      '/images/properties/property-2.jpg',
+      '/images/properties/property-3.jpg',
+      '/images/properties/property-4.jpg',
+      '/images/properties/property-5.jpg',
+    ];
+    // Use property ID to consistently select same image
+    const index = property.id ? parseInt(property.id.slice(-1), 16) % propertyImages.length : 0;
+    return propertyImages[index];
+  };
+
+  const imageUrl = property.thumbnailUrl || property.images[0] || getFallbackImage();
 
   return (
     <Link href={`/property/${property.id}`} className="block group">
-      <Card className="overflow-hidden h-full card-interactive border border-gray-200 hover:border-primary/20 transition-all duration-300">
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+      <Card className="overflow-hidden h-full card-interactive border border-gray-200 hover:border-primary/20 transition-all duration-300 shadow-soft hover:shadow-medium">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-secondary/20">
           <Image
             src={imageUrl}
             alt={property.name}

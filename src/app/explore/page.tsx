@@ -100,10 +100,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
       {/* Page Header */}
       <div className="mb-8 sm:mb-12 space-y-2 sm:space-y-4 px-2 sm:px-0 animate-fade-in">
         <h1 className="text-display-sm md:text-display-md font-bold text-gray-900 text-center">
-          테마별 촌캉스 탐색
+          테마별 VINTEE 탐색
         </h1>
         <p className="text-body md:text-body-lg text-gray-600 text-center max-w-2xl mx-auto px-4">
-          당신의 감성에 맞는 진정한 휴식을 찾아보세요
+          빈티지한 감성과 함께하는 진정한 시골 휴식을 찾아보세요
         </p>
       </div>
 
@@ -137,7 +137,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
               </h2>
               <p className="text-body-sm md:text-body text-gray-600">
                 {selectedTag
-                  ? `'${selectedTag}' 태그와 관련된 촌캉스를 찾았습니다`
+                  ? `'${selectedTag}' 태그와 관련된 VINTEE 숙소를 찾았습니다`
                   : `'${searchQuery}'에 대한 검색 결과입니다`}
               </p>
             </div>
@@ -155,7 +155,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         <div className="mb-12 sm:mb-16 md:mb-20 text-center py-12 sm:py-16 px-4">
           <p className="text-lg sm:text-xl text-gray-600 mb-4">
             {selectedTag
-              ? `'${selectedTag}' 태그와 관련된 촌캉스를 찾을 수 없습니다`
+              ? `'${selectedTag}' 태그와 관련된 VINTEE 숙소를 찾을 수 없습니다`
               : `'${searchQuery}'에 대한 검색 결과가 없습니다`}
           </p>
           <Link href="/explore">
@@ -169,10 +169,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             <div className="mb-12 sm:mb-16 md:mb-20">
               <div className="text-center mb-8 sm:mb-12 px-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-800 mb-3 sm:mb-4">
-                  이번 주 추천 촌캉스
+                  이번 주 추천 VINTEE 숙소
                 </h2>
                 <p className="text-sm sm:text-base md:text-lg text-gray-600">
-                  엄선된 숙소에서 특별한 휴식을 경험하세요
+                  빈티지한 감성이 담긴 엄선된 숙소에서 특별한 휴식을 경험하세요
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -190,7 +190,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
                 테마별로 찾아보세요
               </h2>
               <p className="text-sm sm:text-base text-gray-600">
-                원하는 분위기와 경험으로 완벽한 촌캉스를 발견하세요
+                원하는 분위기와 경험으로 완벽한 VINTEE 숙소를 발견하세요
               </p>
             </div>
 
