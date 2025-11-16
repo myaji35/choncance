@@ -358,11 +358,17 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      <section id="stories" className="py-24 px-6 md:px-12 lg:px-20">
+      <section id="stories" className="py-24 px-6 md:px-12 lg:px-20 bg-secondary/10">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl">
-              <Image src="/hanok-host.svg" alt="강원도 어느 한옥 스테이 호스트" fill className="object-cover" />
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-strong">
+              <Image
+                src="/images/stories/host-story.jpg"
+                alt="VINTEE 호스트의 진솔한 이야기"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
             <div className="text-center lg:text-left">
               <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-800 dark:text-gray-100">진정성 있는 이야기</h2>
