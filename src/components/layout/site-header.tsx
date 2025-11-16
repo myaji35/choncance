@@ -49,9 +49,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="w-full px-3 md:px-4 lg:px-6">
         {/* Desktop Header */}
-        <div className="hidden lg:flex h-16 items-center justify-between gap-6">
+        <div className="hidden lg:flex h-16 items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Image
@@ -67,7 +67,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex items-center gap-6 shrink-0">
+          <nav className="flex items-center gap-4 shrink-0">
             <Link
               href="/explore"
               className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
@@ -113,7 +113,7 @@ export function SiteHeader() {
           </div>
 
           {/* Auth Buttons */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {!user ? (
               <>
                 <Link href="/login">

@@ -16,15 +16,17 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <Link href={`/property/${property.id}`} className="block group">
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
-        <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <Card className="overflow-hidden h-full card-interactive border border-gray-200 hover:border-primary/20 transition-all duration-300">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
           <Image
             src={imageUrl}
             alt={property.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            priority={false}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAwIiBoZWlnaHQ9IjQ3NSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4="
           />
           <WishlistButton
             propertyId={property.id}
@@ -56,11 +58,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
           )}
 
           {/* Price */}
-          <div className="text-right pt-2 border-t">
+          <div className="text-right pt-2 border-t border-gray-100">
             {property.discountRate && property.discountRate > 0 ? (
               <div className="space-y-0.5 sm:space-y-1">
                 <div className="flex items-center justify-end gap-2">
-                  <span className="inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 sm:py-1 rounded">
+                  <span className="inline-block bg-primary text-white text-xs font-bold px-2 py-0.5 sm:py-1 rounded-md shadow-sm animate-fade-in">
                     {property.discountRate}% 할인
                   </span>
                 </div>
@@ -69,13 +71,13 @@ export function PropertyCard({ property }: PropertyCardProps) {
                     ₩{property.pricePerNight.toLocaleString()}
                   </p>
                 </div>
-                <p className="text-base sm:text-lg font-bold text-red-600">
+                <p className="text-base sm:text-lg font-bold text-primary group-hover:scale-105 transition-transform duration-200 inline-block">
                   ₩{(property.discountedPrice || (property.pricePerNight * (1 - property.discountRate / 100))).toLocaleString()}
                   <span className="text-xs sm:text-sm font-normal text-gray-600"> / 박</span>
                 </p>
               </div>
             ) : (
-              <p className="text-base sm:text-lg font-bold text-primary">
+              <p className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-primary group-hover:scale-105 transition-all duration-200 inline-block">
                 ₩{property.pricePerNight.toLocaleString()}
                 <span className="text-xs sm:text-sm font-normal text-gray-600"> / 박</span>
               </p>
