@@ -98,11 +98,11 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   return (
     <ExploreContent tags={tagsGrouped}>
       {/* Page Header */}
-      <div className="mb-8 sm:mb-12 space-y-2 sm:space-y-4 px-2 sm:px-0">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 text-center">
+      <div className="mb-8 sm:mb-12 space-y-2 sm:space-y-4 px-2 sm:px-0 animate-fade-in">
+        <h1 className="text-display-sm md:text-display-md font-bold text-gray-900 text-center">
           테마별 촌캉스 탐색
         </h1>
-        <p className="text-sm sm:text-base md:text-lg text-gray-600 text-center max-w-2xl mx-auto px-4">
+        <p className="text-body md:text-body-lg text-gray-600 text-center max-w-2xl mx-auto px-4">
           당신의 감성에 맞는 진정한 휴식을 찾아보세요
         </p>
       </div>
@@ -130,12 +130,12 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
       {/* Filtered Results or Tag Categories */}
       {filteredProperties && filteredProperties.length > 0 ? (
         <div className="mb-12 sm:mb-16 md:mb-20">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 px-4 gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8 px-4 gap-4 animate-fade-in">
             <div className="text-center sm:text-left">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-light text-gray-800 mb-2">
+              <h2 className="text-heading-lg md:text-heading-xl font-semibold text-gray-800 mb-2">
                 검색 결과 ({displayProperties.length}개)
               </h2>
-              <p className="text-sm sm:text-base text-gray-600">
+              <p className="text-body-sm md:text-body text-gray-600">
                 {selectedTag
                   ? `'${selectedTag}' 태그와 관련된 촌캉스를 찾았습니다`
                   : `'${searchQuery}'에 대한 검색 결과입니다`}
@@ -144,8 +144,10 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             <SortSelect />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {displayProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {displayProperties.map((property, index) => (
+              <div key={property.id} className="stagger-item" style={{ animationDelay: `${index * 0.05}s` }}>
+                <PropertyCard property={property} />
+              </div>
             ))}
           </div>
         </div>

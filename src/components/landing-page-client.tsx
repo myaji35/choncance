@@ -201,11 +201,11 @@ export function LandingPageClient() {
           interval={5000}
         />
         <div className="relative z-10 text-white px-4 sm:px-6 py-8 max-w-5xl w-full flex flex-col items-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight mb-4 sm:mb-6 leading-tight tracking-wide animate-fade-in-up">
+          <h1 className="text-display-md md:text-display-lg font-extralight mb-4 sm:mb-6 leading-tight tracking-tight animate-slide-up text-balance">
             도시의 소음은 잠시 끄고, <br className="hidden sm:block" />
             당신의 진짜 쉼을 켜세요
           </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 font-light tracking-wide animate-fade-in-up animation-delay-300 px-4">
+          <p className="text-body-lg md:text-heading-sm mb-8 sm:mb-12 font-light tracking-wide animate-fade-in px-4 text-balance" style={{ animationDelay: '0.2s' }}>
             시골 여행가 제안하는 진정한 쉼의 순간으로 당신을 초대합니다.
           </p>
           <div className="w-full max-w-4xl px-2 sm:px-0 animate-fade-in-up animation-delay-600">
@@ -234,29 +234,29 @@ export function LandingPageClient() {
       {/* How it Works Section */}
       <section id="how-it-works" className="py-12 sm:py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20">
         <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-center mb-3 sm:mb-4 md:mb-6 text-gray-800 dark:text-gray-100">시골 여행 이용방법</h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-12 md:mb-20 text-base sm:text-lg md:text-xl">세상 가장 쉬운 쉼을 찾는 여정</p>
+          <h2 className="text-heading-xl md:text-display-sm font-light text-center mb-3 sm:mb-4 md:mb-6 text-gray-800 dark:text-gray-100">시골 여행 이용방법</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-12 md:mb-20 text-body-lg md:text-heading-sm">세상 가장 쉬운 쉼을 찾는 여정</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16 max-w-6xl mx-auto text-center">
-            <div className="flex flex-col items-center px-4">
-              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+            <div className="stagger-item flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-all duration-300 shadow-soft hover:shadow-medium">
                 <span className="text-4xl sm:text-4xl md:text-5xl">🎨</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">테마 발견</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">#논뷰맛집 #불멍과별멍 #찐할머니손맛<br/>당신을 위한 테마를 찾아보세요.</p>
+              <h3 className="text-heading-md md:text-heading-lg font-medium mb-2 sm:mb-3 md:mb-4">테마 발견</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-body-sm md:text-body">#논뷰맛집 #불멍과별멍 #찐할머니손맛<br/>당신을 위한 테마를 찾아보세요.</p>
             </div>
-            <div className="flex flex-col items-center px-4">
-              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+            <div className="stagger-item flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-all duration-300 shadow-soft hover:shadow-medium">
                 <span className="text-4xl sm:text-4xl md:text-5xl">📖</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">스토리 탐색</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">호스트의 진솔한 이야기를 통해<br/>공간에 대한 깊은 이해를 더하세요.</p>
+              <h3 className="text-heading-md md:text-heading-lg font-medium mb-2 sm:mb-3 md:mb-4">스토리 탐색</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-body-sm md:text-body">호스트의 진솔한 이야기를 통해<br/>공간에 대한 깊은 이해를 더하세요.</p>
             </div>
-            <div className="flex flex-col items-center px-4">
-              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-transform">
+            <div className="stagger-item flex flex-col items-center px-4">
+              <div className="flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mb-4 sm:mb-6 md:mb-8 bg-primary/10 rounded-full transform hover:scale-110 transition-all duration-300 shadow-soft hover:shadow-medium">
                 <span className="text-4xl sm:text-4xl md:text-5xl">🏡</span>
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-light mb-2 sm:mb-3 md:mb-4">경험 예약</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base md:text-lg">단 몇 번의 클릭으로<br/>당신만의 시골 여행를 예약하세요.</p>
+              <h3 className="text-heading-md md:text-heading-lg font-medium mb-2 sm:mb-3 md:mb-4">경험 예약</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-body-sm md:text-body">단 몇 번의 클릭으로<br/>당신만의 시골 여행를 예약하세요.</p>
             </div>
           </div>
         </div>
@@ -264,8 +264,8 @@ export function LandingPageClient() {
 
       <section id="featured-experiences" className="py-24 px-6 md:px-12 lg:px-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-6 text-gray-800 dark:text-gray-100">추천 시골 여행</h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-xl">지금 가장 인기있는 인증된 숙소를 만나보세요</p>
+          <h2 className="text-display-sm md:text-display-md font-light text-center mb-6 text-gray-800 dark:text-gray-100">추천 시골 여행</h2>
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-20 text-body-lg md:text-heading-sm">지금 가장 인기있는 인증된 숙소를 만나보세요</p>
 
           {loadingProperties ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -283,9 +283,9 @@ export function LandingPageClient() {
             </div>
           ) : featuredProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {featuredProperties.map((property) => (
-                <Link key={property.id} href={`/property/${property.id}`}>
-                  <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-shadow duration-300 rounded-xl cursor-pointer h-full">
+              {featuredProperties.map((property, index) => (
+                <Link key={property.id} href={`/property/${property.id}`} className="stagger-item" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <Card className="overflow-hidden border-0 card-elevated rounded-xl cursor-pointer h-full hover:border-primary/20 transition-all duration-300">
                     <CardContent className="p-0">
                       <div className="relative h-72">
                         <Image
