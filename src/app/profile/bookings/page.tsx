@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,9 +47,10 @@ const statusInfo: Record<string, { label: string; color: string; icon: any }> =
   };
 
 export default async function MyBookingsPage() {
-  const { userId } = await auth();
+  const authUser = await getUser();
+  const userId = authUser?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !authUser) {
     redirect("/login");
   }
 

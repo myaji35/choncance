@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
@@ -7,14 +7,14 @@ import { redirect } from "next/navigation";
  * 현재 로그인한 사용자의 정보와 역할을 가져옵니다.
  */
 export async function getCurrentUser() {
-  const { userId } = await auth();
+  const supabaseUser = await getUser();
 
-  if (!userId) {
+  if (!supabaseUser || !supabaseUser.profile) {
     return null;
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: supabaseUser.profile.id },
     include: {
       hostProfile: true,
     },

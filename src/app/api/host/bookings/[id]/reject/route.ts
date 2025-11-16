@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingRejected } from "@/lib/notifications";
@@ -13,7 +13,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

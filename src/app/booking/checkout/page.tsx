@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,11 +12,14 @@ import { ArrowLeft, Calendar, Users, MapPin } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 function CheckoutForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isLoaded } = useUser();
+  const supabase = createClient();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const propertyId = searchParams.get("propertyId");
   const checkInStr = searchParams.get("checkIn");
@@ -35,12 +38,30 @@ function CheckoutForm() {
   const [guestEmail, setGuestEmail] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
 
+  // Check user authentication
   useEffect(() => {
-    if (isLoaded && user) {
-      setGuestName(user.fullName || "");
-      setGuestEmail(user.emailAddresses[0]?.emailAddress || "");
-    }
-  }, [isLoaded, user]);
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setIsLoaded(true);
+
+      if (user) {
+        setGuestEmail(user.email || "");
+        // Try to get user profile data
+        const { data: profile } = await supabase
+          .from('User')
+          .select('name')
+          .eq('email', user.email)
+          .single();
+
+        if (profile?.name) {
+          setGuestName(profile.name);
+        }
+      }
+    };
+
+    checkUser();
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,9 +8,10 @@ import { Plus, Edit, Eye, Trash2 } from "lucide-react";
 import Image from "next/image";
 
 export default async function HostPropertiesPage() {
-  const { userId } = await auth();
+  const user = await getUser();
+  const userId = user?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !user) {
     redirect("/login");
   }
 

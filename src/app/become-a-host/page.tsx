@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { BecomeHostForm } from "@/components/host/become-host-form";
@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle2 } from "lucide-react";
 
 export default async function BecomeHostPage() {
-  const { userId } = await auth();
+  const authUser = await getUser();
+  const userId = authUser?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !authUser) {
     redirect("/login");
   }
 

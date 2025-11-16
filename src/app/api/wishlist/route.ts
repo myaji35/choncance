@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/wishlist - Get user's wishlist
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -47,7 +48,8 @@ export async function GET() {
 // POST /api/wishlist - Add property to wishlist
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -113,7 +115,8 @@ export async function POST(request: NextRequest) {
 // DELETE /api/wishlist - Remove property from wishlist
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

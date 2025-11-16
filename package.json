@@ -6,7 +6,7 @@
     "node": ">=18.17.0"
   },
   "scripts": {
-    "dev": "next dev -p 3010",
+    "dev": "next dev -p 3005",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
@@ -22,8 +22,6 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@clerk/localizations": "^3.26.3",
-    "@clerk/nextjs": "^6.34.0",
     "@google-cloud/storage": "^7.17.2",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
@@ -44,13 +42,20 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.80.0",
     "@tailwindcss/vite": "^4.1.15",
     "@tosspayments/payment-sdk": "^1.9.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "jose": "^6.1.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.546.0",
     "next": "14.2.33",
     "next-auth": "^4.24.11",

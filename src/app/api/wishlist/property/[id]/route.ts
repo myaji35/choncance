@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 interface RouteParams {
@@ -12,7 +12,8 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
     const { id: propertyId } = await params;
 
     if (!userId) {
@@ -50,7 +51,8 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
     const { id: propertyId } = await params;
 
     if (!userId) {

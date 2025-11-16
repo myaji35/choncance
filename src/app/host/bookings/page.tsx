@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingManagementTable } from "@/components/host/booking-management-table";
@@ -107,9 +107,10 @@ async function getHostProperties(hostId: string) {
 export default async function HostBookingsPage({
   searchParams,
 }: HostBookingsPageProps) {
-  const { userId } = await auth();
+  const user = await getUser();
+  const userId = user?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !user) {
     redirect("/login");
   }
 

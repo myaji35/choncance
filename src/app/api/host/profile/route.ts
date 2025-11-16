@@ -1,11 +1,12 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 // POST /api/host/profile - 호스트 프로필 생성 (호스트 신청)
 export async function POST(request: Request) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -32,19 +33,12 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
-      // Fetch user data from Clerk
-      const client = await clerkClient();
-      const clerkUser = await client.users.getUser(userId);
-
-      // Create user in database
-      user = await prisma.user.create({
-        data: {
-          id: userId,
-          email: clerkUser.emailAddresses[0]?.emailAddress || "",
-          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null,
-        },
-        include: { hostProfile: true },
-      });
+      // User not found in database - they need to be created first
+      // This should not happen in normal flow as users are created on signup
+      return NextResponse.json(
+        { error: "사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요." },
+        { status: 404 }
+      );
     }
 
     // Check if host profile already exists
@@ -88,7 +82,8 @@ export async function POST(request: Request) {
 // GET /api/host/profile - 현재 사용자의 호스트 프로필 조회
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -106,18 +101,11 @@ export async function GET() {
     });
 
     if (!user) {
-      // Fetch user data from Clerk and create in database
-      const client = await clerkClient();
-      const clerkUser = await client.users.getUser(userId);
-
-      user = await prisma.user.create({
-        data: {
-          id: userId,
-          email: clerkUser.emailAddresses[0]?.emailAddress || "",
-          name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null,
-        },
-        include: { hostProfile: true },
-      });
+      // User not found in database
+      return NextResponse.json(
+        { error: "사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요." },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
@@ -135,7 +123,8 @@ export async function GET() {
 // PATCH /api/host/profile - Update host profile
 export async function PATCH(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

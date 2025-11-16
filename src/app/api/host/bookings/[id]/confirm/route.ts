@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingConfirmed } from "@/lib/notifications";
 import { sendBookingConfirmedAlimtalk } from "@/lib/kakao-alimtalk";
@@ -14,7 +14,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

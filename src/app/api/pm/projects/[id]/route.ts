@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/pm/projects/[id] - 특정 프로젝트 상세 조회
@@ -8,7 +8,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = getAuth(request);
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -85,7 +86,8 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = getAuth(request);
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -138,7 +140,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = getAuth(request);
+    const authUser = await getUser();
+    const userId = authUser?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(

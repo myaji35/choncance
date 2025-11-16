@@ -1,5 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,11 +17,13 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
 export default async function PaymentsPage() {
-  const { userId } = await auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user || !user.profile) {
     redirect("/login");
   }
+
+  const userId = user.profile.id;
 
   // 사용자의 모든 결제 내역 조회
   const payments = await prisma.payment.findMany({

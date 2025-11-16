@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
@@ -12,18 +12,20 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
 
-    if (!userId) {
+    if (!authUser || !authUser.profile) {
       return NextResponse.json({ error: "인증이 필요합니다" }, { status: 401 });
     }
 
+    const userId = authUser.profile.id;
+
     // Get user and check if admin
-    const user = await prisma.user.findUnique({
+    const dbUser = await prisma.user.findUnique({
       where: { id: userId },
     });
 
-    if (user?.role !== "ADMIN") {
+    if (dbUser?.role !== "ADMIN") {
       return NextResponse.json(
         { error: "관리자 권한이 필요합니다" },
         { status: 403 }

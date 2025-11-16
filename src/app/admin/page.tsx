@@ -1,23 +1,14 @@
 import { redirect } from "next/navigation";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { ClipboardCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ClipboardCheck, Settings, LogOut } from "lucide-react";
 
 export default async function AdminPage() {
-  // ADMIN 역할만 접근 가능
-  await requireAdmin();
-
-  const { userId } = await auth();
-
-  if (!userId) {
-    redirect("/login");
-  }
-
-  // Get current user from Clerk
-  const clerkUser = await currentUser();
+  // Admin token으로 인증 확인
+  await requireAdminAuth();
 
   // Get statistics
   const stats = await Promise.all([
@@ -32,7 +23,24 @@ export default async function AdminPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">관리자 대시보드</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">관리자 대시보드</h1>
+
+        <div className="flex gap-3">
+          <Link href="/admin/settings">
+            <Button variant="outline">
+              <Settings className="mr-2 h-4 w-4" />
+              설정
+            </Button>
+          </Link>
+          <form action="/api/admin/auth/logout" method="POST">
+            <Button variant="outline" type="submit">
+              <LogOut className="mr-2 h-4 w-4" />
+              로그아웃
+            </Button>
+          </form>
+        </div>
+      </div>
 
       {/* Pending Properties Alert */}
       {pendingPropertiesCount > 0 && (
@@ -119,6 +127,12 @@ export default async function AdminPage() {
             >
               통계 및 리포트
             </Link>
+            <Link
+              href="/admin/settings"
+              className="block p-3 hover:bg-gray-50 rounded transition-colors border-t"
+            >
+              관리자 설정
+            </Link>
           </div>
         </div>
 
@@ -126,15 +140,10 @@ export default async function AdminPage() {
           <h2 className="text-xl font-bold mb-4">관리자 정보</h2>
           <div className="space-y-2">
             <p>
-              <span className="font-medium">이메일:</span>{" "}
-              {clerkUser?.emailAddresses[0]?.emailAddress || "N/A"}
+              <span className="font-medium">사용자명:</span> admin
             </p>
-            <p>
-              <span className="font-medium">이름:</span>{" "}
-              {clerkUser?.firstName || clerkUser?.username || "N/A"}
-            </p>
-            <p>
-              <span className="font-medium">사용자 ID:</span> {userId}
+            <p className="text-sm text-muted-foreground mt-4">
+              보안을 위해 정기적으로 패스워드를 변경하세요.
             </p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireHost, getCurrentUser } from "@/lib/auth-utils";

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -8,11 +8,13 @@ import { prisma } from "@/lib/prisma";
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const authUser = await getUser();
 
-    if (!userId) {
+    if (!authUser || !authUser.profile) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const userId = authUser.profile.id;
 
     // Check if user is admin (you can add admin check logic here)
     // For now, allowing all authenticated users

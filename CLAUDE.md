@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Communication Language
+
+**항상 한글로 대화해주세요.** All communication with the user should be in Korean (한국어).
+
 ## Project Overview
 
 **VINTEE** is a platform for curating and booking authentic rural vacation experiences (VINTEE) for the MZ generation in Korea. The platform focuses on providing unique local stories and experiences beyond simple accommodation booking, emphasizing healing, relaxation, and SNS-shareable content.

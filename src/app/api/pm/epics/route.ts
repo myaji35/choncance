@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 // POST /api/pm/epics - 새 Epic 생성
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const user = await getUser();
+    const userId = user?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(

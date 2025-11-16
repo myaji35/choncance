@@ -1,45 +1,46 @@
 "use client";
 
-import { SignInButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/search-bar";
-import { NotificationButton } from "@/components/notifications/notification-button";
-import { UserRoleButton } from "@/components/layout/user-role-button";
 import { useRouter, usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, Bell } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Role } from "@prisma/client";
+import { createClient } from "@/lib/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export function SiteHeader() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useUser();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const supabase = createClient();
 
   useEffect(() => {
-    async function checkAdminRole() {
-      if (!user) {
-        setIsAdmin(false);
-        return;
-      }
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
 
-      try {
-        const response = await fetch("/api/user/role");
-        if (response.ok) {
-          const data = await response.json();
-          setIsAdmin(data.role === Role.ADMIN);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user role:", error);
-        setIsAdmin(false);
+      if (user) {
+        const { data: profile } = await supabase
+          .from('User')
+          .select('*')
+          .eq('email', user.email)
+          .single();
+        setUserProfile(profile);
       }
-    }
+    };
 
-    checkAdminRole();
-  }, [user]);
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Hide header on landing page (it has its own custom header)
   if (pathname === "/") {
@@ -79,14 +80,14 @@ export function SiteHeader() {
             >
               추천
             </Link>
-            <SignedIn>
+            {user && (
               <Link
                 href="/wishlist"
                 className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
               >
                 찜한 숙소
               </Link>
-            </SignedIn>
+            )}
             <Link
               href="/how-to-use"
               className="text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
@@ -113,32 +114,47 @@ export function SiteHeader() {
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-2 shrink-0">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <Button variant="outline" size="sm" className="border-gray-300">
-                  로그인
-                </Button>
-              </SignInButton>
-              <Link href="/signup">
-                <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
-                  회원가입
-                </Button>
-              </Link>
-            </SignedOut>
-
-            <SignedIn>
-              {isAdmin && <NotificationButton />}
-              <Link href="/bookings">
+            {!user ? (
+              <>
+                <Link href="/login">
+                  <Button variant="outline" size="sm" className="border-gray-300">
+                    로그인
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm" className="bg-primary text-white hover:bg-primary/90">
+                    회원가입
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                {userProfile?.role === 'ADMIN' && (
+                  <Button variant="ghost" size="sm" className="relative">
+                    <Bell className="h-5 w-5" />
+                  </Button>
+                )}
+                <Link href="/bookings">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-gray-400 bg-white text-gray-900 font-medium hover:bg-primary hover:text-white hover:border-primary transition-all whitespace-nowrap"
+                  >
+                    내 예약
+                  </Button>
+                </Link>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  className="border-2 border-gray-400 bg-white text-gray-900 font-medium hover:bg-primary hover:text-white hover:border-primary transition-all whitespace-nowrap"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    router.push('/');
+                  }}
                 >
-                  내 예약
+                  <User className="h-5 w-5" />
                 </Button>
-              </Link>
-              <UserRoleButton />
-            </SignedIn>
+              </>
+            )}
           </div>
         </div>
 
@@ -160,9 +176,11 @@ export function SiteHeader() {
 
           {/* Auth and Menu */}
           <div className="flex items-center gap-2">
-            <SignedIn>
-              {isAdmin && <NotificationButton />}
-            </SignedIn>
+            {user && userProfile?.role === 'ADMIN' && (
+              <Button variant="ghost" size="sm" className="relative">
+                <Bell className="h-5 w-5" />
+              </Button>
+            )}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors shrink-0"
@@ -196,7 +214,7 @@ export function SiteHeader() {
             >
               추천
             </Link>
-            <SignedIn>
+            {user && (
               <Link
                 href="/wishlist"
                 className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
@@ -204,7 +222,7 @@ export function SiteHeader() {
               >
                 찜한 숙소
               </Link>
-            </SignedIn>
+            )}
             <Link
               href="/how-to-use"
               className="block py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
@@ -220,34 +238,39 @@ export function SiteHeader() {
               호스트 되기
             </Link>
 
-            <SignedOut>
+            {!user ? (
               <div className="pt-3 border-t space-y-2">
-                <SignInButton mode="modal">
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full border-gray-300">
                     로그인
                   </Button>
-                </SignInButton>
+                </Link>
                 <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-primary text-white hover:bg-primary/90">
                     회원가입
                   </Button>
                 </Link>
               </div>
-            </SignedOut>
-
-            <SignedIn>
+            ) : (
               <div className="pt-3 border-t space-y-2">
                 <Link href="/bookings" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full">
                     내 예약
                   </Button>
                 </Link>
-                <div className="flex items-center gap-3 pt-2">
-                  {isAdmin && <NotificationButton />}
-                  <UserRoleButton />
-                </div>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    router.push('/');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  로그아웃
+                </Button>
               </div>
-            </SignedIn>
+            )}
           </nav>
         </div>
       )}

@@ -1,12 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { PropertyRegistrationForm } from "@/components/host/property-registration-form";
 import { getTagsGroupedByCategory } from "@/lib/api/tags";
 
 export default async function NewPropertyPage() {
-  const { userId } = await auth();
+  const user = await getUser();
+  const userId = user?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !user) {
     redirect("/login");
   }
 

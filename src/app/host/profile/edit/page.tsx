@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,9 +8,10 @@ import { ArrowLeft } from "lucide-react";
 import { HostProfileEditForm } from "@/components/host/host-profile-edit-form";
 
 export default async function HostProfileEditPage() {
-  const { userId } = await auth();
+  const user = await getUser();
+  const userId = user?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !user) {
     redirect("/login");
   }
 

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,9 +10,10 @@ import { WishlistButton } from "@/components/wishlist/wishlist-button";
 import { TagList } from "@/components/tag/tag-badge";
 
 export default async function WishlistPage() {
-  const { userId } = await auth();
+  const authUser = await getUser();
+  const userId = authUser?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !authUser) {
     redirect("/login");
   }
 

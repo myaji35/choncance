@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { createClient } from "@/lib/supabase/client";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface WishlistButtonProps {
   propertyId: string;
@@ -23,10 +24,21 @@ export function WishlistButton({
   showToast = true,
 }: WishlistButtonProps) {
   const router = useRouter();
-  const { user, isLoaded } = useUser();
+  const supabase = createClient();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistId, setWishlistId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setIsLoaded(true);
+    };
+    checkUser();
+  }, []);
   const [isChecking, setIsChecking] = useState(true);
 
   // Check if property is in wishlist

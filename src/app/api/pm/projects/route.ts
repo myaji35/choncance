@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/pm/projects - 모든 프로젝트 목록 조회
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const user = await getUser();
+    const userId = user?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(
@@ -45,7 +46,8 @@ export async function GET(request: NextRequest) {
 // POST /api/pm/projects - 새 프로젝트 생성
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const user = await getUser();
+    const userId = user?.profile?.id;
 
     if (!userId) {
       return NextResponse.json(

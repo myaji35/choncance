@@ -1,5 +1,5 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -42,12 +42,13 @@ async function getBookings(userId: string) {
 }
 
 export default async function BookingsPage() {
-  const { userId } = await auth();
+  const user = await getUser();
 
-  if (!userId) {
+  if (!user || !user.profile) {
     redirect("/login");
   }
 
+  const userId = user.profile.id;
   const bookings = await getBookings(userId);
 
   const getStatusBadge = (status: string) => {

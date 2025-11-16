@@ -1,5 +1,5 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,19 +16,22 @@ import {
 } from "lucide-react";
 
 export default async function ProfilePage() {
-  const { userId } = await auth();
+  const authUser = await getUser();
 
-  if (!userId) {
+  if (!authUser || !authUser.profile) {
     redirect("/login");
   }
 
-  // Get Clerk user info
-  const clerkUser = await currentUser();
+  const userId = authUser.profile.id;
 
   // Get our database user info
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: {
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
       hostProfile: true,
       _count: {
         select: {
@@ -45,19 +48,20 @@ export default async function ProfilePage() {
     await prisma.user.create({
       data: {
         id: userId,
-        email: clerkUser?.emailAddresses[0]?.emailAddress || "",
-        name: clerkUser?.fullName || clerkUser?.firstName || "",
+        email: authUser.email || "",
+        name: authUser.profile?.name || "사용자",
       },
     });
   }
 
-  const joinDate = clerkUser?.createdAt
-    ? new Date(clerkUser.createdAt).toLocaleDateString("ko-KR", {
+  // Supabase auth user의 created_at 사용
+  const joinDate = authUser.profile?.created_at
+    ? new Date(authUser.profile.created_at).toLocaleDateString("ko-KR", {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
-    : "";
+    : "정보 없음";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,10 +86,10 @@ export default async function ProfilePage() {
               <CardContent className="space-y-4">
                 {/* Profile Image */}
                 <div className="flex justify-center">
-                  {clerkUser?.imageUrl ? (
+                  {user?.image ? (
                     <img
-                      src={clerkUser.imageUrl}
-                      alt={clerkUser.fullName || "User"}
+                      src={user.image}
+                      alt={user.name || "User"}
                       className="w-24 h-24 rounded-full border-4 border-primary/10"
                     />
                   ) : (
@@ -99,7 +103,7 @@ export default async function ProfilePage() {
                 <div className="space-y-3 text-center">
                   <div>
                     <p className="text-2xl font-bold text-gray-900">
-                      {clerkUser?.fullName || clerkUser?.firstName || "사용자"}
+                      {user?.name || "사용자"}
                     </p>
                     {user?.hostProfile && (
                       <Badge className="mt-2" variant="secondary">
@@ -110,7 +114,7 @@ export default async function ProfilePage() {
 
                   <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
                     <Mail className="w-4 h-4" />
-                    {clerkUser?.emailAddresses[0]?.emailAddress}
+                    {user?.email || authUser.email}
                   </div>
 
                   <div className="flex items-center justify-center gap-2 text-sm text-gray-600">

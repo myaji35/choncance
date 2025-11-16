@@ -1,6 +1,33 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser, getRoleHomePage } from "@/lib/auth-utils";
+import { Role } from "@prisma/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  // 로그인한 사용자 정보 가져오기
+  const user = await getCurrentUser();
+
+  // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+  if (!user) {
+    redirect("/login");
+  }
+
+  // 호스트인 경우 호스트 대시보드로 리디렉션
+  if (user.role === Role.HOST) {
+    redirect("/host/dashboard");
+  }
+
+  // 관리자인 경우 관리자 페이지로 리디렉션
+  if (user.role === Role.ADMIN) {
+    redirect("/admin");
+  }
+
+  // 호스트 승인 대기 중인 경우
+  if (user.role === Role.HOST_PENDING) {
+    redirect("/become-a-host/pending");
+  }
+
+  // 일반 사용자(USER)인 경우 아래 대시보드 표시
   // Placeholder for dashboard data
   const todayTasks = 5;
   const inProgressTasks = 12;
@@ -8,7 +35,7 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">환영합니다!</h1>
+      <h1 className="text-3xl font-bold mb-6">환영합니다, {user.name || user.email}님!</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>

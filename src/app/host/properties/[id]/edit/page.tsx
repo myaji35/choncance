@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/supabase/auth-helpers";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PropertyEditForm } from "@/components/host/property-edit-form";
@@ -11,9 +11,10 @@ interface EditPropertyPageProps {
 }
 
 export default async function EditPropertyPage({ params }: EditPropertyPageProps) {
-  const { userId } = await auth();
+  const authUser = await getUser();
+  const userId = authUser?.profile?.id;
 
-  if (!userId) {
+  if (!userId || !authUser) {
     redirect("/login");
   }
 
