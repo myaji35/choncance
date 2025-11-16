@@ -115,9 +115,9 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             <PropertyGallery images={serializedProperty.images} title={serializedProperty.name} />
 
             {/* Property Header */}
-            <div className="space-y-3 sm:space-y-4">
+            <div className="space-y-3 sm:space-y-4 animate-fade-in">
               <div className="flex items-start justify-between gap-3 sm:gap-4">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 flex-1">
+                <h1 className="text-heading-xl md:text-display-sm font-bold text-gray-900 flex-1">
                   {serializedProperty.name}
                 </h1>
                 <WishlistButton
@@ -130,7 +130,7 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
 
               <div className="flex items-center gap-2 text-gray-600">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
-                <p className="text-sm sm:text-base md:text-lg">{serializedProperty.address}</p>
+                <p className="text-body md:text-body-lg">{serializedProperty.address}</p>
               </div>
 
               <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
@@ -153,19 +153,19 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
             </div>
 
             {/* Property Description */}
-            <section className="space-y-3 sm:space-y-4">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">숙소 소개</h2>
-              <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
+            <section className="space-y-3 sm:space-y-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <h2 className="text-heading-lg md:text-heading-xl font-bold text-gray-900">숙소 소개</h2>
+              <p className="text-body md:text-body-lg text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {serializedProperty.description}
               </p>
             </section>
 
             {/* Host Story */}
             {serializedProperty.hostStory && (
-              <section className="space-y-3 sm:space-y-4">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">호스트 이야기</h2>
-                <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
-                  <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed whitespace-pre-wrap italic">
+              <section className="space-y-3 sm:space-y-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                <h2 className="text-heading-lg md:text-heading-xl font-bold text-gray-900">호스트 이야기</h2>
+                <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-soft">
+                  <p className="text-body md:text-body-lg text-gray-700 leading-relaxed whitespace-pre-wrap italic">
                     {serializedProperty.hostStory}
                   </p>
                   <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
