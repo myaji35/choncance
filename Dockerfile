@@ -22,6 +22,8 @@ RUN npx prisma generate
 # Build Next.js app with environment variables
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ
+ENV NEXT_PUBLIC_SUPABASE_URL=https://xfchchvhwciaiwefgjgsg.supabase.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmY2hjdmh3Y2lhaXdlZmpnanNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3Mzc5MjcsImV4cCI6MjA3ODMxMzkyN30.gfQFoqqBRowyI2FsR8Uu00Jt3cN2lofwleJ_J_-ctTI
 # Set a dummy DATABASE_URL for build time (Prisma requires it)
 ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 RUN npm run build

@@ -41,10 +41,10 @@ export default function HowToUsePage() {
               <span className="text-sm font-medium">이용 가이드</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              ChonCance 이용 방법
+              VINTEE 이용방법
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              촌캉스 예약부터 호스트 등록까지, 모든 것을 쉽고 간단하게
+              빈티지한 시골의 쉼을 찾는 가장 쉬운 여정
             </p>
           </div>
         </div>
@@ -309,10 +309,10 @@ export default function HowToUsePage() {
             {/* 일반 */}
             <AccordionItem value="faq-1" className="border rounded-lg px-6">
               <AccordionTrigger className="text-left hover:no-underline">
-                <span className="font-semibold text-gray-900">ChonCance는 어떤 서비스인가요?</span>
+                <span className="font-semibold text-gray-900">VINTEE는 어떤 서비스인가요?</span>
               </AccordionTrigger>
               <AccordionContent className="text-gray-600 pb-4">
-                ChonCance는 한국의 아름다운 농촌 지역에서 휴가를 즐길 수 있도록 돕는 촌캉스 큐레이션 플랫폼입니다.
+                VINTEE는 도시 생활에 지친 MZ세대를 위한 빈티지한 시골 여행 큐레이션 플랫폼입니다.
                 테마 기반 검색으로 원하는 분위기의 숙소를 쉽게 찾고, 호스트의 진정성 있는 스토리를 통해 특별한 경험을 예약할 수 있습니다.
               </AccordionContent>
             </AccordionItem>
@@ -400,7 +400,7 @@ export default function HowToUsePage() {
                 <span className="font-semibold text-gray-900">문의는 어떻게 하나요?</span>
               </AccordionTrigger>
               <AccordionContent className="text-gray-600 pb-4">
-                고객센터 이메일(support@choncance.com)로 문의해주시면 빠르게 답변드리겠습니다.
+                고객센터 이메일(support@vintee.com)로 문의해주시면 빠르게 답변드리겠습니다.
                 영업일 기준 24시간 이내에 답변을 받으실 수 있습니다.
               </AccordionContent>
             </AccordionItem>
