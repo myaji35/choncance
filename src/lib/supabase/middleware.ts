@@ -45,21 +45,15 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-  // Admin routes protection
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
+  // Admin routes protection (skip login page)
+  if (request.nextUrl.pathname.startsWith('/admin') &&
+      !request.nextUrl.pathname.startsWith('/admin/login') &&
+      !request.nextUrl.pathname.startsWith('/api/admin/auth')) {
+    // Check for admin JWT token instead of Supabase auth
+    const adminToken = request.cookies.get('admin_token')
+
+    if (!adminToken) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
-    }
-
-    // Check if user has admin role
-    const { data: profile } = await supabase
-      .from('User')
-      .select('role')
-      .eq('email', user.email)
-      .single()
-
-    if (profile?.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/', request.url))
     }
   }
 

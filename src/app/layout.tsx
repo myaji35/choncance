@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/layout/site-header-simple";
 import { Toaster } from "@/components/ui/toaster";
 import { PWAInit } from "@/components/pwa-init";
+import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
 
 // Pretendard 폰트 (한글 최적화)
 const pretendard = localFont({
@@ -84,6 +85,9 @@ export default function RootLayout({
 
         {/* Toaster for notifications */}
         <Toaster />
+
+        {/* Chatbot Widget */}
+        <ChatbotWidget />
 
         {/* Footer */}
         <footer className="bg-gray-100 py-6 px-6 text-center text-gray-600 text-sm">

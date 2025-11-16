@@ -4,22 +4,33 @@ import { requireAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClipboardCheck, Settings, LogOut } from "lucide-react";
+import { ClipboardCheck, Settings, LogOut, Bot } from "lucide-react";
 
 export default async function AdminPage() {
   // Admin token으로 인증 확인
   await requireAdminAuth();
 
-  // Get statistics
-  const stats = await Promise.all([
-    prisma.property.count(),
-    prisma.booking.count(),
-    prisma.user.count(),
-    prisma.review.count(),
-    prisma.property.count({ where: { status: "PENDING" } }),
-  ]);
+  // Get statistics with error handling
+  let propertyCount = 0;
+  let bookingCount = 0;
+  let userCount = 0;
+  let reviewCount = 0;
+  let pendingPropertiesCount = 0;
 
-  const [propertyCount, bookingCount, userCount, reviewCount, pendingPropertiesCount] = stats;
+  try {
+    const stats = await Promise.all([
+      prisma.property.count(),
+      prisma.booking.count(),
+      prisma.user.count(),
+      prisma.review.count(),
+      prisma.property.count({ where: { status: "PENDING" } }),
+    ]);
+
+    [propertyCount, bookingCount, userCount, reviewCount, pendingPropertiesCount] = stats;
+  } catch (error) {
+    console.error("Database connection error:", error);
+    // Use default values (0) when database is not available
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -27,6 +38,12 @@ export default async function AdminPage() {
         <h1 className="text-3xl font-bold">관리자 대시보드</h1>
 
         <div className="flex gap-3">
+          <Link href="/admin/settings/chatbot">
+            <Button variant="outline">
+              <Bot className="mr-2 h-4 w-4" />
+              챗봇 AI
+            </Button>
+          </Link>
           <Link href="/admin/settings">
             <Button variant="outline">
               <Settings className="mr-2 h-4 w-4" />

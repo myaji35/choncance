@@ -704,3 +704,23 @@ model SNSPost {
   @@index([platform])
   @@index([publishedAt])
 }
+
+// ============================================
+// Chatbot LLM Settings
+// ============================================
+
+model ChatbotSettings {
+  id          String   @id @default("default") // 싱글톤 패턴
+  llmProvider String   @default("GEMINI") // "GEMINI", "OPENAI", "KEYWORD"
+  geminiApiKey String? @db.Text
+  openaiApiKey String? @db.Text
+
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+enum LLMProvider {
+  GEMINI
+  OPENAI
+  KEYWORD
+}
