@@ -107,12 +107,12 @@ ${JSON.stringify(propertiesContext, null, 2)}
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", // 비용 효율적인 모델
       messages: [
-        { role: "system", content: systemPrompt },
+        { role: "system" as const, content: systemPrompt },
         ...history.slice(-5).map((msg: any) => ({
-          role: msg.role === "user" ? "user" : "assistant",
+          role: (msg.role === "user" ? "user" : "assistant") as "user" | "assistant",
           content: msg.content,
         })),
-        { role: "user", content: userMessage },
+        { role: "user" as const, content: userMessage },
       ],
       temperature: 0.7,
       max_tokens: 500,

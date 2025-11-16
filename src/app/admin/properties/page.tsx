@@ -10,7 +10,7 @@ export default async function AdminPropertiesPage() {
   await requireAdminAuth();
 
   // Get all properties with host information
-  let properties = [];
+  let properties: any[] = [];
 
   try {
     properties = await prisma.property.findMany({
