@@ -176,11 +176,12 @@ According to TASK.md, prioritize:
 - ✅ Tag-Based Filtering - Click tags to filter properties (`/explore?tag=태그명`)
 - ✅ Text Search - Search properties by name, description, address, or tags (`/explore?search=검색어`)
 
-**Epic 2: Booking System (In Progress)**
+**Epic 2: Booking System**
 - ✅ Database Models - Booking, BookingItem, Calendar, Payment, PaymentTransaction models
-- ⏳ Booking API - Availability check, booking creation, payment integration
-- ⏳ Booking UI - Date picker, booking widget, checkout flow
-- ⏳ Payment Integration - Toss Payments integration
+- ✅ Booking API - Availability check, booking creation, payment integration
+- ✅ Booking UI - Checkout page with guest info form and booking summary
+- ✅ Payment Integration - Toss Payments full integration (승인, 환불, 영수증)
+- ✅ Payment Success/Fail Pages - 결제 성공/실패 처리 페이지
 
 **Authentication**
 - ✅ Clerk authentication with Korean localization
@@ -198,9 +199,9 @@ According to TASK.md, prioritize:
 **Backend API (Next.js API Routes)**
 - ✅ Tag API (`GET /api/tags`) with category filtering
 - ✅ Property API (`GET /api/properties`, `GET /api/properties/[id]`) with tag filtering
-- ⏳ Booking API (`POST /api/bookings`, `GET /api/bookings`, `GET /api/bookings/[id]`)
-- ⏳ Availability API (`GET /api/availability/check`, `GET /api/availability/calendar/:propertyId`)
-- ⏳ Payment API (`POST /api/payments/confirm`, `GET /api/payments/:bookingId`)
+- ✅ Booking API (`POST /api/bookings`, `GET /api/bookings`, `GET /api/bookings/[id]`)
+- ✅ Availability API (`GET /api/availability/check`, `GET /api/availability/calendar/:propertyId`)
+- ✅ Payment API (`POST /api/payments/confirm`, `POST /api/payments/[id]/refund`, `GET /api/payments/[id]/receipt`)
 
 **Database (PostgreSQL via Prisma)**
 - ✅ Core models: User, HostProfile, Property, Tag, Experience

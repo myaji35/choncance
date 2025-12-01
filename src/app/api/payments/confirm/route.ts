@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
             externalId: paymentKey,
             type: "PAYMENT",
             amount: payment.amount,
-            status: PaymentStatus.DONE,
+            status: "SUCCESS",
             method: "SIMULATED",
             metadata: {
               orderId,
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
           externalId: tossData.transactionKey || paymentKey,
           type: "PAYMENT",
           amount: payment.amount,
-          status: PaymentStatus.DONE,
+          status: "SUCCESS",
           method: tossData.method || "UNKNOWN",
           metadata: tossData,
         },

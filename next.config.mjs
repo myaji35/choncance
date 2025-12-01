@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable standalone output for Docker
-  output: 'standalone',
+  // Standalone output for Docker/self-hosting
+  // For Vercel, this can be removed or kept (Vercel handles it automatically)
+  // output: 'standalone',
   eslint: {
     // Temporarily ignore ESLint errors during builds
     // All TypeScript type errors have been fixed

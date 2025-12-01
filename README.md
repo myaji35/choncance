@@ -173,28 +173,39 @@ pytest
 
 ## 🚢 배포
 
-### Netlify (Frontend)
+### Vercel & GCP PostgreSQL (권장)
+
+VINTEE는 Vercel과 GCP Cloud SQL PostgreSQL로 배포됩니다.
+
+**빠른 시작 (5분):**
+```bash
+# 1. GCP Cloud SQL 연결 정보 확인
+# 2. Vercel 환경 변수 설정
+# 3. 데이터베이스 마이그레이션
+npx prisma migrate deploy
+npm run seed
+
+# 4. 배포
+git push origin main
+```
+
+**배포 가이드:**
+- 📖 [5분 빠른 배포](./docs/QUICK_DEPLOY.md) - 빠르게 배포하기
+- 📖 [단계별 배포 가이드](./docs/DEPLOY_STEPS.md) - 상세한 배포 절차
+- 📖 [Vercel 설정](./docs/VERCEL_DEPLOYMENT.md) - Vercel 환경 변수 설정
+
+**자동 설정 스크립트:**
+```bash
+./scripts/setup-vercel-env.sh
+```
+
+### Netlify (대안)
 
 1. Netlify에 GitHub 연결
 2. Build settings:
-   - Build command: `npm run build`
+   - Build command: `prisma generate && next build`
    - Publish directory: `.next`
-3. Environment variables 설정:
-   ```
-   NEXT_PUBLIC_API_URL=https://your-backend-url.com
-   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
-   CLERK_SECRET_KEY=sk_live_...
-   ```
-
-### Railway (Backend)
-
-1. Railway에 GitHub 연결
-2. Root Directory: `backend`
-3. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. PostgreSQL 데이터베이스 추가
-5. Environment variables 설정
-
-자세한 내용은 [backend/DEPLOYMENT.md](./backend/DEPLOYMENT.md) 참조
+3. Environment variables 설정 (`.env.production.example` 참조)
 
 ## 🤝 기여하기
 
