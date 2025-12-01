@@ -1,6 +1,6 @@
-import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+// Load from environment variables
 const DATABASE_URL = process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/choncance?schema=public";
 const DIRECT_URL = process.env.DIRECT_URL || DATABASE_URL;
 

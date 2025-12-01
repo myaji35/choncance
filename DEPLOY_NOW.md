@@ -1,68 +1,52 @@
-# 🚀 ChonCance 배포 - 바로 실행하기
+# 🚀 간단 배포 가이드 (기존 환경 사용)
 
-## Google Cloud Run + Cloud SQL PostgreSQL 배포
+## 현재 상황
+- ✅ Supabase PostgreSQL 이미 연결됨
+- ✅ Vercel 프로젝트 이미 생성됨  
+- ✅ 로컬 빌드 성공
 
-### 1단계: Google Cloud 로그인
-터미널에서 실행:
-```bash
-gcloud auth login
-```
-→ 브라우저가 열리고 Google 계정으로 로그인
+## 배포 2단계
 
-### 2단계: 필수 API 활성화
-```bash
-# API 활성화
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com sqladmin.googleapis.com
-```
+### 1. Vercel 환경 변수 설정
 
-### 3단계: 배포 실행
-```bash
-./deploy.sh
-```
+[Vercel Dashboard](https://vercel.com/dashboard) > 프로젝트 > Settings > Environment Variables
 
-## 예상 소요 시간: 5-7분
-
----
-
-## 배포 완료 후
-
-배포가 성공하면 URL이 표시됩니다:
-```
-🌐 서비스 URL: https://choncance-646626710380.asia-northeast3.run.app
-```
-
-## 생성된 리소스
-
-✅ **Cloud Run 서비스**: choncance (asia-northeast3)
-✅ **Cloud SQL 인스턴스**: choncance-db (PostgreSQL 15)
-✅ **데이터베이스**: choncance
-✅ **연결**: Cloud Run ↔ Cloud SQL Unix Socket
-
-## PostgreSQL 접속 정보
-
-- **인스턴스**: choncance-db
-- **사용자**: postgres
-- **비밀번호**: ChonCance2025!
-- **데이터베이스**: choncance
-- **연결 방식**: Cloud SQL Proxy (Unix Socket)
-
----
-
-## 지금 바로 시작하세요!
+아래 환경 변수를 **Production**과 **Preview**에 추가:
 
 ```bash
-# 1. 로그인
-gcloud auth login
+# Database (Supabase PostgreSQL)
+DATABASE_URL=postgresql://postgres.xfchchvhwciaiwefgjgsg:posdnjs!00@aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres
+DIRECT_URL=postgresql://postgres.xfchchvhwciaiwefgjgsg:posdnjs!00@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
 
-# 2. API 활성화
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com sqladmin.googleapis.com
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xfchchvhwciaiwefgjgsg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmY2hjdmh3Y2lhaXdlZmpnanNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3Mzc5MjcsImV4cCI6MjA3ODMxMzkyN30.gfQFoqqBRowyI2FsR8Uu00Jt3cN2lofwleJ_J_-ctTI
 
-# 3. 배포!
-./deploy.sh
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_d29uZHJvdXMtc3BvbmdlLTIwLmNsZXJrLmFjY291bnRzLmRldiQ
+CLERK_SECRET_KEY=sk_test_bdfLUP32iwMl8zL2oAPgmJvXCqKeZpz8X4Yey8zUla
+
+# Toss Payments
+NEXT_PUBLIC_TOSS_CLIENT_KEY=test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq
+TOSS_SECRET_KEY=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R
+
+# Gemini AI
+GEMINI_API_KEY=AIzaSyDMtwOnB77EYK9d_eaETnSSpC25Eiu7wa0
+
+# Admin
+ADMIN_PASSWORD_HASH=$2b$10$/2LriKXhyrDcDzRgC9TzeOmB5X2tY4AIUBvIeW4tH0eenTOcWVOte
+JWT_SECRET=your-secret-key-change-this-in-production
+
+# Kakao (선택사항)
+KAKAO_ALIMTALK_ENABLED=false
 ```
 
-## 주의사항
+### 2. Git Push
 
-- 첫 배포 후 Prisma 마이그레이션이 필요할 수 있습니다
-- Cloud SQL 인스턴스는 생성 후 자동으로 연결됩니다
-- 데이터베이스 비밀번호: `ChonCance2025!`
+```bash
+git add .
+git commit -m "feat: Vercel 배포 설정 완료"
+git push origin main
+```
+
+Vercel이 자동으로 빌드하고 배포합니다. 끝! 🎉
