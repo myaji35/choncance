@@ -1,0 +1,99 @@
+{
+  "name": "vintee-e2e-tests",
+  "version": "1.0.0",
+  "description": "VINTEE E2E Tests with Playwright",
+  "scripts": {
+    "// ========== 전체 테스트 ==========": "",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+
+    "// ========== 병렬 그룹 테스트 ==========": "",
+    "test:parallel": "npm run test:group-a && npm run test:group-b && npm run test:group-c && npm run test:group-d",
+    "test:parallel:all": "playwright test --project=group-a1-public --project=group-a2-components --project=group-b1-user --project=group-b2-host --project=group-b3-admin --project=group-c1-booking --project=group-c2-booking-alt --project=group-c3-host-bookings --project=group-d1-reviews --project=group-d2-chatbot --project=group-d3-credits",
+
+    "// ========== Group A: 읽기 전용 테스트 ==========": "",
+    "test:group-a": "playwright test --project=group-a1-public --project=group-a2-components",
+    "test:group-a1": "playwright test --project=group-a1-public",
+    "test:group-a2": "playwright test --project=group-a2-components",
+
+    "// ========== Group B: 사용자별 테스트 ==========": "",
+    "test:group-b": "playwright test --project=group-b1-user --project=group-b2-host --project=group-b3-admin",
+    "test:group-b1": "playwright test --project=group-b1-user",
+    "test:group-b2": "playwright test --project=group-b2-host",
+    "test:group-b3": "playwright test --project=group-b3-admin",
+
+    "// ========== Group C: 예약/결제 테스트 ==========": "",
+    "test:group-c": "playwright test --project=group-c1-booking --project=group-c2-booking-alt --project=group-c3-host-bookings",
+    "test:group-c1": "playwright test --project=group-c1-booking",
+    "test:group-c2": "playwright test --project=group-c2-booking-alt",
+    "test:group-c3": "playwright test --project=group-c3-host-bookings",
+
+    "// ========== Group D: 기능별 테스트 ==========": "",
+    "test:group-d": "playwright test --project=group-d1-reviews --project=group-d2-chatbot --project=group-d3-credits",
+    "test:group-d1": "playwright test --project=group-d1-reviews",
+    "test:group-d2": "playwright test --project=group-d2-chatbot",
+    "test:group-d3": "playwright test --project=group-d3-credits",
+
+    "// ========== Group E: 순차 실행 테스트 ==========": "",
+    "test:sequential": "playwright test --project=group-e1-journey --project=group-e2-dependencies",
+    "test:journey": "playwright test --project=group-e1-journey",
+    "test:dependencies": "playwright test --project=group-e2-dependencies",
+
+    "// ========== Group F: 성능/접근성 테스트 ==========": "",
+    "test:performance": "playwright test --project=performance",
+    "test:accessibility": "playwright test --project=accessibility",
+    "test:quality": "npm run test:performance && npm run test:accessibility",
+
+    "// ========== 모바일 테스트 ==========": "",
+    "test:mobile": "playwright test --project=mobile-ios --project=mobile-android",
+    "test:mobile:ios": "playwright test --project=mobile-ios",
+    "test:mobile:android": "playwright test --project=mobile-android",
+
+    "// ========== CI/CD 전용 ==========": "",
+    "test:ci": "playwright test --workers=4 --project=group-a1-public --project=group-b1-user --project=group-c1-booking",
+    "test:ci:full": "playwright test --workers=4",
+    "test:ci:smoke": "playwright test --grep @smoke --workers=2",
+    "test:ci:critical": "playwright test --grep @critical --workers=4",
+
+    "// ========== 특정 기능 테스트 ==========": "",
+    "test:auth": "playwright test tests/e2e/parallel/group-b1-user/01-user-auth.spec.ts",
+    "test:booking": "playwright test tests/e2e/parallel/group-c1-booking/",
+    "test:host": "playwright test tests/e2e/parallel/group-b2-host/",
+    "test:admin": "playwright test tests/e2e/parallel/group-b3-admin/",
+
+    "// ========== 리포트 및 유틸리티 ==========": "",
+    "test:report": "playwright show-report",
+    "test:trace": "playwright show-trace",
+    "test:codegen": "playwright codegen http://localhost:3010",
+    "test:install": "playwright install",
+    "test:install:deps": "playwright install-deps",
+
+    "// ========== 테스트 데이터 관리 ==========": "",
+    "test:seed": "tsx tests/e2e/setup/seed-test-data.ts",
+    "test:cleanup": "tsx tests/e2e/setup/cleanup-test-data.ts",
+    "test:reset": "npm run test:cleanup && npm run test:seed",
+
+    "// ========== 개발자 워크플로우 ==========": "",
+    "test:watch": "playwright test --watch",
+    "test:only-changed": "playwright test --only-changed",
+    "test:failed": "playwright test --last-failed",
+    "test:update-snapshots": "playwright test --update-snapshots",
+
+    "// ========== 분석 및 메트릭 ==========": "",
+    "test:coverage": "nyc playwright test",
+    "test:lighthouse": "playwright test tests/e2e/performance/lighthouse.spec.ts",
+    "test:bundle-size": "playwright test tests/e2e/performance/bundle-size.spec.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "dotenv": "^16.3.1",
+    "tsx": "^4.0.0",
+    "nyc": "^15.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
