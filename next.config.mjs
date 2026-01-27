@@ -2,7 +2,7 @@
 const nextConfig = {
   // Standalone output for Docker/self-hosting
   // For Vercel, this can be removed or kept (Vercel handles it automatically)
-  // output: 'standalone',
+  output: 'standalone',
   eslint: {
     // Temporarily ignore ESLint errors during builds
     // All TypeScript type errors have been fixed
