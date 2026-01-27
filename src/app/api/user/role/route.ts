@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/auth-helpers";
 import { getUserRole } from "@/lib/auth-utils";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const authUser = await getUser();

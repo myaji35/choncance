@@ -26,10 +26,10 @@ registry:
   password:
     - KAMAL_REGISTRY_PASSWORD
 
-# Builder Configuration
-# Use local build (requires Docker Desktop or colima)
+# Remote Builder Configuration (Build on Vultr server to save local resources)
 builder:
   arch: amd64
+  remote: ssh://root@158.247.235.31
   cache:
     type: registry
     options: mode=max
