@@ -58,3 +58,6 @@ backend/build/
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Kamal secrets
+.kamal/secrets

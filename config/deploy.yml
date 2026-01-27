@@ -1,0 +1,82 @@
+# VINTEE Kamal Deployment Configuration
+# Vultr VPS Deployment for Next.js Application
+
+# Service and Image Configuration
+service: vintee
+image: myaji35/vintee
+
+# Server Configuration
+servers:
+  web:
+    - 158.247.235.31
+
+# SSL and Proxy Configuration
+proxy:
+  ssl: true
+  host: vintee.townin.net
+  app_port: 8080     # Container internal port (matches Dockerfile EXPOSE)
+  healthcheck:
+    path: /api/health
+    interval: 10
+    timeout: 120      # Next.js startup time
+
+# Docker Registry Authentication
+registry:
+  username: myaji35
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Remote Builder Configuration (Build on Vultr server to save local resources)
+builder:
+  arch: amd64
+  remote: ssh://root@158.247.235.31
+  cache:
+    type: registry
+    options: mode=max
+
+# Environment Variables
+env:
+  # Secret environment variables (stored in .kamal/secrets)
+  secret:
+    - CLERK_SECRET_KEY
+    - TOSS_SECRET_KEY
+    - GEMINI_API_KEY
+    - JWT_SECRET
+    - ADMIN_PASSWORD_HASH
+
+  # Clear (public) environment variables
+  clear:
+    NODE_ENV: production
+    TZ: Asia/Seoul
+
+    # API URL
+    NEXT_PUBLIC_API_URL: https://vintee.townin.net
+
+    # Supabase Configuration
+    NEXT_PUBLIC_SUPABASE_URL: https://xfchchvhwciaiwefgjgsg.supabase.co
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmY2hjdmh3Y2lhaXdlZmpnanNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3Mzc5MjcsImV4cCI6MjA3ODMxMzkyN30.gfQFoqqBRowyI2FsR8Uu00Jt3cN2lofwleJ_J_-ctTI
+
+    # Database URL (Supabase PostgreSQL)
+    DATABASE_URL: postgresql://postgres.xfchchvhwciaiwefgjgsg:VinteeDB2025!@aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres?pgbouncer=true
+    DIRECT_URL: postgresql://postgres.xfchchvhwciaiwefgjgsg:VinteeDB2025!@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+
+    # Clerk Authentication
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_d29uZHJvdXMtc3BvbmdlLTIwLmNsZXJrLmFjY291bnRzLmRldiQ
+
+    # Toss Payments
+    NEXT_PUBLIC_TOSS_CLIENT_KEY: test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq
+
+    # Kakao AlimTalk
+    KAKAO_ALIMTALK_ENABLED: false
+
+# Deployment Settings
+# Prevent downtime during deployment
+readiness_delay: 10
+drain_timeout: 30
+
+# Logging
+logging:
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
