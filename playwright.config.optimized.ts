@@ -62,9 +62,11 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         /* Chromium 특화 설정 */
-        launchArgs: [
-          '--disable-blink-features=AutomationControlled',
-        ],
+        launchOptions: {
+          args: [
+            '--disable-blink-features=AutomationControlled',
+          ],
+        },
       },
     },
 
@@ -105,10 +107,7 @@ export default defineConfig({
   },
 
   /* 웹 서버 환경 변수 */
-  env: {
-    // 필요한 환경 변수 설정
-    NODE_ENV: 'test',
-  },
+
 
   /**
    * 글로벌 설정
