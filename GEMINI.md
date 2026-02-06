@@ -26,6 +26,7 @@ This project is "ChonCance", a platform for curating and booking authentic rural
 - The user has provided the Auth0 Client ID. I still need the Auth0 Domain and Auth0 Client Secret to complete the integration.
 - The user's Auth0 Domain is dev-4okfzkn0rlzo7zrj.au.auth0.com
 - The user's Auth0 API Audience is https://dev-4okfzkn0rlzo7zrj.au.auth0.com/api/v2/
+- **[CRITICAL] Deployment Protocol**: NO automated deployments are allowed. All projects must pass a **Manual User Acceptance Test (UAT)** and receive explicit approval from the USER (`Representive`) before going to the `DEPLOY` stage. All ready-to-deploy projects must be held in `REVIEW` stage.
 
 ## BMAD-METHOD Integration
 

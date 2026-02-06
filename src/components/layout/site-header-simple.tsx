@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import UserNav from "@/components/auth/user-nav";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   // Hide header on landing page
   if (pathname === "/") {
@@ -62,18 +65,9 @@ export function SiteHeader() {
             </Link>
           </nav>
 
-          {/* Auth Buttons */}
+          {/* Auth Section */}
           <div className="flex items-center gap-2">
-            <Link href="/auth/login">
-              <Button variant="outline" size="sm">
-                로그인
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button size="sm">
-                회원가입
-              </Button>
-            </Link>
+            <UserNav />
           </div>
         </div>
 
@@ -132,16 +126,7 @@ export function SiteHeader() {
                 호스트 되기
               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t">
-                <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full">
-                    로그인
-                  </Button>
-                </Link>
-                <Link href="/auth/signup" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full">
-                    회원가입
-                  </Button>
-                </Link>
+                <UserNav />
               </div>
             </nav>
           </div>

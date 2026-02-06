@@ -39,8 +39,9 @@ async function takeSnapshot(label: string) {
         const filePath = path.join(SNAPSHOT_DIR, `${label}.png`);
         await page.screenshot({ path: filePath, fullPage: true });
         console.log(chalk.green(`✅ Snapshot saved: ${filePath}`));
-    } catch (e) {
+    } catch (error) {
         console.log(chalk.red(`❌ Sentinel Blinded: Could not access ${URL}. Is server running?`));
+        console.log(chalk.gray(`Error details: ${error}`));
         process.exit(1);
     } finally {
         await browser.close();
