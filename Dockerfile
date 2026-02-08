@@ -1,56 +1,77 @@
-# Base image
-FROM node:20-alpine AS base
+# syntax=docker/dockerfile:1
+# check=error=true
 
-# Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
+# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
+# docker build -t choncance .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name choncance choncance
 
-# Install dependencies
-COPY package.json package-lock.json* ./
-RUN npm install --legacy-peer-deps
+# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
+ARG RUBY_VERSION=3.3.10
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+
+# Rails app lives here
+WORKDIR /rails
+
+# Install base packages
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 && \
+    ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Set production environment variables and enable jemalloc for reduced memory usage and latency.
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development" \
+    LD_PRELOAD="/usr/local/lib/libjemalloc.so"
+
+# Throw-away build stage to reduce size of final image
+FROM base AS build
+
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install application gems
+COPY vendor/* ./vendor/
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
+    bundle exec bootsnap precompile -j 1 --gemfile
+
+# Copy application code
 COPY . .
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Precompile bootsnap code for faster boot times.
+# -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
+RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Build Next.js app with environment variables
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZXRoaWNhbC1zd2lmdC0xLmNsZXJrLmFjY291bnRzLmRldiQ
-ENV NEXT_PUBLIC_SUPABASE_URL=https://xfchchvhwciaiwefgjgsg.supabase.co
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmY2hjdmh3Y2lhaXdlZmpnanNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3Mzc5MjcsImV4cCI6MjA3ODMxMzkyN30.gfQFoqqBRowyI2FsR8Uu00Jt3cN2lofwleJ_J_-ctTI
-# Set a dummy DATABASE_URL for build time (Prisma requires it)
-ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
-RUN npm run build
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+# Final stage for app image
+FROM base
 
-# Set correct permissions
-RUN chown -R nextjs:nodejs /app
+# Run and own only the runtime files as a non-root user for security
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+USER 1000:1000
 
-USER nextjs
+# Copy built artifacts: gems, application
+COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --chown=rails:rails --from=build /rails /rails
 
-EXPOSE 8080
+# Entrypoint prepares the database.
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-ENV PORT 8080
-ENV HOSTNAME "0.0.0.0"
-
-CMD ["node", "server.js"]
+# Start server via Thruster by default, this can be overwritten at runtime
+EXPOSE 80
+CMD ["./bin/thrust", "./bin/rails", "server"]

@@ -1,0 +1,74 @@
+<div class="bg-slate-50 min-h-screen py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-12">
+       <div class="flex items-center gap-6 mb-8">
+         <div class="w-16 h-16 bg-green-700 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
+           <%= @user.email_address[0].upcase %>
+         </div>
+         <div>
+           <h1 class="text-3xl font-bold text-slate-900 tracking-tight"><%= @user.email_address.split('@').first %>님, 환영합니다! 🌾</h1>
+           <p class="text-slate-500 font-medium">오늘은 어떤 시골을 꿈꾸고 계신가요?</p>
+         </div>
+       </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- Sidebar / Navigation -->
+      <div class="lg:col-span-1 border border-slate-200 rounded-[2.5rem] bg-white p-8 shadow-sm h-fit">
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-green-50 text-green-700 rounded-2xl font-bold text-sm">
+              <span class="text-xl">🏠</span> 마이 페이지
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
+              <span class="text-xl">📅</span> 내 예약 내역
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
+              <span class="text-xl">🖤</span> 관심 숙소
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
+              <span class="text-xl">⚙️</span> 설정
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Activity -->
+      <div class="lg:col-span-2 space-y-12">
+        <!-- New Arrivals / Recommendations -->
+        <section>
+          <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+            요즘 핫한 촌캉스 🔥
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <% Property.active.limit(2).each do |p| %>
+              <div class="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm hover:shadow-lg transition">
+                <div class="aspect-video bg-slate-100 rounded-2xl mb-4 relative flex items-center justify-center">
+                  <span class="text-4xl opacity-30">🏡</span>
+                </div>
+                <h3 class="font-bold text-slate-900 mb-1"><%= link_to p.title, property_path(p) %></h3>
+                <p class="text-xs text-slate-500"><%= p.location %></p>
+              </div>
+            <% end %>
+          </div>
+        </section>
+
+        <!-- Booking Status -->
+        <section>
+          <h2 class="text-xl font-bold text-slate-900 mb-6">최근 예약 내역</h2>
+          <div class="bg-white border border-dashed border-slate-300 py-12 px-8 text-center rounded-[2.5rem]">
+            <div class="text-5xl mb-4">📭</div>
+            <p class="text-slate-400 font-medium">아직 예약된 내역이 없습니다.<br/>지금 바로 떠나볼까요?</p>
+            <%= link_to "숙소 둘러보기", properties_path, class: "inline-block mt-6 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold hover:bg-slate-800 transition" %>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

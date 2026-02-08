@@ -1,0 +1,37 @@
+<footer class="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <div class="md:col-span-2">
+        <div class="text-2xl font-bold text-green-700 mb-4">ChonCance</div>
+        <p class="text-slate-500 max-w-sm leading-relaxed">
+          어촌과 농촌의 숨겨진 보석 같은 공간을 찾아 MZ세대에게 소개합니다. 
+          우리는 단순한 숙박을 넘어 호스트의 삶과 로컬의 이야기가 담긴 진짜 경험을 지향합니다.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">서비스</h4>
+        <ul class="space-y-2">
+          <li><%= link_to "숙소 탐색", properties_path, class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+          <li><%= link_to "테마 큐레이션", "#", class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+          <li><%= link_to "호스트 신청", "#", class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">고객지원</h4>
+        <ul class="space-y-2">
+          <li><%= link_to "자주 묻는 질문", "#", class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+          <li><%= link_to "개인정보 처리방침", "#", class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+          <li><%= link_to "이용약관", "#", class: "text-slate-500 hover:text-green-700 text-sm" %></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-slate-400 text-xs">© 2026 ChonCance. All rights reserved. BMAD Portfolio Project.</p>
+      <div class="flex gap-6">
+        <span class="text-slate-300 hover:text-slate-400 cursor-pointer">IG</span>
+        <span class="text-slate-300 hover:text-slate-400 cursor-pointer">FB</span>
+        <span class="text-slate-300 hover:text-slate-400 cursor-pointer">YT</span>
+      </div>
+    </div>
+  </div>
+</footer>
