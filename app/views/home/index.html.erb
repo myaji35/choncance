@@ -1,0 +1,79 @@
+<div class="bg-white min-h-screen">
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden bg-white border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 relative z-10">
+      <div class="text-center">
+        <div class="inline-block px-4 py-2 bg-green-50 rounded-2xl text-green-700 text-sm font-bold mb-6 animate-pulse">
+           New: 🌾 논뷰 맛집 시즌 오픈
+        </div>
+        <h1 class="text-6xl font-extrabold text-slate-900 tracking-tight sm:text-7xl mb-8 leading-tight">
+          MZ세대를 위한<br/><span class="text-green-700">진짜 농촌 여행</span>
+        </h1>
+        <p class="mt-6 max-w-2xl mx-auto text-xl text-slate-500 leading-relaxed">
+          도시의 소음을 뒤로하고, 시골 마을의 정취와<br/>호스트의 이야기가 숨어있는 촌캉스를 즐겨보세요.
+        </p>
+        <div class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
+          <%= link_to "지금 촌캉스 떠나기", properties_path, class: "bg-green-700 text-white px-10 py-5 rounded-3xl font-bold shadow-2xl hover:bg-green-800 transition transform hover:-translate-y-1 text-lg" %>
+          <%= link_to "인기 테마 리스트", "#themes", class: "bg-white text-slate-700 border-2 border-slate-200 px-10 py-5 rounded-3xl font-bold hover:bg-slate-50 transition text-lg" %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pattern Background -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none select-none">
+       <div class="grid grid-cols-6 h-full w-full">
+         <% 24.times do %>
+           <div class="border border-slate-900 flex items-center justify-center text-4xl">🌾</div>
+         <% end %>
+       </div>
+    </div>
+  </div>
+
+  <!-- Featured Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <div class="flex items-end justify-between mb-16">
+      <div>
+        <h2 class="text-4xl font-bold text-slate-900 tracking-tight mb-2">Editor's Pick 🏡</h2>
+        <p class="text-slate-500 text-lg">이번 주 가장 사랑받는 촌캉스 숙소입니다.</p>
+      </div>
+      <%= link_to "전체 숙소 보기 →", properties_path, class: "text-green-700 font-bold hover:underline py-2" %>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <% @featured_properties.each do |property| %>
+        <div class="group cursor-pointer">
+          <div class="aspect-[4/3] bg-slate-100 rounded-[2.5rem] overflow-hidden mb-6 relative shadow-sm group-hover:shadow-2xl transition-all duration-500 transform group-hover:-translate-y-2">
+            <div class="absolute inset-0 flex items-center justify-center text-6xl opacity-40">🏡</div>
+            <div class="absolute bottom-6 left-6 flex gap-2">
+              <% property.tags.take(2).each do |tag| %>
+                <span class="bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm"><%= tag.name %></span>
+              <% end %>
+            </div>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors"><%= link_to property.title, property_path(property) %></h3>
+          <p class="text-slate-500 font-medium mb-4"><%= property.location %></p>
+          <div class="text-xl font-bold text-slate-900"><%= number_with_delimiter(property.price_per_night) %>원<span class="text-slate-400 text-sm font-normal"> / 1박</span></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Theme Section -->
+  <div id="themes" class="bg-slate-50 py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20">
+        <h2 class="text-4xl font-bold text-slate-900 tracking-tight">당신의 취향은 무엇인가요?</h2>
+        <p class="text-slate-500 mt-4 text-lg">테마별로 준비된 특별한 시골 경험</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <% @tags.each do |tag| %>
+          <%= link_to properties_path(tag: tag.name), class: "bg-white p-12 rounded-[3rem] text-center shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 border border-slate-100 group" %>
+            <div class="text-6xl mb-6 transform group-hover:scale-110 transition-transform"><%= tag.icon %></div>
+            <div class="text-xl font-extrabold text-slate-800 group-hover:text-green-700 uppercase tracking-tight"><%= tag.name %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

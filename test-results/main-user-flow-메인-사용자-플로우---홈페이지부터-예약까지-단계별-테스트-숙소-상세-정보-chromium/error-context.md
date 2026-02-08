@@ -1,0 +1,102 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "VINTEE VINTEE" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "VINTEE" [ref=e6]
+        - generic [ref=e7]: VINTEE
+      - navigation [ref=e8]:
+        - link "둘러보기" [ref=e9] [cursor=pointer]:
+          - /url: /explore
+        - link "추천" [ref=e10] [cursor=pointer]:
+          - /url: /recommendations
+        - link "이용방법" [ref=e11] [cursor=pointer]:
+          - /url: /how-to-use
+        - link "호스트 되기" [ref=e12] [cursor=pointer]:
+          - /url: /become-a-host
+      - generic [ref=e13]:
+        - link "로그인" [ref=e14] [cursor=pointer]:
+          - /url: /auth/login
+          - button "로그인" [ref=e15]
+        - link "회원가입" [ref=e16] [cursor=pointer]:
+          - /url: /auth/signup
+          - button "회원가입" [ref=e17]
+  - main [ref=e18]:
+    - generic [ref=e20]:
+      - complementary [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - heading "필터 (1)" [level=3] [ref=e25]
+            - button "초기화" [ref=e26] [cursor=pointer]
+          - generic [ref=e27]:
+            - text: 태그
+            - heading "뷰" [level=4] [ref=e29]
+            - heading "액티비티" [level=4] [ref=e31]
+            - heading "시설" [level=4] [ref=e33]
+            - heading "분위기" [level=4] [ref=e35]
+          - generic [ref=e36]:
+            - text: 가격 범위 (1박)
+            - slider "Minimum" [ref=e42]
+            - generic [ref=e43]:
+              - generic [ref=e44]: ₩50,000
+              - generic [ref=e45]: ~
+              - generic [ref=e46]: ₩500,000
+            - generic [ref=e47]: "평균 가격: ₩275,000"
+          - generic [ref=e48]:
+            - text: 지역
+            - generic [ref=e49]:
+              - paragraph [ref=e50]: 인기 지역
+              - generic [ref=e51]:
+                - button "강릉" [ref=e52] [cursor=pointer]
+                - button "담양" [ref=e53] [cursor=pointer]
+                - button "제주" [ref=e54] [cursor=pointer]
+                - button "경주" [ref=e55] [cursor=pointer]
+            - generic [ref=e56]:
+              - text: 시/도
+              - combobox "시/도" [ref=e57] [cursor=pointer]:
+                - generic: 시/도 선택
+                - img [ref=e58]
+          - generic [ref=e60]:
+            - text: 날짜
+            - button "날짜 선택" [ref=e61] [cursor=pointer]:
+              - img
+              - generic [ref=e62]: 날짜 선택
+          - generic [ref=e63]:
+            - text: 인원
+            - generic [ref=e65]:
+              - generic [ref=e66]: 게스트
+              - generic [ref=e67]:
+                - button [ref=e68] [cursor=pointer]:
+                  - img
+                - generic [ref=e69]: 2명
+                - button [ref=e70] [cursor=pointer]:
+                  - img
+            - generic [ref=e71]:
+              - checkbox "반려동물 동반 🐕" [ref=e72] [cursor=pointer]
+              - generic [ref=e73] [cursor=pointer]: 반려동물 동반 🐕
+          - button "적용하기" [ref=e74] [cursor=pointer]
+      - main [ref=e75]:
+        - generic [ref=e76]:
+          - heading "테마별 VINTEE 탐색" [level=1] [ref=e77]
+          - paragraph [ref=e78]: 빈티지한 감성과 함께하는 진정한 시골 휴식을 찾아보세요
+        - generic [ref=e80]:
+          - heading "테마별로 찾아보세요" [level=2] [ref=e81]
+          - paragraph [ref=e82]: 원하는 분위기와 경험으로 완벽한 VINTEE 숙소를 발견하세요
+  - region "Notifications (F8)":
+    - list
+  - button "챗봇 열기" [ref=e83] [cursor=pointer]:
+    - img
+  - contentinfo [ref=e84]:
+    - paragraph [ref=e85]: © 2026 VINTEE. All rights reserved.
+    - generic [ref=e86]:
+      - link "개인정보처리방침" [ref=e87] [cursor=pointer]:
+        - /url: /privacy
+        - button "개인정보처리방침" [ref=e88]
+      - link "이용약관" [ref=e89] [cursor=pointer]:
+        - /url: /terms
+        - button "이용약관" [ref=e90]
+  - alert [ref=e91]
+```

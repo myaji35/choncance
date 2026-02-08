@@ -1,0 +1,23 @@
+<nav class="bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <%= link_to root_path, class: "flex items-center" do %>
+          <span class="text-2xl font-bold text-green-700 tracking-tight">ChonCance</span>
+        <% end %>
+        <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+          <%= link_to "테마 탐색", properties_path, class: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <% if authenticated? %>
+          <%= link_to "대시보드", dashboard_path, class: "text-slate-500 hover:text-slate-700 text-sm font-medium" %>
+          <%= button_to "로그아웃", session_path, method: :delete, class: "bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-200" %>
+        <% else %>
+          <%= link_to "로그인", new_session_path, class: "text-slate-500 hover:text-slate-700 text-sm font-medium" %>
+          <%= link_to "가입하기", "#", class: "bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-green-800 transition shadow-sm" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
