@@ -19,6 +19,8 @@ interface OptimizedImageProps {
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
   onLoad?: () => void
   onClick?: () => void
+  // NEW: Device Pixel Ratio support for high-PPI displays
+  dpr?: 1 | 2 | 3 // 1x, 2x (Retina), 3x (Super Retina)
 }
 
 export function OptimizedImage({
@@ -35,15 +37,21 @@ export function OptimizedImage({
   blurDataURL,
   objectFit = 'cover',
   onLoad,
-  onClick
+  onClick,
+  dpr = 2 // Default to 2x (Retina) for modern devices
 }: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
 
   // Generate sizes automatically based on common breakpoints
+  // Optimized for high-PPI mobile devices (iPhone, Samsung Galaxy)
   const defaultSizes = fill
-    ? sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+    ? sizes || '(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
     : undefined
+
+  // Adjust quality based on DPR to maintain visual quality on Retina displays
+  // Higher DPR = slightly lower JPEG quality (file size optimization)
+  const adjustedQuality = dpr >= 2 ? Math.max(quality - 5, 70) : quality
 
   // Fallback image
   const fallbackSrc = '/images/placeholder.jpg'
@@ -73,7 +81,7 @@ export function OptimizedImage({
         height={!fill ? height : undefined}
         fill={fill}
         sizes={defaultSizes}
-        quality={quality}
+        quality={adjustedQuality}
         priority={priority}
         placeholder={placeholder}
         blurDataURL={blurDataURL}
