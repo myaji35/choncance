@@ -4,7 +4,7 @@ import { requireAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClipboardCheck, Settings, LogOut, Bot, UserCheck } from "lucide-react";
+import { ClipboardCheck, Settings, LogOut, Bot, UserCheck, Tag } from "lucide-react";
 
 export default async function AdminPage() {
   // Admin token으로 인증 확인
@@ -168,6 +168,13 @@ export default async function AdminPage() {
               {pendingHostsCount > 0 && (
                 <Badge variant="destructive">{pendingHostsCount}</Badge>
               )}
+            </Link>
+            <Link
+              href="/admin/tags"
+              className="flex items-center gap-2 p-3 hover:bg-gray-50 rounded transition-colors"
+            >
+              <Tag className="h-4 w-4 text-gray-500" />
+              태그 관리
             </Link>
             <Link
               href="/admin/reports"
