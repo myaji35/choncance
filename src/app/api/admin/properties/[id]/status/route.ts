@@ -44,6 +44,16 @@ export async function PATCH(
       );
     }
 
+    // Validate rejectionReason when status is REJECTED
+    if (status === "REJECTED") {
+      if (!rejectionReason || rejectionReason.trim().length < 20) {
+        return NextResponse.json(
+          { error: "거절 사유를 20자 이상 입력해주세요" },
+          { status: 400 }
+        );
+      }
+    }
+
     // Check if property exists
     const property = await prisma.property.findUnique({
       where: { id: params.id },

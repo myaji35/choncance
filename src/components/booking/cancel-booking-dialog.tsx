@@ -97,8 +97,8 @@ export function CancelBookingDialog({
   };
 
   const handleCancel = async () => {
-    if (!reason.trim()) {
-      setError("취소 사유를 입력해주세요");
+    if (!reason.trim() || reason.trim().length < 10) {
+      setError("취소 사유를 10자 이상 입력해주세요");
       return;
     }
 
@@ -222,7 +222,7 @@ export function CancelBookingDialog({
                     setReason(e.target.value);
                     setError(null);
                   }}
-                  placeholder="예약을 취소하는 사유를 입력해주세요"
+                  placeholder="예약을 취소하는 사유를 입력해주세요 (최소 10자)"
                   rows={3}
                   maxLength={500}
                   className={error ? "border-red-500" : ""}

@@ -15,8 +15,20 @@ import {
 import { ArrowLeft, Users } from "lucide-react";
 import { HostApproveButton, HostRejectButton } from "./approve-button";
 
-export default async function AdminHostsPage() {
+type StatusFilter = "ALL" | "PENDING" | "APPROVED" | "REJECTED";
+
+interface PageProps {
+  searchParams: Promise<{ status?: string }>;
+}
+
+export default async function AdminHostsPage({ searchParams }: PageProps) {
   await requireAdminAuth();
+
+  const { status: rawStatus } = await searchParams;
+  const activeFilter: StatusFilter =
+    rawStatus === "PENDING" || rawStatus === "APPROVED" || rawStatus === "REJECTED"
+      ? rawStatus
+      : "ALL";
 
   let hostProfiles: any[] = [];
   let pendingCount = 0;
@@ -54,6 +66,18 @@ export default async function AdminHostsPage() {
   } catch (error) {
     console.error("Failed to fetch host profiles:", error);
   }
+
+  const filteredProfiles =
+    activeFilter === "ALL"
+      ? hostProfiles
+      : hostProfiles.filter((h) => h.status === activeFilter);
+
+  const filterTabs: { label: string; value: StatusFilter; count: number }[] = [
+    { label: "전체", value: "ALL", count: hostProfiles.length },
+    { label: "승인 대기", value: "PENDING", count: pendingCount },
+    { label: "승인됨", value: "APPROVED", count: approvedCount },
+    { label: "거부됨", value: "REJECTED", count: rejectedCount },
+  ];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -108,55 +132,42 @@ export default async function AdminHostsPage() {
         </Card>
       </div>
 
-      {/* Pending Hosts Section */}
-      {pendingCount > 0 && (
-        <Card className="mb-8 border-amber-200">
-          <CardHeader className="bg-amber-50 border-b border-amber-200">
-            <CardTitle className="text-lg text-amber-900">
-              승인 대기 호스트 ({pendingCount}건)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>이름</TableHead>
-                  <TableHead>이메일</TableHead>
-                  <TableHead>연락처</TableHead>
-                  <TableHead>사업자번호</TableHead>
-                  <TableHead className="text-right">작업</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {hostProfiles
-                  .filter((h) => h.status === "PENDING")
-                  .map((host) => (
-                    <TableRow key={host.id}>
-                      <TableCell className="font-medium">
-                        {host.user.name || "-"}
-                      </TableCell>
-                      <TableCell>{host.user.email || "-"}</TableCell>
-                      <TableCell>{host.contact || host.user.phone || "-"}</TableCell>
-                      <TableCell>{host.businessNumber || "-"}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
-                          <HostApproveButton hostId={host.id} hostName={host.user.name || "호스트"} />
-                          <HostRejectButton hostId={host.id} hostName={host.user.name || "호스트"} />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
+      {/* Filter Tabs */}
+      <div className="flex gap-2 mb-6 border-b pb-0">
+        {filterTabs.map((tab) => (
+          <Link
+            key={tab.value}
+            href={tab.value === "ALL" ? "/admin/hosts" : `/admin/hosts?status=${tab.value}`}
+          >
+            <button
+              className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                activeFilter === tab.value
+                  ? "border-[#00A1E0] text-[#00A1E0]"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {tab.label}
+              <span
+                className={`ml-1.5 px-1.5 py-0.5 rounded-full text-xs ${
+                  activeFilter === tab.value
+                    ? "bg-[#00A1E0] text-white"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {tab.count}
+              </span>
+            </button>
+          </Link>
+        ))}
+      </div>
 
-      {/* All Hosts Table */}
+      {/* Host List */}
       <Card>
         <CardHeader className="bg-gray-50 border-b">
           <CardTitle className="text-lg text-[#16325C]">
-            전체 호스트 목록
+            {activeFilter === "ALL"
+              ? "전체 호스트 목록"
+              : filterTabs.find((t) => t.value === activeFilter)?.label + " 목록"}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -167,27 +178,38 @@ export default async function AdminHostsPage() {
                 <TableHead>이메일</TableHead>
                 <TableHead>연락처</TableHead>
                 <TableHead>사업자번호</TableHead>
+                <TableHead>신청일</TableHead>
                 <TableHead>상태</TableHead>
                 <TableHead>등록 숙소</TableHead>
                 <TableHead className="text-right">작업</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {hostProfiles.length === 0 ? (
+              {filteredProfiles.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-12 text-gray-500">
-                    등록된 호스트가 없습니다
+                  <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                    {activeFilter === "ALL"
+                      ? "등록된 호스트가 없습니다"
+                      : "해당 상태의 호스트가 없습니다"}
                   </TableCell>
                 </TableRow>
               ) : (
-                hostProfiles.map((host) => (
+                filteredProfiles.map((host) => (
                   <TableRow key={host.id}>
                     <TableCell className="font-medium">
-                      {host.user.name || "-"}
+                      <Link
+                        href={`/admin/hosts/${host.id}`}
+                        className="hover:underline text-[#00A1E0]"
+                      >
+                        {host.user.name || "-"}
+                      </Link>
                     </TableCell>
                     <TableCell>{host.user.email || "-"}</TableCell>
                     <TableCell>{host.contact || host.user.phone || "-"}</TableCell>
                     <TableCell>{host.businessNumber || "-"}</TableCell>
+                    <TableCell className="text-sm text-gray-500">
+                      {"-"}
+                    </TableCell>
                     <TableCell>
                       <Badge
                         variant={
@@ -207,9 +229,7 @@ export default async function AdminHostsPage() {
                     </TableCell>
                     <TableCell>
                       {host.properties.length > 0 ? (
-                        <span className="text-sm">
-                          {host.properties.length}개
-                        </span>
+                        <span className="text-sm">{host.properties.length}개</span>
                       ) : (
                         <span className="text-sm text-gray-400">없음</span>
                       )}
