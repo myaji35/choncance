@@ -1,7 +1,10 @@
 <div class="bg-white min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Breadcrumb & Back -->
-    <%= link_to "← 목록으로 돌아가기", properties_path, class: "text-slate-500 hover:text-slate-700 text-sm font-medium mb-8 inline-block" %>
+    <!-- Back Link -->
+    <%= link_to properties_path, class: "inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-700 text-sm font-medium mb-8 transition-colors" do %>
+      <%= render "shared/icon", name: "arrow-left", size: 16 %>
+      목록으로 돌아가기
+    <% end %>
 
     <div class="lg:grid lg:grid-cols-3 lg:gap-12">
       <!-- Main Content -->
@@ -9,52 +12,69 @@
         <div class="mb-8">
           <div class="flex flex-wrap gap-2 mb-4">
             <% @property.tags.each do |tag| %>
-              <span class="bg-slate-100 px-3 py-1 rounded-full text-xs font-bold text-slate-600"><%= tag.icon %> <%= tag.name %></span>
+              <span class="inline-flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-full text-xs font-bold text-slate-600">
+                <%= render "shared/icon", name: tag_icon_name(tag.name), size: 11, css: "text-green-600" %>
+                <%= tag.name %>
+              </span>
             <% end %>
           </div>
           <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight mb-4"><%= @property.title %></h1>
-          <div class="flex items-center text-slate-500 font-medium">
-            <span class="mr-2">📍</span><%= @property.location %>
+          <div class="flex items-center gap-1.5 text-slate-500 font-medium">
+            <%= render "shared/icon", name: "map-pin", size: 16, css: "text-green-600 shrink-0" %>
+            <%= @property.location %>
           </div>
         </div>
 
         <!-- Gallery Placeholder -->
-        <div class="aspect-video bg-slate-100 rounded-3xl mb-12 flex items-center justify-center text-slate-400">
+        <div class="aspect-video bg-slate-50 rounded-3xl mb-12 flex items-center justify-center border border-slate-100">
           <div class="text-center">
-            <span class="text-6xl mb-4 block">📸</span>
-            <p class="font-medium">고화질 감성 사진 갤러리 영역</p>
+            <%= render "shared/icon", name: "camera", size: 48, css: "text-slate-200 mx-auto mb-3" %>
+            <p class="font-medium text-slate-400 text-sm">고화질 감성 사진 갤러리 영역</p>
           </div>
         </div>
 
-        <!-- Host Story Section -->
-        <div class="prose prose-slate max-w-none">
-          <h2 class="text-2xl font-bold text-slate-900 mb-6">호스트 이야기</h2>
-          <div class="bg-green-50/50 p-8 rounded-3xl border border-green-100/50 mb-12">
+        <!-- Host Story -->
+        <div>
+          <div class="flex items-center gap-2 mb-6">
+            <%= render "shared/icon", name: "feather", size: 20, css: "text-green-700" %>
+            <h2 class="text-2xl font-bold text-slate-900">호스트 이야기</h2>
+          </div>
+          <div class="bg-green-50/60 p-8 rounded-3xl border border-green-100/80 mb-12">
             <p class="text-slate-700 text-lg leading-relaxed whitespace-pre-wrap"><%= @property.description %></p>
           </div>
-          
-          <h3 class="text-xl font-bold text-slate-900 mb-4">이곳에서의 경험</h3>
-          <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0">
-            <li class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl">
-              <span class="text-xl">☕</span>
-              <span class="text-slate-700 font-medium font-medium">핸드드립 커피 체험</span>
+
+          <div class="flex items-center gap-2 mb-4">
+            <%= render "shared/icon", name: "sparkles", size: 18, css: "text-amber-500" %>
+            <h3 class="text-xl font-bold text-slate-900">이곳에서의 경험</h3>
+          </div>
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0 mb-12">
+            <li class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <%= render "shared/icon", name: "coffee", size: 18, css: "text-amber-600 shrink-0" %>
+              <span class="text-slate-700 font-medium">핸드드립 커피 체험</span>
             </li>
-            <li class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl">
-              <span class="text-xl">🚜</span>
-              <span class="text-slate-700 font-medium font-medium">계절 농사 체험</span>
+            <li class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <%= render "shared/icon", name: "leaf", size: 18, css: "text-green-600 shrink-0" %>
+              <span class="text-slate-700 font-medium">계절 농사 체험</span>
             </li>
           </ul>
 
-          <div class="mt-12">
-            <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <span class="text-amber-500">⚠️</span> 정직한 불편함
-            </h3>
-            <p class="text-slate-500 text-sm mb-4">ChonCance는 완벽함보다 진정성을 추구합니다. 아래 내용을 반드시 확인해주세요.</p>
+          <!-- Honest Discomforts -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <%= render "shared/icon", name: "alert-circle", size: 18, css: "text-amber-500" %>
+              <h3 class="text-xl font-bold text-slate-900">정직한 불편함</h3>
+            </div>
+            <p class="text-slate-500 text-sm mb-4 pl-6">ChonCance는 완벽함보다 진정성을 추구합니다. 아래 내용을 반드시 확인해주세요.</p>
             <div class="bg-amber-50 p-6 rounded-2xl border border-amber-100 text-amber-900 text-sm">
-              <ul class="space-y-2 list-disc pl-4">
-                <li>시골 특성상 작은 벌레가 출몰할 수 있습니다.</li>
-                <li>오래된 한옥이라 방음이 완벽하지 않을 수 있습니다.</li>
-                <li>마을 버스 배차 간격이 기니 자차 이용을 권장합니다.</li>
+              <ul class="space-y-2.5">
+                <% ["시골 특성상 작은 벌레가 출몰할 수 있습니다.",
+                    "오래된 한옥이라 방음이 완벽하지 않을 수 있습니다.",
+                    "마을 버스 배차 간격이 기니 자차 이용을 권장합니다."].each do |item| %>
+                  <li class="flex items-start gap-2">
+                    <%= render "shared/icon", name: "info", size: 14, css: "text-amber-600 shrink-0 mt-0.5" %>
+                    <%= item %>
+                  </li>
+                <% end %>
               </ul>
             </div>
           </div>
@@ -69,39 +89,59 @@
               <span class="text-3xl font-bold text-slate-900"><%= number_with_delimiter(@property.price_per_night) %>원</span>
               <span class="text-slate-500"> / 1박</span>
             </div>
-            <div class="mt-2 flex items-center gap-1 text-yellow-500 text-sm">
-              <span>★</span>
+            <div class="mt-2 flex items-center gap-1.5 text-sm">
+              <%= render "shared/icon", name: "star", size: 14, css: "text-amber-400" %>
               <span class="font-bold text-slate-900">4.9</span>
               <span class="text-slate-400 font-normal">(후기 12개)</span>
             </div>
           </div>
 
-          <div class="space-y-4 mb-8">
+          <div class="space-y-3 mb-8">
             <div class="grid grid-cols-2 border border-slate-200 rounded-2xl overflow-hidden">
               <div class="p-4 border-r border-slate-200">
-                <div class="text-[10px] font-bold text-slate-900 uppercase">체크인</div>
-                <div class="text-sm font-medium text-slate-500">날짜 선택</div>
+                <div class="flex items-center gap-1 text-[10px] font-bold text-slate-700 uppercase mb-1">
+                  <%= render "shared/icon", name: "calendar", size: 11 %>
+                  체크인
+                </div>
+                <div class="text-sm font-medium text-slate-400">날짜 선택</div>
               </div>
               <div class="p-4">
-                <div class="text-[10px] font-bold text-slate-900 uppercase">체크아웃</div>
-                <div class="text-sm font-medium text-slate-500">날짜 선택</div>
+                <div class="flex items-center gap-1 text-[10px] font-bold text-slate-700 uppercase mb-1">
+                  <%= render "shared/icon", name: "calendar", size: 11 %>
+                  체크아웃
+                </div>
+                <div class="text-sm font-medium text-slate-400">날짜 선택</div>
               </div>
             </div>
             <div class="p-4 border border-slate-200 rounded-2xl">
-              <div class="text-[10px] font-bold text-slate-900 uppercase">인원</div>
-              <div class="text-sm font-medium text-slate-500">게스트 2명</div>
+              <div class="flex items-center gap-1 text-[10px] font-bold text-slate-700 uppercase mb-1">
+                <%= render "shared/icon", name: "user", size: 11 %>
+                인원
+              </div>
+              <div class="text-sm font-medium text-slate-400">게스트 2명</div>
             </div>
           </div>
 
-          <%= link_to "예약 요청하기", "#", class: "w-full bg-green-700 text-white text-center block py-4 rounded-2xl font-bold shadow-lg hover:bg-green-800 transition transform active:scale-95" %>
-          
-          <p class="text-slate-400 text-[11px] text-center mt-4">예약 확정 전에는 결제가 진행되지 않습니다.</p>
+          <%= link_to "#", class: "flex items-center justify-center gap-2 w-full bg-green-700 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-green-800 transition transform active:scale-95" do %>
+            <%= render "shared/icon", name: "calendar", size: 18, css: "text-white" %>
+            예약 요청하기
+          <% end %>
 
-          <div class="mt-8 pt-8 border-t border-slate-100 flex items-center gap-4">
-            <div class="w-12 h-12 bg-slate-200 rounded-full"></div>
+          <p class="flex items-center justify-center gap-1 text-slate-400 text-[11px] text-center mt-3">
+            <%= render "shared/icon", name: "lock", size: 11, css: "text-slate-300" %>
+            예약 확정 전에는 결제가 진행되지 않습니다.
+          </p>
+
+          <div class="mt-8 pt-6 border-t border-slate-100 flex items-center gap-4">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+              <%= render "shared/icon", name: "user", size: 22, css: "text-green-600" %>
+            </div>
             <div>
               <div class="text-sm font-bold text-slate-900">슈퍼호스트 김영희님</div>
-              <div class="text-xs text-slate-500">응답률 100% · 24시간 내 응답</div>
+              <div class="flex items-center gap-1 text-xs text-slate-500">
+                <%= render "shared/icon", name: "check-circle", size: 12, css: "text-green-500" %>
+                응답률 100% · 24시간 내 응답
+              </div>
             </div>
           </div>
         </div>

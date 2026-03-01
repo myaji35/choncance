@@ -1,21 +1,40 @@
-<nav class="bg-white border-b border-slate-200">
+<nav class="bg-white border-b border-slate-100 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
+      <!-- Logo -->
       <div class="flex items-center">
-        <%= link_to root_path, class: "flex items-center" do %>
-          <span class="text-2xl font-bold text-green-700 tracking-tight">ChonCance</span>
+        <%= link_to root_path, class: "flex items-center gap-2 group" do %>
+          <%= render "shared/icon", name: "leaf", size: 22, css: "text-green-700 group-hover:text-green-800 transition-colors" %>
+          <span class="text-xl font-bold text-green-700 tracking-tight group-hover:text-green-800 transition-colors">ChonCance</span>
         <% end %>
-        <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-          <%= link_to "테마 탐색", properties_path, class: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+        <div class="hidden sm:ml-10 sm:flex sm:items-center sm:space-x-1">
+          <%= link_to properties_path, class: "flex items-center gap-1.5 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" do %>
+            <%= render "shared/icon", name: "compass", size: 16 %>
+            <span>테마 탐색</span>
+          <% end %>
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-2">
         <% if authenticated? %>
-          <%= link_to "대시보드", dashboard_path, class: "text-slate-500 hover:text-slate-700 text-sm font-medium" %>
-          <%= button_to "로그아웃", session_path, method: :delete, class: "bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-200" %>
+          <%= link_to dashboard_path, class: "flex items-center gap-1.5 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" do %>
+            <%= render "shared/icon", name: "user", size: 16 %>
+            <span class="hidden sm:inline">대시보드</span>
+          <% end %>
+          <%= button_to session_path, method: :delete, class: "flex items-center gap-1.5 bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors cursor-pointer" do %>
+            <%= render "shared/icon", name: "log-out", size: 16 %>
+            <span class="hidden sm:inline">로그아웃</span>
+          <% end %>
         <% else %>
-          <%= link_to "로그인", new_session_path, class: "text-slate-500 hover:text-slate-700 text-sm font-medium" %>
-          <%= link_to "가입하기", "#", class: "bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-green-800 transition shadow-sm" %>
+          <%= link_to new_session_path, class: "flex items-center gap-1.5 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" do %>
+            <%= render "shared/icon", name: "log-in", size: 16 %>
+            <span>로그인</span>
+          <% end %>
+          <%= link_to "#", class: "flex items-center gap-1.5 bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-green-800 transition-colors shadow-sm" do %>
+            <%= render "shared/icon", name: "user-plus", size: 16, css: "text-white" %>
+            <span class="hidden sm:inline">가입하기</span>
+          <% end %>
         <% end %>
       </div>
     </div>

@@ -1,47 +1,62 @@
 <div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-md">
-    <h2 class="text-center text-4xl font-extrabold text-slate-900 tracking-tight font-outfit">
-      반가워요! 🌾
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <%= render "shared/icon", name: "leaf", size: 28, css: "text-green-700" %>
+      <span class="text-2xl font-bold text-green-700">ChonCance</span>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-slate-900 tracking-tight">
+      반가워요!
     </h2>
-    <p class="mt-2 text-center text-sm text-slate-600">
+    <p class="mt-2 text-center text-sm text-slate-500">
       로그인하고 당신만의 촌캉스를 완성해보세요.
     </p>
   </div>
 
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-    <div class="bg-white py-12 px-10 shadow-2xl rounded-[3rem] border border-slate-100">
+    <div class="bg-white py-12 px-10 shadow-xl rounded-[2.5rem] border border-slate-100">
       <% if alert %>
-        <div class="mb-6 p-4 bg-rose-50 border border-rose-100 text-rose-700 text-sm rounded-2xl">
+        <div class="mb-6 flex items-start gap-3 p-4 bg-rose-50 border border-rose-100 text-rose-700 text-sm rounded-2xl">
+          <%= render "shared/icon", name: "alert-circle", size: 16, css: "text-rose-500 shrink-0 mt-0.5" %>
           <%= alert %>
         </div>
       <% end %>
 
       <%= form_with url: session_path, class: "space-y-6" do |f| %>
         <div>
-          <%= f.label :email_address, "이메일 주소", class: "block text-xs font-bold text-slate-900 uppercase tracking-widest mb-2" %>
-          <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "example@choncance.com", 
-              class: "appearance-none block w-full px-5 py-4 border border-slate-200 rounded-2xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm transition" %>
+          <%= f.label :email_address, class: "flex items-center gap-1.5 text-xs font-bold text-slate-700 uppercase tracking-widest mb-2" do %>
+            <%= render "shared/icon", name: "mail", size: 13 %>
+            이메일 주소
+          <% end %>
+          <%= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username",
+              placeholder: "example@choncance.com",
+              class: "appearance-none block w-full px-5 py-4 border border-slate-200 rounded-2xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition" %>
         </div>
 
         <div>
-          <%= f.label :password, "비밀번호", class: "block text-xs font-bold text-slate-900 uppercase tracking-widest mb-2" %>
-          <%= f.password_field :password, required: true, autocomplete: "current-password", placeholder: "••••••••", 
-              class: "appearance-none block w-full px-5 py-4 border border-slate-200 rounded-2xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm transition" %>
+          <%= f.label :password, class: "flex items-center gap-1.5 text-xs font-bold text-slate-700 uppercase tracking-widest mb-2" do %>
+            <%= render "shared/icon", name: "lock", size: 13 %>
+            비밀번호
+          <% end %>
+          <%= f.password_field :password, required: true, autocomplete: "current-password",
+              placeholder: "••••••••",
+              class: "appearance-none block w-full px-5 py-4 border border-slate-200 rounded-2xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition" %>
         </div>
 
         <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-green-700 focus:ring-green-500 border-slate-300 rounded-md">
-            <label for="remember_me" class="ml-2 block text-sm text-slate-500">로그인 유지</label>
+          <div class="flex items-center gap-2">
+            <input id="remember_me" name="remember_me" type="checkbox"
+                   class="h-4 w-4 text-green-700 focus:ring-green-500 border-slate-300 rounded">
+            <label for="remember_me" class="text-sm text-slate-500">로그인 유지</label>
           </div>
-
-          <div class="text-sm">
-            <%= link_to "비밀번호를 잊으셨나요?", new_password_path, class: "font-medium text-green-700 hover:text-green-800" %>
-          </div>
+          <%= link_to new_password_path, class: "flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-800 transition-colors" do %>
+            <%= render "shared/icon", name: "key", size: 13 %>
+            비밀번호를 잊으셨나요?
+          <% end %>
         </div>
 
         <div>
-          <%= f.submit "로그인", class: "w-full flex justify-center py-4 px-4 border border-transparent rounded-2xl shadow-lg text-lg font-bold text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform active:scale-95" %>
+          <%= f.submit "로그인",
+              class: "w-full flex justify-center items-center gap-2 py-4 px-4 border border-transparent rounded-2xl shadow-sm text-base font-bold text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all cursor-pointer" %>
         </div>
       <% end %>
 
@@ -51,13 +66,17 @@
             <div class="w-full border-t border-slate-200"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white text-slate-400">간편하게 시작하기</span>
+            <span class="px-3 bg-white text-slate-400">간편하게 시작하기</span>
           </div>
         </div>
 
         <div class="mt-6">
-          <button class="w-full flex items-center justify-center py-4 border border-slate-200 rounded-2xl shadow-sm bg-white text-sm font-bold text-slate-700 hover:bg-slate-50 transition">
-             <span class="mr-3 text-xl">💬</span> 카카오로 시작하기
+          <button class="w-full flex items-center justify-center gap-3 py-4 border border-slate-200 rounded-2xl shadow-sm bg-white text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" fill="#FEE500"/>
+              <path d="M12 6.5c-3.038 0-5.5 1.888-5.5 4.217 0 1.35.819 2.548 2.098 3.323-.092.324-.595 2.094-.617 2.236 0 0-.016.131.069.181a.245.245 0 0 0 .196-.031l2.617-1.716c.372.051.752.077 1.137.077 3.038 0 5.5-1.888 5.5-4.07C17.5 8.388 15.038 6.5 12 6.5z" fill="#381E1F"/>
+            </svg>
+            카카오로 시작하기
           </button>
         </div>
       </div>

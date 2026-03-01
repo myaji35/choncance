@@ -1,59 +1,77 @@
 <div class="bg-slate-50 min-h-screen py-12">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- User Header -->
     <div class="mb-12">
-       <div class="flex items-center gap-6 mb-8">
-         <div class="w-16 h-16 bg-green-700 rounded-2xl flex items-center justify-center text-white text-3xl font-bold">
-           <%= @user.email_address[0].upcase %>
-         </div>
-         <div>
-           <h1 class="text-3xl font-bold text-slate-900 tracking-tight"><%= @user.email_address.split('@').first %>님, 환영합니다! 🌾</h1>
-           <p class="text-slate-500 font-medium">오늘은 어떤 시골을 꿈꾸고 계신가요?</p>
-         </div>
-       </div>
+      <div class="flex items-center gap-5 mb-2">
+        <div class="w-14 h-14 bg-green-700 rounded-2xl flex items-center justify-center text-white text-xl font-bold shrink-0">
+          <%= @user.email_address[0].upcase %>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            <%= @user.email_address.split('@').first %>님, 환영합니다!
+          </h1>
+          <p class="text-slate-500 font-medium flex items-center gap-1.5 mt-0.5">
+            <%= render "shared/icon", name: "sun", size: 14, css: "text-green-600" %>
+            오늘은 어떤 시골을 꿈꾸고 계신가요?
+          </p>
+        </div>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-      <!-- Sidebar / Navigation -->
-      <div class="lg:col-span-1 border border-slate-200 rounded-[2.5rem] bg-white p-8 shadow-sm h-fit">
-        <ul class="space-y-2">
-          <li>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-green-50 text-green-700 rounded-2xl font-bold text-sm">
-              <span class="text-xl">🏠</span> 마이 페이지
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
-              <span class="text-xl">📅</span> 내 예약 내역
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
-              <span class="text-xl">🖤</span> 관심 숙소
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl font-bold text-sm">
-              <span class="text-xl">⚙️</span> 설정
-            </a>
-          </li>
-        </ul>
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Sidebar Navigation -->
+      <div class="lg:col-span-1">
+        <nav class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
+          <ul class="space-y-1">
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-3 bg-green-50 text-green-700 rounded-2xl font-semibold text-sm">
+                <%= render "shared/icon", name: "home", size: 16, css: "text-green-700 shrink-0" %>
+                마이 페이지
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-semibold text-sm transition-colors">
+                <%= render "shared/icon", name: "calendar", size: 16, css: "shrink-0" %>
+                내 예약 내역
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-semibold text-sm transition-colors">
+                <%= render "shared/icon", name: "heart", size: 16, css: "shrink-0" %>
+                관심 숙소
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-2xl font-semibold text-sm transition-colors">
+                <%= render "shared/icon", name: "settings", size: 16, css: "shrink-0" %>
+                설정
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
 
-      <!-- Main Activity -->
-      <div class="lg:col-span-2 space-y-12">
-        <!-- New Arrivals / Recommendations -->
+      <!-- Main Content -->
+      <div class="lg:col-span-3 space-y-10">
+        <!-- Hot Properties -->
         <section>
-          <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            요즘 핫한 촌캉스 🔥
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex items-center gap-2 mb-6">
+            <%= render "shared/icon", name: "trending-up", size: 18, css: "text-orange-500" %>
+            <h2 class="text-lg font-bold text-slate-900">요즘 핫한 촌캉스</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <% Property.active.limit(2).each do |p| %>
-              <div class="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm hover:shadow-lg transition">
-                <div class="aspect-video bg-slate-100 rounded-2xl mb-4 relative flex items-center justify-center">
-                  <span class="text-4xl opacity-30">🏡</span>
+              <div class="bg-white border border-slate-100 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                <div class="aspect-video bg-slate-50 rounded-xl mb-4 flex items-center justify-center">
+                  <%= render "shared/icon", name: "image", size: 40, css: "text-slate-200" %>
                 </div>
-                <h3 class="font-bold text-slate-900 mb-1"><%= link_to p.title, property_path(p) %></h3>
-                <p class="text-xs text-slate-500"><%= p.location %></p>
+                <h3 class="font-bold text-slate-900 mb-1 hover:text-green-700 transition-colors">
+                  <%= link_to p.title, property_path(p) %>
+                </h3>
+                <p class="flex items-center gap-1 text-xs text-slate-500">
+                  <%= render "shared/icon", name: "map-pin", size: 12, css: "text-slate-400 shrink-0" %>
+                  <%= p.location %>
+                </p>
               </div>
             <% end %>
           </div>
@@ -61,11 +79,17 @@
 
         <!-- Booking Status -->
         <section>
-          <h2 class="text-xl font-bold text-slate-900 mb-6">최근 예약 내역</h2>
-          <div class="bg-white border border-dashed border-slate-300 py-12 px-8 text-center rounded-[2.5rem]">
-            <div class="text-5xl mb-4">📭</div>
+          <div class="flex items-center gap-2 mb-6">
+            <%= render "shared/icon", name: "calendar", size: 18, css: "text-blue-500" %>
+            <h2 class="text-lg font-bold text-slate-900">최근 예약 내역</h2>
+          </div>
+          <div class="bg-white border-2 border-dashed border-slate-200 py-14 px-8 text-center rounded-3xl">
+            <%= render "shared/icon", name: "inbox", size: 48, css: "text-slate-200 mx-auto mb-4" %>
             <p class="text-slate-400 font-medium">아직 예약된 내역이 없습니다.<br/>지금 바로 떠나볼까요?</p>
-            <%= link_to "숙소 둘러보기", properties_path, class: "inline-block mt-6 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold hover:bg-slate-800 transition" %>
+            <%= link_to properties_path, class: "inline-flex items-center gap-2 mt-6 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-700 transition-colors text-sm" do %>
+              <%= render "shared/icon", name: "compass", size: 16, css: "text-white" %>
+              숙소 둘러보기
+            <% end %>
           </div>
         </section>
       </div>

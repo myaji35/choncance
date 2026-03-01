@@ -3,8 +3,9 @@
   <div class="relative overflow-hidden bg-white border-b border-slate-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 relative z-10">
       <div class="text-center">
-        <div class="inline-block px-4 py-2 bg-green-50 rounded-2xl text-green-700 text-sm font-bold mb-6 animate-pulse">
-           New: 🌾 논뷰 맛집 시즌 오픈
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-50 rounded-2xl text-green-700 text-sm font-bold mb-6">
+          <%= render "shared/icon", name: "sun", size: 16, css: "text-green-600" %>
+          <span>New: 논뷰 맛집 시즌 오픈</span>
         </div>
         <h1 class="text-6xl font-extrabold text-slate-900 tracking-tight sm:text-7xl mb-8 leading-tight">
           MZ세대를 위한<br/><span class="text-green-700">진짜 농촌 여행</span>
@@ -13,19 +14,69 @@
           도시의 소음을 뒤로하고, 시골 마을의 정취와<br/>호스트의 이야기가 숨어있는 촌캉스를 즐겨보세요.
         </p>
         <div class="mt-12 flex flex-col sm:flex-row justify-center gap-6">
-          <%= link_to "지금 촌캉스 떠나기", properties_path, class: "bg-green-700 text-white px-10 py-5 rounded-3xl font-bold shadow-2xl hover:bg-green-800 transition transform hover:-translate-y-1 text-lg" %>
-          <%= link_to "인기 테마 리스트", "#themes", class: "bg-white text-slate-700 border-2 border-slate-200 px-10 py-5 rounded-3xl font-bold hover:bg-slate-50 transition text-lg" %>
+          <%= link_to properties_path, class: "flex items-center justify-center gap-2 bg-green-700 text-white px-10 py-5 rounded-3xl font-bold shadow-2xl hover:bg-green-800 transition transform hover:-translate-y-1 text-lg" do %>
+            <%= render "shared/icon", name: "compass", size: 20, css: "text-white" %>
+            <span>지금 촌캉스 떠나기</span>
+          <% end %>
+          <%= link_to "#themes", class: "flex items-center justify-center gap-2 bg-white text-slate-700 border-2 border-slate-200 px-10 py-5 rounded-3xl font-bold hover:bg-slate-50 transition text-lg" do %>
+            <%= render "shared/icon", name: "tag", size: 20 %>
+            <span>인기 테마 리스트</span>
+          <% end %>
         </div>
       </div>
     </div>
-    
-    <!-- Pattern Background -->
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none select-none">
-       <div class="grid grid-cols-6 h-full w-full">
-         <% 24.times do %>
-           <div class="border border-slate-900 flex items-center justify-center text-4xl">🌾</div>
-         <% end %>
-       </div>
+
+    <!-- Decorative grid background (line style) -->
+    <div class="absolute inset-0 pointer-events-none select-none opacity-[0.03]">
+      <div class="grid grid-cols-8 grid-rows-6 h-full w-full gap-0">
+        <% 48.times do %>
+          <div class="border border-slate-900"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Value Props (Icons 강조) -->
+  <div class="border-b border-slate-100 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+            <%= render "shared/icon", name: "feather", size: 18, css: "text-green-700" %>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-slate-900">감성 큐레이션</div>
+            <div class="text-xs text-slate-500 mt-0.5">테마 태그로 빠른 발견</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+            <%= render "shared/icon", name: "eye", size: 18, css: "text-green-700" %>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-slate-900">정직한 정보</div>
+            <div class="text-xs text-slate-500 mt-0.5">불편함도 솔직하게</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+            <%= render "shared/icon", name: "leaf", size: 18, css: "text-green-700" %>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-slate-900">호스트 스토리</div>
+            <div class="text-xs text-slate-500 mt-0.5">진정성 있는 농촌 이야기</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+            <%= render "shared/icon", name: "package", size: 18, css: "text-green-700" %>
+          </div>
+          <div>
+            <div class="text-sm font-bold text-slate-900">복합 체험</div>
+            <div class="text-xs text-slate-500 mt-0.5">숙박 + 농사·아궁이 체험</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -33,26 +84,41 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
     <div class="flex items-end justify-between mb-16">
       <div>
-        <h2 class="text-4xl font-bold text-slate-900 tracking-tight mb-2">Editor's Pick 🏡</h2>
+        <div class="flex items-center gap-2 mb-2">
+          <%= render "shared/icon", name: "star", size: 18, css: "text-amber-500" %>
+          <h2 class="text-4xl font-bold text-slate-900 tracking-tight">Editor's Pick</h2>
+        </div>
         <p class="text-slate-500 text-lg">이번 주 가장 사랑받는 촌캉스 숙소입니다.</p>
       </div>
-      <%= link_to "전체 숙소 보기 →", properties_path, class: "text-green-700 font-bold hover:underline py-2" %>
+      <%= link_to properties_path, class: "flex items-center gap-1 text-green-700 font-bold hover:underline py-2" do %>
+        <span>전체 숙소 보기</span>
+        <%= render "shared/icon", name: "arrow-right", size: 16, css: "text-green-700" %>
+      <% end %>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
       <% @featured_properties.each do |property| %>
         <div class="group cursor-pointer">
-          <div class="aspect-[4/3] bg-slate-100 rounded-[2.5rem] overflow-hidden mb-6 relative shadow-sm group-hover:shadow-2xl transition-all duration-500 transform group-hover:-translate-y-2">
-            <div class="absolute inset-0 flex items-center justify-center text-6xl opacity-40">🏡</div>
+          <div class="aspect-[4/3] bg-slate-100 rounded-[2.5rem] overflow-hidden mb-6 relative shadow-sm group-hover:shadow-2xl transition-all duration-500 transform group-hover:-translate-y-2 flex items-center justify-center">
+            <div class="text-slate-300">
+              <%= render "shared/icon", name: "image", size: 64, css: "text-slate-300" %>
+            </div>
             <div class="absolute bottom-6 left-6 flex gap-2">
               <% property.tags.take(2).each do |tag| %>
                 <span class="bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm"><%= tag.name %></span>
               <% end %>
             </div>
           </div>
-          <h3 class="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors"><%= link_to property.title, property_path(property) %></h3>
-          <p class="text-slate-500 font-medium mb-4"><%= property.location %></p>
-          <div class="text-xl font-bold text-slate-900"><%= number_with_delimiter(property.price_per_night) %>원<span class="text-slate-400 text-sm font-normal"> / 1박</span></div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2 group-hover:text-green-700 transition-colors">
+            <%= link_to property.title, property_path(property) %>
+          </h3>
+          <div class="flex items-center gap-1.5 text-slate-500 font-medium mb-4">
+            <%= render "shared/icon", name: "map-pin", size: 14, css: "text-slate-400 shrink-0" %>
+            <span><%= property.location %></span>
+          </div>
+          <div class="text-xl font-bold text-slate-900">
+            <%= number_with_delimiter(property.price_per_night) %>원<span class="text-slate-400 text-sm font-normal"> / 1박</span>
+          </div>
         </div>
       <% end %>
     </div>
@@ -62,15 +128,20 @@
   <div id="themes" class="bg-slate-50 py-32">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-20">
-        <h2 class="text-4xl font-bold text-slate-900 tracking-tight">당신의 취향은 무엇인가요?</h2>
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <%= render "shared/icon", name: "filter", size: 20, css: "text-green-700" %>
+          <h2 class="text-4xl font-bold text-slate-900 tracking-tight">당신의 취향은 무엇인가요?</h2>
+        </div>
         <p class="text-slate-500 mt-4 text-lg">테마별로 준비된 특별한 시골 경험</p>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <% @tags.each do |tag| %>
-          <%= link_to properties_path(tag: tag.name), class: "bg-white p-12 rounded-[3rem] text-center shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 border border-slate-100 group" %>
-            <div class="text-6xl mb-6 transform group-hover:scale-110 transition-transform"><%= tag.icon %></div>
-            <div class="text-xl font-extrabold text-slate-800 group-hover:text-green-700 uppercase tracking-tight"><%= tag.name %></div>
+          <%= link_to properties_path(tag: tag.name), class: "bg-white p-10 rounded-[2.5rem] text-center shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-3 border border-slate-100 group flex flex-col items-center gap-4" do %>
+            <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center group-hover:bg-green-100 transition-colors">
+              <%= render "shared/icon", name: tag_icon_name(tag.name), size: 28, css: "text-green-700" %>
+            </div>
+            <div class="text-base font-extrabold text-slate-800 group-hover:text-green-700 transition-colors tracking-tight"><%= tag.name %></div>
           <% end %>
         <% end %>
       </div>
