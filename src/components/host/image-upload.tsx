@@ -11,6 +11,7 @@ interface ImageUploadProps {
   value: string[];
   onChange: (urls: string[]) => void;
   maxImages?: number;
+  minImages?: number;
   label?: string;
   folder?: string; // GCS folder (e.g., 'properties', 'experiences')
 }
@@ -19,6 +20,7 @@ export function ImageUpload({
   value,
   onChange,
   maxImages = 10,
+  minImages = 0,
   label = "이미지",
   folder = "properties",
 }: ImageUploadProps) {
@@ -153,11 +155,25 @@ export function ImageUpload({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label>{label}</Label>
-        <span className="text-sm text-gray-500">
+        <Label>
+          {label}
+          {minImages > 0 && (
+            <span className="ml-1 text-xs text-gray-500">
+              (최소 {minImages}장)
+            </span>
+          )}
+        </Label>
+        <span className={`text-sm ${minImages > 0 && value.length < minImages ? "text-red-500 font-medium" : "text-gray-500"}`}>
           {value.length} / {maxImages}
+          {minImages > 0 && value.length < minImages && ` (${minImages - value.length}장 더 필요)`}
         </span>
       </div>
+
+      {minImages > 0 && value.length < minImages && (
+        <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-sm text-amber-800">
+          숙소 이미지를 최소 {minImages}장 이상 업로드해주세요. (현재 {value.length}장)
+        </div>
+      )}
 
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">

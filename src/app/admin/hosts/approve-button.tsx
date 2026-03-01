@@ -65,13 +65,13 @@ export function HostRejectButton({ hostId, hostName }: ApproveButtonProps) {
 
   const handleReject = async () => {
     const reason = prompt(
-      `${hostName}님의 호스트 신청을 거부합니다.\n거부 사유를 입력해주세요 (10자 이상):`
+      `${hostName}님의 호스트 신청을 거부합니다.\n거부 사유를 입력해주세요 (20자 이상):`
     );
 
     if (!reason) return;
 
-    if (reason.trim().length < 10) {
-      alert("거부 사유를 10자 이상 입력해주세요");
+    if (reason.trim().length < 20) {
+      alert("거부 사유를 20자 이상 입력해주세요");
       return;
     }
 

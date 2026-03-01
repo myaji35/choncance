@@ -57,6 +57,11 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
         throw new Error("필수 항목을 모두 입력해주세요");
       }
 
+      // Validate minimum images
+      if (uploadedImages.length < 3) {
+        throw new Error("숙소 이미지를 최소 3장 이상 업로드해주세요");
+      }
+
       // Create property
       const response = await fetch("/api/host/properties", {
         method: "POST",
@@ -490,6 +495,11 @@ export function PropertyRegistrationForm({ tags }: PropertyRegistrationFormProps
             <p className="text-xs text-gray-500">
               JPG, PNG, WebP 형식 지원. 여러 이미지를 한번에 선택할 수 있습니다.
             </p>
+            {uploadedImages.length > 0 && uploadedImages.length < 3 && (
+              <p className="text-xs text-amber-600">
+                최소 3장의 이미지를 업로드해주세요. (현재 {uploadedImages.length}장)
+              </p>
+            )}
           </div>
 
           {/* Image Preview Grid */}
