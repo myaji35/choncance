@@ -10,15 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_06_035907) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_01_124136) do
   create_table "properties", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "external_id"
+    t.decimal "latitude", precision: 10, scale: 8
     t.string "location"
+    t.decimal "longitude", precision: 11, scale: 8
+    t.string "phone"
     t.integer "price_per_night"
+    t.string "source", default: "manual"
     t.integer "status"
+    t.string "thumbnail_url"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.string "uploaded_by"
+    t.index ["external_id"], name: "index_properties_on_external_id", unique: true
+    t.index ["source"], name: "index_properties_on_source"
   end
 
   create_table "properties_tags", id: false, force: :cascade do |t|

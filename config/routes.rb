@@ -6,7 +6,12 @@ Rails.application.routes.draw do
 
   namespace :host do
     get "dashboard", to: "dashboard#index", as: :dashboard
-    resources :properties, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :properties, only: [:index, :new, :create, :edit, :update, :destroy] do
+      member do
+        patch :approve
+        delete :reject
+      end
+    end
   end
   
   resource :session

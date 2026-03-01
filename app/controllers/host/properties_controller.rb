@@ -1,5 +1,5 @@
 class Host::PropertiesController < Host::BaseController
-  before_action :set_property, only: [:edit, :update, :destroy]
+  before_action :set_property, only: [:edit, :update, :destroy, :approve, :reject]
 
   def index
     @properties = Property.order(created_at: :desc)
@@ -39,6 +39,18 @@ class Host::PropertiesController < Host::BaseController
   def destroy
     @property.destroy
     redirect_to host_dashboard_path, notice: "숙소가 삭제되었습니다."
+  end
+
+  def approve
+    @property.update!(status: :active)
+    redirect_to host_properties_path, notice: "숙소가 승인되었습니다."
+  rescue => e
+    redirect_to host_properties_path, alert: "승인 처리 중 오류가 발생했습니다: #{e.message}"
+  end
+
+  def reject
+    @property.destroy
+    redirect_to host_properties_path, notice: "숙소가 거부 및 삭제되었습니다."
   end
 
   private
