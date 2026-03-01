@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Link from "next/link";
+import Script from "next/script";
 import { getPropertyById, getProperties } from "@/lib/api/properties";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,11 +12,63 @@ import { PropertyCard } from "@/components/property/property-card";
 import { BookingWidget } from "@/components/booking/booking-widget";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
 import { ReviewCard } from "@/components/review/review-card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { prisma } from "@/lib/prisma";
+import { generateAllPropertySchemas } from "@/lib/geo/schemas";
 
 interface PropertyDetailPageProps {
   params: {
     id: string;
+  };
+}
+
+// GEO 최적화 메타데이터 동적 생성
+export async function generateMetadata(
+  { params }: PropertyDetailPageProps
+): Promise<Metadata> {
+  let property;
+  try {
+    property = await getPropertyById(params.id);
+  } catch {
+    return { title: "숙소를 찾을 수 없습니다" };
+  }
+  if (!property) return { title: "숙소를 찾을 수 없습니다" };
+
+  const tagNames = property.tags?.map((t: { name: string }) => t.name).join(", ") ?? "";
+  const region = [property.province, property.city].filter(Boolean).join(" ");
+  const price = Number(property.pricePerNight).toLocaleString("ko-KR");
+
+  const description = [
+    `${region} 위치한 농촌 체험 숙소.`,
+    tagNames ? `${tagNames} 테마.` : "",
+    `1박 ${price}원부터.`,
+    property.hostStory ? property.hostStory.substring(0, 80) : "",
+  ].filter(Boolean).join(" ");
+
+  const images = [property.thumbnailUrl, ...(property.images ?? [])].filter(Boolean) as string[];
+
+  return {
+    title: `${property.name} — VINTEE 농촌 체험 숙소`,
+    description,
+    keywords: [
+      property.name,
+      region,
+      tagNames,
+      "농촌체험", "촌캉스", "농촌민박", "펜션",
+    ].filter(Boolean).join(", "),
+    openGraph: {
+      title: property.name,
+      description,
+      url: `/property/${property.id}`,
+      type: "website",
+      images: images.slice(0, 3).map((url) => ({ url, alt: property.name })),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: property.name,
+      description,
+      images: images[0] ? [images[0]] : undefined,
+    },
   };
 }
 
@@ -95,8 +149,29 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
     console.error("Failed to fetch reviews:", error);
   }
 
+  // GEO: JSON-LD 구조화 데이터 생성
+  const jsonLdSchemas = generateAllPropertySchemas({
+    ...serializedProperty,
+    reviews: reviews.map((r) => ({
+      rating: r.rating,
+      comment: r.comment,
+      createdAt: r.createdAt,
+      user: r.user,
+    })),
+  });
+
   return (
     <div className="min-h-screen bg-white">
+      {/* JSON-LD 구조화 데이터 (GEO 최적화) */}
+      {jsonLdSchemas.map((schema, i) => (
+        <Script
+          key={`jsonld-${i}`}
+          id={`jsonld-${i}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
         {/* Back Navigation */}
         <Link
@@ -269,38 +344,41 @@ export default async function PropertyDetailPage({ params }: PropertyDetailPageP
         {/* Add padding at bottom for mobile sticky CTA */}
         <div className="h-20 sm:h-24 lg:hidden" />
 
-        {/* Reviews Section */}
-        {averageRating.count > 0 && (
-          <section className="py-8 sm:py-10 md:py-12 border-t">
-            <div className="mb-6 sm:mb-8">
-              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="flex items-center gap-2">
-                  <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
-                  <h2 className="text-xl sm:text-2xl font-bold">
-                    {averageRating.average.toFixed(1)}
-                  </h2>
-                </div>
-                <div className="text-gray-600">
-                  <p className="text-sm sm:text-base font-semibold">리뷰 {averageRating.count}개</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3 sm:space-y-4">
-              {reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </div>
-
-            {averageRating.count > 5 && (
-              <div className="mt-4 sm:mt-6 text-center">
-                <p className="text-xs sm:text-sm text-gray-500">
-                  {averageRating.count - 5}개의 리뷰가 더 있습니다
-                </p>
-              </div>
+        {/* Reviews Section — 항상 표시 (리뷰 없을 때 EmptyState) */}
+        <section className="py-8 sm:py-10 md:py-12 border-t">
+          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <Star className="w-5 h-5 sm:w-6 sm:h-6 fill-yellow-400 text-yellow-400" />
+            <h2 className="text-xl sm:text-2xl font-bold">리뷰</h2>
+            {averageRating.count > 0 && (
+              <span className="text-gray-500 font-normal text-base sm:text-lg">
+                {averageRating.average.toFixed(1)} ({averageRating.count}개)
+              </span>
             )}
-          </section>
-        )}
+          </div>
+
+          {averageRating.count === 0 ? (
+            <EmptyState
+              icon="star"
+              title="아직 리뷰가 없어요"
+              description="이 숙소에 첫 번째 리뷰를 남겨보세요"
+            />
+          ) : (
+            <>
+              <div className="space-y-3 sm:space-y-4">
+                {reviews.map((review) => (
+                  <ReviewCard key={review.id} review={review} />
+                ))}
+              </div>
+              {averageRating.count > 5 && (
+                <div className="mt-4 sm:mt-6 text-center">
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    {averageRating.count - 5}개의 리뷰가 더 있습니다
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+        </section>
 
         {/* Related Properties Section */}
         {relatedProperties.length > 0 && (

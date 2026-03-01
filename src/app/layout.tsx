@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { PWAInit } from "@/components/pwa-init";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
 import { ClerkProvider } from "@clerk/nextjs";
+import { generateWebSiteSchema } from "@/lib/geo/schemas";
 
 // Pretendard 폰트 (한글 최적화)
 const pretendard = localFont({
@@ -82,6 +84,12 @@ export default function RootLayout({
           as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+        />
+        {/* WebSite JSON-LD: GEO 최적화 — AI 검색엔진 사이트 인식 */}
+        <Script
+          id="jsonld-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }}
         />
       </head>
       <body
