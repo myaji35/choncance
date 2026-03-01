@@ -181,7 +181,7 @@ export default async function BookingsPage() {
                             </Button>
                           </Link>
 
-                          {booking.status === "CONFIRMED" && (
+                          {(booking.status === "CONFIRMED" || booking.status === "PENDING") && (
                             <CancelBookingDialog
                               bookingId={booking.id}
                               checkInDate={checkIn}
