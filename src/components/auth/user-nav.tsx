@@ -1,35 +1,34 @@
-'use client';
+"use client";
 
-import { useSession, signOut } from 'next-auth/react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { useAuth, UserButton, SignInButton } from "@clerk/nextjs";
 
 export default function UserNav() {
-  const { data: session, status } = useSession();
+  const { isSignedIn, isLoaded } = useAuth();
 
-  if (status === 'loading') {
+  if (!isLoaded) {
     return null;
   }
 
-  if (status === 'unauthenticated') {
+  if (!isSignedIn) {
     return (
-      <Link href="/login" passHref>
-        <Button>로그인</Button>
-      </Link>
+      <SignInButton mode="modal">
+        <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+          로그인
+        </button>
+      </SignInButton>
     );
   }
 
   return (
     <div className="flex items-center space-x-4">
-      {session?.user?.role !== 'HOST' && session?.user?.role !== 'HOST_PENDING' && (
-        <Link href="/become-a-host" passHref>
-          <Button variant="ghost">호스트 되기</Button>
-        </Link>
-      )}
-      <Link href="/dashboard" passHref>
-        <Button variant="ghost">대시보드</Button>
+      <Link href="/bookings" className="text-sm font-medium text-gray-600 hover:text-primary">
+        내 예약
       </Link>
-      <Button onClick={() => signOut()}>로그아웃</Button>
+      <Link href="/host/dashboard" className="text-sm font-medium text-gray-600 hover:text-primary">
+        호스트
+      </Link>
+      <UserButton afterSignOutUrl="/" />
     </div>
   );
 }

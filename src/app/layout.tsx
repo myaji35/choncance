@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/layout/site-header-simple";
 import { Toaster } from "@/components/ui/toaster";
 import { PWAInit } from "@/components/pwa-init";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // Pretendard 폰트 (한글 최적화)
 const pretendard = localFont({
@@ -73,6 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="ko">
       <head>
         <link
@@ -115,5 +117,6 @@ export default function RootLayout({
         </footer>
       </body>
     </html>
+    </ClerkProvider>
   );
 }

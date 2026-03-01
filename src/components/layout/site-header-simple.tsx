@@ -2,17 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import UserNav from "@/components/auth/user-nav";
+import { useAuth, UserButton, SignInButton } from "@clerk/nextjs";
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: session } = useSession();
+  const { isSignedIn } = useAuth();
 
   // Hide header on landing page
   if (pathname === "/") {
@@ -66,8 +64,30 @@ export function SiteHeader() {
           </nav>
 
           {/* Auth Section */}
-          <div className="flex items-center gap-2">
-            <UserNav />
+          <div className="flex items-center gap-3">
+            {isSignedIn ? (
+              <>
+                <Link
+                  href="/host/dashboard"
+                  className="text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+                >
+                  호스트 대시보드
+                </Link>
+                <Link
+                  href="/bookings"
+                  className="text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+                >
+                  내 예약
+                </Link>
+                <UserButton afterSignOutUrl="/" />
+              </>
+            ) : (
+              <SignInButton mode="modal">
+                <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                  로그인
+                </button>
+              </SignInButton>
+            )}
           </div>
         </div>
 
@@ -85,12 +105,23 @@ export function SiteHeader() {
             <span className="text-xl font-bold text-primary">VINTEE</span>
           </Link>
 
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex items-center gap-3">
+            {isSignedIn ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
+              <SignInButton mode="modal">
+                <button className="text-sm font-medium text-gray-600 hover:text-primary">
+                  로그인
+                </button>
+              </SignInButton>
+            )}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 hover:bg-gray-100 rounded-lg"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -125,9 +156,24 @@ export function SiteHeader() {
               >
                 호스트 되기
               </Link>
-              <div className="flex flex-col gap-2 pt-4 border-t">
-                <UserNav />
-              </div>
+              {isSignedIn && (
+                <>
+                  <Link
+                    href="/host/dashboard"
+                    className="text-sm font-medium text-gray-600 hover:text-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    호스트 대시보드
+                  </Link>
+                  <Link
+                    href="/bookings"
+                    className="text-sm font-medium text-gray-600 hover:text-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    내 예약
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}

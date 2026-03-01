@@ -1,24 +1,10 @@
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-const projectRoot = path.dirname(fileURLToPath(import.meta.url));
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Standalone output for Docker/self-hosting
-  // For Vercel, this can be removed or kept (Vercel handles it automatically)
-  output: 'standalone',
-  turbopack: {
-    root: projectRoot,
-  },
+  // Explicitly set src directory so Next.js uses src/app over root app/ (Rails)
+  // output: 'standalone', // disabled for dev; re-enable for production Docker builds
   // Ignore ESLint and TypeScript errors during builds (fix separately)
   typescript: {
     ignoreBuildErrors: true,
-  },
-  experimental: {
-    eslint: {
-      ignoreDuringBuilds: true,
-    },
   },
   images: {
     // Enable image optimization for remote domains
