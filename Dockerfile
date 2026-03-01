@@ -25,7 +25,7 @@ RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-RUN npm run build 2>&1 | tail -20 || (echo "Build failed, check logs above" && exit 1)
+RUN npm run build
 
 # 프로덕션 런타임 단계
 FROM base AS runner
