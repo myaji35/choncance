@@ -8,6 +8,67 @@
 
 ## [Unreleased]
 
+## [2026-03-01] - Sprint-통합 PDCA 완료 (93% Match Rate)
+
+### Added
+
+**Sprint-통합 최종 완료 보고서**:
+- 📄 `docs/04-report/sprint-통합.report.md` - 18개 Story (Epic 3~6) 통합 구현 완료
+- 5회 Act 반복을 통한 점진적 개선 (65% → 93% Match Rate)
+- **최종 달성**: 93% Match Rate (목표 90% 초과)
+
+**Epic 3 (호스트 관리) - 100% 완료**:
+- 호스트 대시보드 및 예약 관리
+- 호스트 승인/거부 프로세스
+- 이미지 Drag & Drop 순서 변경
+
+**Epic 4 (예약 및 결제) - 86% 완료**:
+- 토스페이먼츠 결제 연동 (개발 모드)
+- 예약 취소/환불 기능
+- 예약 내역 조회
+
+**Epic 5 (리뷰 시스템) - 100% 완료**:
+- 리뷰 작성/표시 기능
+- 호스트 답변 기능
+- 별점 평균 및 통계
+
+**Epic 6 (관리자 기능) - 90% 완료**:
+- 호스트 승인 페이지 (상세 페이지)
+- 숙소 승인 (수정 요청 모달)
+- 태그 관리 Admin UI (CRUD)
+
+### Changed
+
+- Admin 대시보드 통합 (`admin/page.tsx`)
+- Property 승인 플로우 개선 (수정 요청 추가)
+- 호스트 필터링 시스템 (ALL/PENDING/APPROVED/REJECTED)
+
+### Fixed
+
+- Act-1: 호스트 승인 UI 개선 (+7%)
+- Act-2: 거절 사유 검증 통일 (+2%)
+- Act-3: 예약 취소 로직 개선 (+1%)
+- Act-4: 이미지 DnD, 호스트 상세 페이지 (+13%)
+- Act-5: 태그 관리 Admin, 수정 요청 모달 (+5%)
+
+### Removed
+
+- Dead Code 정리: `refund-dialog.tsx`, `storage.ts`
+
+### Metrics
+
+```
+Sprint-통합 최종 성과:
+- 전체 Match Rate: 93% (v1.0: 65% → v6.0: 93%)
+- 완료된 Story: 18개 (100%)
+- 100% 달성 Story: 7개
+- 90%+ 달성 Story: 6개
+- 소요 시간: 12시간 (5회 Act)
+- 신규 파일: 12개, 삭제: 2개
+```
+
+---
+
 ## [2026-03-01] - 리뷰 시스템 완성
 
 ### Added
