@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { notifyHostReply } from "@/lib/notifications";
+import { hostReplySchema } from "@/lib/validations/review";
 
 /**
  * POST /api/reviews/:id/reply
@@ -20,14 +21,17 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { reply } = body;
 
-    if (!reply || reply.trim().length === 0) {
+    // Zod 서버 검증 (10-300자)
+    const parsed = hostReplySchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Reply content is required" },
+        { error: parsed.error.errors[0].message },
         { status: 400 }
       );
     }
+
+    const { reply } = parsed.data;
 
     // Find review and verify host ownership
     const review = await prisma.review.findUnique({
@@ -53,6 +57,14 @@ export async function POST(
       return NextResponse.json(
         { error: "Only the host can reply to reviews" },
         { status: 403 }
+      );
+    }
+
+    // 중복 답글 방지
+    if (review.hostReply) {
+      return NextResponse.json(
+        { error: "Already replied to this review" },
+        { status: 409 }
       );
     }
 

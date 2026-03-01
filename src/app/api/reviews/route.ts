@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { notifyReviewReceived } from "@/lib/notifications";
+import { createReviewSchema } from "@/lib/validations/review";
 
 /**
  * POST /api/reviews
@@ -17,22 +18,17 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { bookingId, rating, content, images, snsShareConsent = false } = body;
 
-    // Validation
-    if (!bookingId || !rating || !content) {
+    // Zod 서버 검증
+    const parsed = createReviewSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "bookingId, rating, and content are required" },
+        { error: parsed.error.errors[0].message },
         { status: 400 }
       );
     }
 
-    if (rating < 1 || rating > 5) {
-      return NextResponse.json(
-        { error: "Rating must be between 1 and 5" },
-        { status: 400 }
-      );
-    }
+    const { bookingId, rating, content, images, snsShareConsent } = parsed.data;
 
     // Find booking
     const booking = await prisma.booking.findFirst({
@@ -56,7 +52,15 @@ export async function POST(request: NextRequest) {
     if (booking.status !== "COMPLETED") {
       return NextResponse.json(
         { error: "Can only review completed bookings" },
-        { status: 400 }
+        { status: 422 }
+      );
+    }
+
+    // Check checkout date (must be in the past)
+    if (new Date(booking.checkOut) > new Date()) {
+      return NextResponse.json(
+        { error: "Can only review after checkout date" },
+        { status: 422 }
       );
     }
 
@@ -64,7 +68,7 @@ export async function POST(request: NextRequest) {
     if (booking.review) {
       return NextResponse.json(
         { error: "Review already exists for this booking" },
-        { status: 400 }
+        { status: 409 }
       );
     }
 

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { HostReplyForm } from "./host-reply-form";
+import { maskName } from "@/lib/utils/review";
 
 interface ReviewCardProps {
   review: {
@@ -51,7 +52,7 @@ export function ReviewCard({ review, showProperty = false, property, isHost = fa
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-600 font-semibold">
-                  {review.user.name?.charAt(0).toUpperCase() || "U"}
+                  {review.user.name?.charAt(0) || "U"}
                 </div>
               )}
             </div>
@@ -59,7 +60,7 @@ export function ReviewCard({ review, showProperty = false, property, isHost = fa
             {/* User Name & Date */}
             <div>
               <p className="font-semibold text-gray-900">
-                {review.user.name || "익명"}
+                {maskName(review.user.name)}
               </p>
               <p className="text-sm text-gray-500">
                 {format(createdDate, "PPP", { locale: ko })}
