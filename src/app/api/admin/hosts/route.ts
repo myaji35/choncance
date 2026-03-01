@@ -18,8 +18,17 @@ export async function GET(request: NextRequest) {
 
     const userId = authUser.profile.id;
 
-    // Check if user is admin (you can add admin check logic here)
-    // For now, allowing all authenticated users
+    // Check if user is admin
+    const dbUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (dbUser?.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "관리자 권한이 필요합니다" },
+        { status: 403 }
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status"); // PENDING, APPROVED, REJECTED

@@ -4,7 +4,7 @@ import { requireAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClipboardCheck, Settings, LogOut, Bot } from "lucide-react";
+import { ClipboardCheck, Settings, LogOut, Bot, UserCheck } from "lucide-react";
 
 export default async function AdminPage() {
   // Admin token으로 인증 확인
@@ -16,6 +16,7 @@ export default async function AdminPage() {
   let userCount = 0;
   let reviewCount = 0;
   let pendingPropertiesCount = 0;
+  let pendingHostsCount = 0;
 
   try {
     const stats = await Promise.all([
@@ -24,9 +25,10 @@ export default async function AdminPage() {
       prisma.user.count(),
       prisma.review.count(),
       prisma.property.count({ where: { status: "PENDING" } }),
+      prisma.hostProfile.count({ where: { status: "PENDING" } }),
     ]);
 
-    [propertyCount, bookingCount, userCount, reviewCount, pendingPropertiesCount] = stats;
+    [propertyCount, bookingCount, userCount, reviewCount, pendingPropertiesCount, pendingHostsCount] = stats;
   } catch (error) {
     console.error("Database connection error:", error);
     // Use default values (0) when database is not available
@@ -58,6 +60,32 @@ export default async function AdminPage() {
           </form>
         </div>
       </div>
+
+      {/* Pending Hosts Alert */}
+      {pendingHostsCount > 0 && (
+        <Link href="/admin/hosts">
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-4 hover:bg-blue-100 transition-colors cursor-pointer">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="bg-blue-500 text-white p-3 rounded-full">
+                  <UserCheck className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-blue-900">
+                    승인 대기중인 호스트 신청이 있습니다
+                  </h3>
+                  <p className="text-blue-700 text-sm">
+                    호스트 신청을 검토하고 승인하거나 거부해주세요
+                  </p>
+                </div>
+              </div>
+              <Badge variant="destructive" className="text-lg px-4 py-2">
+                {pendingHostsCount}건 대기중
+              </Badge>
+            </div>
+          </div>
+        </Link>
+      )}
 
       {/* Pending Properties Alert */}
       {pendingPropertiesCount > 0 && (
@@ -134,9 +162,12 @@ export default async function AdminPage() {
             </Link>
             <Link
               href="/admin/hosts"
-              className="block p-3 hover:bg-gray-50 rounded transition-colors"
+              className="flex items-center justify-between p-3 hover:bg-gray-50 rounded transition-colors"
             >
-              호스트 관리
+              <span>호스트 관리</span>
+              {pendingHostsCount > 0 && (
+                <Badge variant="destructive">{pendingHostsCount}</Badge>
+              )}
             </Link>
             <Link
               href="/admin/reports"
