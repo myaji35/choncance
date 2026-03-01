@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
   root "home#index"
   
-  resources :properties, only: [:index, :show]
+  resources :properties, only: [:index, :show] do
+    resources :reviews, only: [:index, :new, :create]
+  end
+  resources :bookings, only: [:index, :show] do
+    member do
+      patch :cancel
+    end
+  end
   get "dashboard" => "dashboard#index", as: :dashboard
 
   namespace :host do
@@ -10,6 +17,11 @@ Rails.application.routes.draw do
       member do
         patch :approve
         delete :reject
+      end
+    end
+    resources :reviews, only: [] do
+      member do
+        patch :reply
       end
     end
   end

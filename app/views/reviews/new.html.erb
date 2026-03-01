@@ -1,0 +1,97 @@
+<div class="bg-slate-50 min-h-screen py-12">
+  <div class="max-w-2xl mx-auto px-4">
+    <%= link_to property_path(@property), class: "inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-700 text-sm font-medium mb-8 transition-colors" do %>
+      <%= render "shared/icon", name: "arrow-left", size: 16 %>
+      숙소로 돌아가기
+    <% end %>
+
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900 mb-1">리뷰 작성</h1>
+        <p class="text-slate-500 text-sm"><%= @property.title %></p>
+      </div>
+
+      <%= form_with model: [@property, @review], class: "space-y-6" do |f| %>
+        <!-- Star Rating -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-3">별점 <span class="text-rose-500">*</span></label>
+          <div class="flex items-center gap-2" id="star-rating">
+            <% 5.times do |i| %>
+              <label class="cursor-pointer">
+                <%= f.radio_button :rating, i + 1, class: "sr-only peer", id: "rating_#{i + 1}", required: true %>
+                <span class="text-3xl text-slate-200 hover:text-amber-400 transition-colors peer-checked:text-amber-400 star-label" data-value="<%= i + 1 %>">★</span>
+              </label>
+            <% end %>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">별점을 선택해주세요</p>
+        </div>
+
+        <!-- Review Text -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-2" for="review_comment">
+            리뷰 내용 <span class="text-rose-500">*</span>
+          </label>
+          <%= f.text_area :comment,
+              id: "review_comment",
+              rows: 5,
+              minlength: 10,
+              maxlength: 500,
+              placeholder: "숙소에서의 경험을 솔직하게 작성해주세요. (최소 10자, 최대 500자)",
+              class: "w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none",
+              required: true %>
+          <p class="text-xs text-slate-400 mt-1 text-right" id="char-count">0 / 500</p>
+        </div>
+
+        <!-- Errors -->
+        <% if @review.errors.any? %>
+          <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4">
+            <ul class="space-y-1">
+              <% @review.errors.full_messages.each do |msg| %>
+                <li class="text-rose-600 text-sm flex items-start gap-2">
+                  <%= render "shared/icon", name: "alert-circle", size: 14, css: "text-rose-500 shrink-0 mt-0.5" %>
+                  <%= msg %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Buttons -->
+        <div class="flex items-center gap-3 pt-2">
+          <%= f.submit "리뷰 등록", class: "flex-1 bg-green-700 text-white py-3 rounded-2xl font-bold hover:bg-green-800 transition-colors cursor-pointer" %>
+          <%= link_to "취소", property_path(@property), class: "flex-1 text-center border border-slate-200 text-slate-600 py-3 rounded-2xl font-semibold hover:bg-slate-50 transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 글자 수 카운터
+  const textarea = document.getElementById('review_comment');
+  const counter = document.getElementById('char-count');
+  if (textarea && counter) {
+    textarea.addEventListener('input', () => {
+      counter.textContent = textarea.value.length + ' / 500';
+    });
+  }
+
+  // 별점 인터랙션 (hover highlight)
+  const labels = document.querySelectorAll('.star-label');
+  labels.forEach((label, idx) => {
+    label.addEventListener('mouseenter', () => {
+      labels.forEach((l, i) => {
+        l.classList.toggle('text-amber-400', i <= idx);
+        l.classList.toggle('text-slate-200', i > idx);
+      });
+    });
+  });
+  document.getElementById('star-rating')?.addEventListener('mouseleave', () => {
+    const checked = document.querySelector('input[name="review[rating]"]:checked');
+    const val = checked ? parseInt(checked.value) : 0;
+    labels.forEach((l, i) => {
+      l.classList.toggle('text-amber-400', i < val);
+      l.classList.toggle('text-slate-200', i >= val);
+    });
+  });
+</script>

@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_01_124136) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_01_130000) do
+  create_table "bookings", force: :cascade do |t|
+    t.text "cancel_reason"
+    t.date "check_in", null: false
+    t.date "check_out", null: false
+    t.datetime "created_at", null: false
+    t.integer "guest_count", default: 1
+    t.integer "property_id", null: false
+    t.string "status", default: "confirmed"
+    t.integer "total_price", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["property_id"], name: "index_bookings_on_property_id"
+    t.index ["status"], name: "index_bookings_on_status"
+    t.index ["user_id", "property_id", "check_in"], name: "index_bookings_on_user_property_checkin"
+    t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
   create_table "properties", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -33,6 +50,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_01_124136) do
   create_table "properties_tags", id: false, force: :cascade do |t|
     t.integer "property_id", null: false
     t.integer "tag_id", null: false
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer "booking_id"
+    t.text "comment", null: false
+    t.datetime "created_at", null: false
+    t.text "host_reply"
+    t.integer "property_id", null: false
+    t.integer "rating", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["property_id"], name: "index_reviews_on_property_id"
+    t.index ["user_id", "property_id"], name: "index_reviews_on_user_id_and_property_id", unique: true
+    t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -60,5 +91,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_01_124136) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "bookings", "properties"
+  add_foreign_key "bookings", "users"
   add_foreign_key "sessions", "users"
 end

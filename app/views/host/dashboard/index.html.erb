@@ -186,4 +186,61 @@
     </div>
 
   </div>
+
+  <!-- Reviews Section: Awaiting Host Reply -->
+  <% unanswered_reviews = Review.joins(:property).where(properties: { id: @properties.pluck(:id) }).where(host_reply: [nil, ""]).order(created_at: :desc).limit(10) %>
+  <% if unanswered_reviews.any? %>
+    <div class="mt-8 bg-white rounded-3xl border border-amber-200 overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-amber-100 bg-amber-50/50">
+        <div class="flex items-center gap-2">
+          <%= render "shared/icon", name: "message-circle", size: 20, css: "text-amber-500" %>
+          <h2 class="text-lg font-bold text-slate-900">답글 대기 중인 리뷰</h2>
+          <span class="ml-1 bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full"><%= unanswered_reviews.count %>건</span>
+        </div>
+      </div>
+      <div class="divide-y divide-slate-100">
+        <% unanswered_reviews.each do |review| %>
+          <div class="px-6 py-5">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                  <span class="text-green-700 font-bold text-sm"><%= review.user.email_address[0].upcase %></span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-semibold text-slate-800 text-sm">
+                      <% eu = review.user.email_address.split('@').first %>
+                      <%= eu.length > 2 ? "#{eu[0]}#{'*' * (eu.length - 2)}#{eu[-1]}" : eu %>
+                    </span>
+                    <span class="text-xs text-slate-400">·</span>
+                    <span class="text-xs text-slate-400"><%= review.created_at.strftime("%Y.%m.%d") %></span>
+                    <span class="inline-flex items-center gap-0.5">
+                      <% 5.times do |i| %>
+                        <span class="text-xs <%= i < review.rating ? 'text-amber-400' : 'text-slate-200' %>">★</span>
+                      <% end %>
+                    </span>
+                  </div>
+                  <p class="text-sm text-slate-600 mb-1"><%= review.property.title %></p>
+                  <p class="text-sm text-slate-700 leading-relaxed"><%= review.comment %></p>
+                </div>
+              </div>
+            </div>
+            <!-- Reply Form -->
+            <%= form_with url: reply_host_review_path(review), method: :patch, class: "ml-12" do |f| %>
+              <div class="flex gap-2 mt-3">
+                <%= f.text_area :host_reply,
+                    rows: 2,
+                    placeholder: "게스트에게 감사의 답글을 남겨보세요...",
+                    class: "flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none",
+                    required: true %>
+                <%= f.submit "답글 등록",
+                    class: "shrink-0 bg-green-700 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-green-800 transition-colors cursor-pointer self-end" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
 </div>

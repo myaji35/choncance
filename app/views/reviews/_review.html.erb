@@ -1,0 +1,43 @@
+<div class="py-6 border-b border-slate-100 last:border-0">
+  <!-- Reviewer Info + Rating -->
+  <div class="flex items-start justify-between gap-4 mb-3">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+        <span class="text-green-700 font-bold text-sm">
+          <%= review.user.email_address[0].upcase %>
+        </span>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-800 text-sm">
+          <%# 이름 마스킹: 첫 글자 + * + 마지막 글자 %>
+          <% email_user = review.user.email_address.split('@').first %>
+          <% masked = email_user.length > 2 ? "#{email_user[0]}#{'*' * (email_user.length - 2)}#{email_user[-1]}" : email_user %>
+          <%= masked %>
+        </p>
+        <p class="text-xs text-slate-400"><%= review.created_at.strftime("%Y.%m.%d") %></p>
+      </div>
+    </div>
+    <!-- Star Rating -->
+    <div class="flex items-center gap-0.5 shrink-0">
+      <% 5.times do |i| %>
+        <span class="text-base <%= i < review.rating ? 'text-amber-400' : 'text-slate-200' %>">★</span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Review Text -->
+  <p class="text-slate-700 text-sm leading-relaxed ml-12"><%= review.comment %></p>
+
+  <!-- Host Reply -->
+  <% if review.host_reply.present? %>
+    <div class="ml-12 mt-3 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+      <div class="flex items-center gap-1.5 mb-2">
+        <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">
+          호스트
+        </span>
+        <span class="text-xs text-slate-400">답글</span>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed"><%= review.host_reply %></p>
+    </div>
+  <% end %>
+</div>

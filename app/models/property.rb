@@ -1,5 +1,7 @@
 class Property < ApplicationRecord
   has_and_belongs_to_many :tags
+  has_many :bookings, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   enum :status, { draft: 0, active: 1, archived: 2 }
 
@@ -12,5 +14,10 @@ class Property < ApplicationRecord
 
   def auto_collected?
     source == "uploaded"
+  end
+
+  def average_rating
+    return nil if reviews.empty?
+    (reviews.sum(:rating).to_f / reviews.count).round(1)
   end
 end

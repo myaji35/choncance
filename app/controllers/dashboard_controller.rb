@@ -7,6 +7,6 @@ class DashboardController < ApplicationController
 
   def index
     @user = Current.user
-    @recent_bookings = [] # Mock for now
+    @recent_bookings = @user.bookings.includes(:property).order(created_at: :desc).limit(3)
   end
 end
