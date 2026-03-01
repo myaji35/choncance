@@ -1,12 +1,22 @@
 {
-  "sessionCount": 8,
+  "sessionCount": 9,
   "lastSession": {
-    "startedAt": "2026-03-01T06:10:01.203Z",
+    "startedAt": "2026-03-01T06:30:45.051Z",
     "platform": "claude",
     "level": "Dynamic"
   },
-  "currentFeature": "sprint-통합",
-  "phase": "act",
-  "matchRate": 72,
-  "iterationCount": 2
+  "currentFeature": null,
+  "phase": "archived",
+  "matchRate": 93,
+  "iterationCount": 5,
+  "archivedFeatures": [
+    {
+      "feature": "sprint-통합",
+      "phase": "archived",
+      "matchRate": 93,
+      "iterationCount": 5,
+      "archivedAt": "2026-03-01T06:40:00.000Z",
+      "archivedTo": "docs/archive/2026-03/sprint-통합/"
+    }
+  ]
 }
