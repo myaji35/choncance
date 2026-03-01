@@ -724,3 +724,95 @@ enum LLMProvider {
   OPENAI
   KEYWORD
 }
+
+// ============================================================
+// VINTEE Intelligence Pipeline (VIP) — 전국 펜션 크롤링 시스템
+// ============================================================
+
+// 원시 크롤링 데이터
+model RawCrawlResult {
+  id           String   @id @default(cuid())
+  source       String   @db.VarChar(20)   // 'naver'|'kakao'|'yanolja'|'yeogi'|'airbnb'|'blog'
+  sourceId     String?  @db.VarChar(200)
+  name         String   @db.VarChar(300)
+  address      String?  @db.Text
+  phone        String?  @db.VarChar(30)
+  lat          Decimal? @db.Decimal(10, 7)
+  lng          Decimal? @db.Decimal(10, 7)
+  sourceRating Decimal? @db.Decimal(3, 2)
+  reviewCount  Int      @default(0)
+  rawReviews   Json?    // [{text, rating, date}]
+  amenities    String[]
+  extraData    Json?
+  crawledAt    DateTime @default(now())
+  isProcessed  Boolean  @default(false)
+
+  @@map("raw_crawl_results")
+  @@index([source])
+  @@index([isProcessed])
+  @@index([crawledAt])
+}
+
+// 정규화 + 점수 통합 데이터
+model PropertyIntelligence {
+  id             String   @id @default(cuid())
+  name           String   @db.VarChar(300)
+  address        String?  @db.Text
+  region         String?  @db.VarChar(50)   // 시도
+  subregion      String?  @db.VarChar(50)   // 시군구
+  lat            Decimal? @db.Decimal(10, 7)
+  lng            Decimal? @db.Decimal(10, 7)
+  phone          String?  @db.VarChar(30)
+
+  // VINTEE Score 구성요소
+  avgRating      Decimal? @db.Decimal(3, 2)
+  totalReviews   Int?
+  sentimentScore Decimal? @db.Decimal(4, 3)
+  themeScore     Decimal? @db.Decimal(4, 3)
+  recencyScore   Decimal? @db.Decimal(4, 3)
+  vinteeScore    Decimal? @db.Decimal(3, 2) // 1.0~5.0
+
+  // 태그 & 영입 상태
+  autoTags       String[]
+  isRecruited    Boolean  @default(false)
+  recruitNote    String?  @db.Text
+  recruitedAt    DateTime?
+
+  // 소스 ID 매핑
+  naverId        String?  @db.VarChar(200)
+  kakaoId        String?  @db.VarChar(200)
+  yanoljaId      String?  @db.VarChar(200)
+  yeogiId        String?  @db.VarChar(200)
+  airbnbId       String?  @db.VarChar(200)
+
+  thumbnailUrl   String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("property_intelligence")
+  @@index([region])
+  @@index([vinteeScore(sort: Desc)])
+  @@index([isRecruited])
+}
+
+// 크롤링 작업 로그
+model CrawlJobLog {
+  id               String    @id @default(cuid())
+  source           String    @db.VarChar(20)   // 'naver'|'kakao'|... 또는 'all'
+  region           String?   @db.VarChar(50)
+  status           String    @db.VarChar(20)   // 'running'|'completed'|'failed'|'partial'
+  totalCrawled     Int       @default(0)
+  newProperties    Int       @default(0)
+  updatedProperties Int      @default(0)
+  errorCount       Int       @default(0)
+  errorDetails     Json?     // [{source, message, url}]
+  startedAt        DateTime  @default(now())
+  completedAt      DateTime?
+  durationSeconds  Int?
+
+  @@map("crawl_job_logs")
+  @@index([source])
+  @@index([status])
+  @@index([startedAt(sort: Desc)])
+}

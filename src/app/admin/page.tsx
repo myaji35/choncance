@@ -4,7 +4,7 @@ import { requireAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClipboardCheck, Settings, LogOut, Bot, UserCheck, Tag } from "lucide-react";
+import { ClipboardCheck, Settings, LogOut, Bot, UserCheck, Tag, Database, Activity } from "lucide-react";
 
 export default async function AdminPage() {
   // Admin token으로 인증 확인
@@ -175,6 +175,20 @@ export default async function AdminPage() {
             >
               <Tag className="h-4 w-4 text-gray-500" />
               태그 관리
+            </Link>
+            <Link
+              href="/admin/intelligence"
+              className="flex items-center gap-2 p-3 hover:bg-gray-50 rounded transition-colors text-blue-700"
+            >
+              <Database className="h-4 w-4" />
+              인텔리전스 DB
+            </Link>
+            <Link
+              href="/admin/crawl-monitor"
+              className="flex items-center gap-2 p-3 hover:bg-gray-50 rounded transition-colors text-blue-700"
+            >
+              <Activity className="h-4 w-4" />
+              크롤 모니터
             </Link>
             <Link
               href="/admin/reports"

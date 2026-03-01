@@ -1,0 +1,12 @@
+playwright==1.40.0
+httpx==0.26.0
+beautifulsoup4==4.12.3
+lxml==5.1.0
+rapidfuzz==3.6.1
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+anthropic==0.18.1
+apscheduler==3.10.4
+python-dotenv==1.0.1
+pydantic==2.6.1
+structlog==24.1.0
