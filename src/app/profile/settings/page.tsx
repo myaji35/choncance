@@ -3,27 +3,20 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const supabase = createClient();
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-      } else {
-        setUser(user);
-      }
-    };
-    checkUser();
-  }, []);
+    if (isLoaded && !user) {
+      router.push('/login');
+    }
+  }, [isLoaded, user, router]);
 
-  if (!user) {
+  if (!isLoaded || !user) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
@@ -42,12 +35,16 @@ export default function ProfileSettingsPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
-              <p className="text-gray-900">{user.email}</p>
+              <p className="text-gray-900">{user.primaryEmailAddress?.emailAddress}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">이름</label>
+              <p className="text-gray-900">{user.fullName || user.firstName || '-'}</p>
             </div>
 
             <div className="pt-4">
               <p className="text-sm text-gray-500">
-                Supabase 인증을 사용하고 있습니다. 더 많은 설정 옵션은 곧 추가될 예정입니다.
+                프로필 설정은 Clerk 대시보드에서 관리됩니다.
               </p>
             </div>
           </div>

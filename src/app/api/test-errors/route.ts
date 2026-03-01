@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest } from "next/server";
 import { catchAsync, successResponse } from "@/lib/api/error-handler";
 import {
