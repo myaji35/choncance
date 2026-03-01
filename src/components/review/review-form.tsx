@@ -176,7 +176,7 @@ export function ReviewForm({
           <p className="text-sm text-red-500">{errors.content.message}</p>
         )}
         <p className="text-xs text-gray-500">
-          최소 10자 이상, 최대 1000자까지 작성 가능합니다
+          최소 10자 이상, 최대 500자까지 작성 가능합니다
         </p>
       </div>
 

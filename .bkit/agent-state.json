@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "teamName": "",
+  "feature": "review",
+  "pdcaPhase": "do",
+  "orchestrationPattern": "leader",
+  "ctoAgent": "opus",
+  "startedAt": "2026-03-01T04:38:16.193Z",
+  "lastUpdated": "2026-03-01T04:45:49.090Z",
+  "teammates": [
+    {
+      "name": "aae3d3342232db5ac",
+      "role": "bkit:gap-detector",
+      "model": "sonnet",
+      "status": "completed",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-03-01T04:38:16.201Z",
+      "lastActivityAt": "2026-03-01T04:42:52.263Z"
+    },
+    {
+      "name": "ae60d3ba192d8bf32",
+      "role": "bkit:report-generator",
+      "model": "sonnet",
+      "status": "completed",
+      "currentTask": null,
+      "taskId": null,
+      "startedAt": "2026-03-01T04:43:17.043Z",
+      "lastActivityAt": "2026-03-01T04:45:47.115Z"
+    }
+  ],
+  "progress": {
+    "totalTasks": 0,
+    "completedTasks": 0,
+    "inProgressTasks": 0,
+    "failedTasks": 0,
+    "pendingTasks": 0
+  },
+  "recentMessages": [
+    {
+      "from": "system",
+      "to": "all",
+      "content": "Phase check → report (auto-advanced)",
+      "timestamp": "2026-03-01T04:45:49.090Z"
+    }
+  ],
+  "sessionId": "c339339c-4fea-4eef-98f7-14a644d2ccf8"
+}
