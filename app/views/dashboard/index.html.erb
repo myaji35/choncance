@@ -79,18 +79,53 @@
 
         <!-- Booking Status -->
         <section>
-          <div class="flex items-center gap-2 mb-6">
-            <%= render "shared/icon", name: "calendar", size: 18, css: "text-blue-500" %>
-            <h2 class="text-lg font-bold text-slate-900">최근 예약 내역</h2>
-          </div>
-          <div class="bg-white border-2 border-dashed border-slate-200 py-14 px-8 text-center rounded-3xl">
-            <%= render "shared/icon", name: "inbox", size: 48, css: "text-slate-200 mx-auto mb-4" %>
-            <p class="text-slate-400 font-medium">아직 예약된 내역이 없습니다.<br/>지금 바로 떠나볼까요?</p>
-            <%= link_to properties_path, class: "inline-flex items-center gap-2 mt-6 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-700 transition-colors text-sm" do %>
-              <%= render "shared/icon", name: "compass", size: 16, css: "text-white" %>
-              숙소 둘러보기
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2">
+              <%= render "shared/icon", name: "calendar", size: 18, css: "text-blue-500" %>
+              <h2 class="text-lg font-bold text-slate-900">최근 예약 내역</h2>
+            </div>
+            <% if @recent_bookings.any? %>
+              <%= link_to bookings_path, class: "text-xs text-slate-400 hover:text-slate-700 font-semibold transition-colors" do %>
+                전체보기
+              <% end %>
             <% end %>
           </div>
+          <% if @recent_bookings.any? %>
+            <div class="space-y-3">
+              <% @recent_bookings.each do |booking| %>
+                <%= link_to booking_path(booking), class: "block bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow" do %>
+                  <div class="flex items-center gap-4 px-5 py-4">
+                    <div class="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center shrink-0">
+                      <%= render "shared/icon", name: "calendar", size: 20, css: booking.status == "confirmed" ? "text-green-500" : "text-slate-300" %>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="font-semibold text-slate-900 truncate"><%= booking.property.title %></p>
+                      <p class="text-xs text-slate-400 mt-0.5">
+                        <%= booking.check_in.strftime("%m/%d") %> ~ <%= booking.check_out.strftime("%m/%d") %>
+                        (<%= booking.nights %>박)
+                      </p>
+                    </div>
+                    <div class="text-right shrink-0">
+                      <p class="text-sm font-bold text-slate-900"><%= number_with_delimiter(booking.total_price) %>원</p>
+                      <span class="text-xs font-bold <%= booking.status == 'confirmed' ? 'text-green-600' : 'text-slate-400' %>">
+                        <%= booking.status_label %>
+                      </span>
+                    </div>
+                    <%= render "shared/icon", name: "chevron-right", size: 16, css: "text-slate-300 shrink-0" %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="bg-white border-2 border-dashed border-slate-200 py-14 px-8 text-center rounded-3xl">
+              <%= render "shared/icon", name: "inbox", size: 48, css: "text-slate-200 mx-auto mb-4" %>
+              <p class="text-slate-400 font-medium">아직 예약된 내역이 없습니다.<br/>지금 바로 떠나볼까요?</p>
+              <%= link_to properties_path, class: "inline-flex items-center gap-2 mt-6 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-700 transition-colors text-sm" do %>
+                <%= render "shared/icon", name: "compass", size: 16, css: "text-white" %>
+                숙소 둘러보기
+              <% end %>
+            </div>
+          <% end %>
         </section>
       </div>
     </div>
