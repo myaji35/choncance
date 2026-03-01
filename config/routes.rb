@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   
   resources :properties, only: [:index, :show]
   get "dashboard" => "dashboard#index", as: :dashboard
+
+  namespace :host do
+    get "dashboard", to: "dashboard#index", as: :dashboard
+    resources :properties, only: [:index, :new, :create, :edit, :update, :destroy]
+  end
   
   resource :session
   resources :passwords, param: :token

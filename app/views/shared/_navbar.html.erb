@@ -20,7 +20,11 @@
         <% if authenticated? %>
           <%= link_to dashboard_path, class: "flex items-center gap-1.5 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" do %>
             <%= render "shared/icon", name: "user", size: 16 %>
-            <span class="hidden sm:inline">대시보드</span>
+            <span class="hidden sm:inline">마이페이지</span>
+          <% end %>
+          <%= link_to host_dashboard_path, class: "flex items-center gap-1.5 text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors" do %>
+            <%= render "shared/icon", name: "home", size: 16 %>
+            <span class="hidden sm:inline">호스트</span>
           <% end %>
           <%= button_to session_path, method: :delete, class: "flex items-center gap-1.5 bg-slate-100 text-slate-600 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-200 transition-colors cursor-pointer" do %>
             <%= render "shared/icon", name: "log-out", size: 16 %>

@@ -1,0 +1,129 @@
+<div class="bg-slate-50 min-h-screen py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="mb-10 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">호스트 대시보드</h1>
+        <p class="text-slate-500 text-sm mt-1 flex items-center gap-1.5">
+          <%= render "shared/icon", name: "user", size: 13, css: "text-slate-400" %>
+          <%= Current.user.email_address %>
+        </p>
+      </div>
+      <%= link_to new_host_property_path, class: "flex items-center gap-2 bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 transition-colors shadow-sm" do %>
+        <%= render "shared/icon", name: "plus", size: 16, css: "text-white" %>
+        숙소 등록
+      <% end %>
+    </div>
+
+    <% if notice %>
+      <div class="mb-6 flex items-center gap-3 p-4 bg-green-50 border border-green-100 text-green-700 text-sm rounded-2xl">
+        <%= render "shared/icon", name: "check-circle", size: 16, css: "text-green-500 shrink-0" %>
+        <%= notice %>
+      </div>
+    <% end %>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <%= render "shared/icon", name: "home", size: 18, css: "text-slate-400" %>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">전체 숙소</span>
+        </div>
+        <p class="text-3xl font-bold text-slate-900"><%= @total_properties %></p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <%= render "shared/icon", name: "check-circle", size: 18, css: "text-green-500" %>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">활성 숙소</span>
+        </div>
+        <p class="text-3xl font-bold text-green-700"><%= @active_properties %></p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <%= render "shared/icon", name: "edit-3", size: 18, css: "text-amber-400" %>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">임시저장</span>
+        </div>
+        <p class="text-3xl font-bold text-amber-500"><%= @draft_properties %></p>
+      </div>
+    </div>
+
+    <!-- Properties Table -->
+    <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+      <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+        <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <%= render "shared/icon", name: "list", size: 16, css: "text-slate-400" %>
+          내 숙소 목록
+        </h2>
+        <%= link_to host_properties_path, class: "text-xs text-slate-400 hover:text-slate-700 transition-colors" do %>
+          전체보기
+        <% end %>
+      </div>
+
+      <% if @properties.empty? %>
+        <div class="py-20 text-center">
+          <%= render "shared/icon", name: "inbox", size: 48, css: "text-slate-200 mx-auto mb-4" %>
+          <p class="text-slate-400 font-medium text-sm">등록된 숙소가 없습니다.</p>
+          <%= link_to new_host_property_path, class: "inline-flex items-center gap-2 mt-6 bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 transition-colors" do %>
+            <%= render "shared/icon", name: "plus", size: 14, css: "text-white" %>
+            첫 숙소 등록하기
+          <% end %>
+        </div>
+      <% else %>
+        <div class="divide-y divide-slate-100">
+          <% @properties.each do |property| %>
+            <div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors">
+              <!-- Thumbnail placeholder -->
+              <div class="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
+                <%= render "shared/icon", name: "image", size: 22, css: "text-slate-300" %>
+              </div>
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-slate-900 truncate"><%= property.title %></p>
+                <p class="flex items-center gap-1 text-xs text-slate-400 mt-0.5">
+                  <%= render "shared/icon", name: "map-pin", size: 11 %>
+                  <%= property.location.presence || "위치 미설정" %>
+                </p>
+              </div>
+              <!-- Price -->
+              <div class="hidden sm:block text-right shrink-0">
+                <p class="text-sm font-bold text-slate-900"><%= number_to_currency(property.price_per_night, unit: "₩", precision: 0, delimiter: ",") %></p>
+                <p class="text-xs text-slate-400">/ 1박</p>
+              </div>
+              <!-- Status badge -->
+              <div class="shrink-0">
+                <% if property.active? %>
+                  <span class="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                    <%= render "shared/icon", name: "check", size: 11 %>
+                    활성
+                  </span>
+                <% elsif property.draft? %>
+                  <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                    <%= render "shared/icon", name: "edit-3", size: 11 %>
+                    임시저장
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-500 text-xs font-bold px-2.5 py-1 rounded-full">
+                    보관됨
+                  </span>
+                <% end %>
+              </div>
+              <!-- Actions -->
+              <div class="flex items-center gap-2 shrink-0">
+                <%= link_to edit_host_property_path(property), class: "p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" do %>
+                  <%= render "shared/icon", name: "edit-2", size: 15 %>
+                <% end %>
+                <%= button_to host_property_path(property), method: :delete,
+                    data: { confirm: "\"#{property.title}\" 숙소를 삭제하시겠습니까?" },
+                    class: "p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer" do %>
+                  <%= render "shared/icon", name: "trash-2", size: 15 %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>
