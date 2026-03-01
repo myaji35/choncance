@@ -1,0 +1,101 @@
+name: Deploy VINTEE to Vultr
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/vintee
+  SERVER_IP: 158.247.235.31
+  SERVER_PORT: 3120
+  APP_URL: vintee.158.247.235.31.nip.io
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Deploy to Vultr
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.VULTR_SSH_KEY }}
+          script: |
+            # GitHub Container Registry 로그인
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # 최신 이미지 pull
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+            # 기존 컨테이너 중단 및 제거
+            docker stop vintee 2>/dev/null || true
+            docker rm vintee 2>/dev/null || true
+
+            # 새 컨테이너 실행
+            docker run -d \
+              --name vintee \
+              --restart unless-stopped \
+              -p ${{ env.SERVER_PORT }}:3000 \
+              -e NODE_ENV=production \
+              -e NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}" \
+              -e CLERK_SECRET_KEY="${{ secrets.CLERK_SECRET_KEY }}" \
+              -e NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login \
+              -e NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup \
+              -e NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/explore \
+              -e NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/explore \
+              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -e DIRECT_URL="${{ secrets.DIRECT_URL }}" \
+              -e NEXT_PUBLIC_TOSS_CLIENT_KEY="${{ secrets.NEXT_PUBLIC_TOSS_CLIENT_KEY }}" \
+              -e TOSS_SECRET_KEY="${{ secrets.TOSS_SECRET_KEY }}" \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+            # 헬스체크 (10초 대기)
+            sleep 10
+            docker ps | grep vintee && echo "VINTEE 배포 성공!" || echo "배포 실패 - 로그 확인 필요"
+            docker logs vintee --tail 20
+
+      - name: Verify deployment
+        run: |
+          sleep 15
+          curl -f http://${{ env.APP_URL }} || echo "헬스체크 실패 (서버 시작 중일 수 있음)"

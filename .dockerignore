@@ -1,51 +1,60 @@
-# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+# VINTEE Next.js Docker ignore
 
-# Ignore git directory.
-/.git/
-/.gitignore
+# Git
+.git/
+.gitignore
 
-# Ignore bundler config.
-/.bundle
+# 환경변수 (서버에서 주입)
+.env
+.env.*
+!.env.example
 
-# Ignore all environment files.
-/.env*
+# 빌드 산출물 (Docker 내부에서 생성)
+node_modules/
+.next/
+npm-debug.log*
 
-# Ignore all default key files.
-/config/master.key
-/config/credentials/*.key
+# 테스트
+tests/
+test-results/
+playwright-report/
+*.spec.ts
 
-# Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+# 문서/스크립트
+docs/
+scripts/
+deploy.sh
+*.md
+!README.md
 
-# Ignore pidfiles, but keep the directory.
-/tmp/pids/*
-!/tmp/pids/.keep
+# Rails 관련 파일 (공존하지만 Node 빌드 불필요)
+app/
+config/
+db/
+lib/
+log/
+tmp/
+vendor/
+Gemfile
+Gemfile.lock
+Rakefile
+config.ru
+*.rb
+.bundle/
+.kamal/
 
-# Ignore storage (uploaded files in development and any SQLite databases).
-/storage/*
-!/storage/.keep
-/tmp/storage/*
-!/tmp/storage/.keep
+# macOS
+.DS_Store
+._*
 
-# Ignore assets.
-/node_modules/
-/app/assets/builds/*
-!/app/assets/builds/.keep
-/public/assets
+# IDE
+.vscode/
+.idea/
+*.swp
 
-# Ignore CI service files.
-/.github
+# CI
+.github/
 
-# Ignore Kamal files.
-/config/deploy*.yml
-/.kamal
-
-# Ignore development files
-/.devcontainer
-
-# Ignore Docker-related files
-/.dockerignore
-/Dockerfile*
+# 기타
+test-results/
+playwright-report/

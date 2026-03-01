@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Explicitly set src directory so Next.js uses src/app over root app/ (Rails)
-  // output: 'standalone', // disabled for dev; re-enable for production Docker builds
+  output: 'standalone', // Docker 배포용 standalone 빌드
   // Ignore ESLint and TypeScript errors during builds (fix separately)
   typescript: {
     ignoreBuildErrors: true,
