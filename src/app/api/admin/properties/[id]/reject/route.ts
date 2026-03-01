@@ -38,9 +38,9 @@ export async function POST(
     const body = await request.json();
     const { reason } = body;
 
-    if (!reason || reason.trim().length < 10) {
+    if (!reason || reason.trim().length < 20) {
       return NextResponse.json(
-        { error: "거절 사유를 10자 이상 입력해주세요" },
+        { error: "거절 사유를 20자 이상 입력해주세요" },
         { status: 400 }
       );
     }

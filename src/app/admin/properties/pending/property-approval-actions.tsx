@@ -54,8 +54,8 @@ export function PropertyApprovalActions({
   };
 
   const handleRejectSubmit = async () => {
-    if (rejectReason.trim().length < 10) {
-      setRejectError("거절 사유는 최소 10자 이상 입력해주세요");
+    if (rejectReason.trim().length < 20) {
+      setRejectError("거절 사유는 최소 20자 이상 입력해주세요");
       return;
     }
 
@@ -140,7 +140,7 @@ export function PropertyApprovalActions({
                   setRejectReason(e.target.value);
                   setRejectError(null);
                 }}
-                placeholder="거절 사유를 입력해주세요 (최소 10자)"
+                placeholder="거절 사유를 입력해주세요 (최소 20자)"
                 rows={4}
                 maxLength={500}
               />
