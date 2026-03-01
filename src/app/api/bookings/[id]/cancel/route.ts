@@ -2,20 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingCancelled } from "@/lib/notifications";
-import { PaymentStatus } from "@prisma/client";
+import { cancelBookingSchema } from "@/lib/validations/booking";
 
 /**
- * Calculate cancellation policy
+ * Calculate cancellation refund based on days until check-in
+ *
+ * Policy:
+ *   - < 1 day (24h): cancellation not allowed
+ *   - 1-2 days: 0% refund (no refund)
+ *   - 3-6 days: 50% refund
+ *   - 7+ days: 100% refund
  */
-function getCancellationPolicy(checkInDate: Date, cancellationDate: Date) {
+function getCancellationPolicy(checkInDate: Date, now: Date) {
   const msPerDay = 1000 * 60 * 60 * 24;
-  const daysUntilCheckIn = Math.ceil(
-    (checkInDate.getTime() - cancellationDate.getTime()) / msPerDay
-  );
+  const daysUntilCheckIn = (checkInDate.getTime() - now.getTime()) / msPerDay;
 
-  // 체크인 7일 전: 전액 환불
+  // 체크인 24시간 이내: 취소 불가
+  if (daysUntilCheckIn < 1) {
+    return {
+      allowed: false,
+      refundRate: 0,
+      description: "체크인 24시간 전에는 취소할 수 없습니다",
+    };
+  }
+
+  // 체크인 7일 이상 전: 전액 환불
   if (daysUntilCheckIn >= 7) {
     return {
+      allowed: true,
       refundRate: 1.0,
       description: "전액 환불",
     };
@@ -24,13 +38,15 @@ function getCancellationPolicy(checkInDate: Date, cancellationDate: Date) {
   // 체크인 3~6일 전: 50% 환불
   if (daysUntilCheckIn >= 3) {
     return {
+      allowed: true,
       refundRate: 0.5,
       description: "50% 환불",
     };
   }
 
-  // 체크인 2일 전 이내: 환불 불가
+  // 체크인 1~2일 전: 환불 불가
   return {
+    allowed: true,
     refundRate: 0,
     description: "환불 불가",
   };
@@ -47,8 +63,7 @@ async function requestTossPaymentRefund(
   const tossSecretKey = process.env.TOSS_SECRET_KEY;
 
   if (!tossSecretKey) {
-    // For development without Toss API key, simulate success
-    console.warn("⚠️ TOSS_SECRET_KEY not found. Simulating refund success for development.");
+    console.warn("TOSS_SECRET_KEY not found. Simulating refund success for development.");
     return;
   }
 
@@ -74,36 +89,41 @@ async function requestTossPaymentRefund(
 }
 
 /**
- * PATCH /api/bookings/[id]/cancel
- * Cancel a booking
+ * POST /api/bookings/[id]/cancel
+ * Cancel a booking and process refund based on cancellation policy
  */
-export async function PATCH(
+export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // 1. 인증 확인
     const authUser = await getUser();
     const userId = authUser?.profile?.id;
 
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "로그인이 필요합니다" }, { status: 401 });
     }
 
+    // 2. Request body Zod 검증
     const body = await request.json();
-    const { reason } = body;
+    const parsed = cancelBookingSchema.safeParse(body);
 
-    if (!reason || reason.trim().length === 0) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "취소 사유를 입력해주세요" },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       );
     }
 
-    // Find booking
+    const { cancelReason } = parsed.data;
+    const { id: bookingId } = await params;
+
+    // 3. 예약 조회 (본인 예약인지 확인)
     const booking = await prisma.booking.findFirst({
       where: {
-        id: params.id,
-        userId, // Ensure user owns this booking
+        id: bookingId,
+        userId,
       },
       include: {
         payment: true,
@@ -127,71 +147,131 @@ export async function PATCH(
       );
     }
 
-    // Check if booking can be cancelled
-    if (booking.status !== "CONFIRMED" && booking.status !== "PENDING") {
+    // 4. 이미 취소/완료된 예약이면 400 반환
+    if (booking.status === "CANCELLED") {
       return NextResponse.json(
-        { error: "이 예약은 취소할 수 없습니다" },
+        { error: "이미 취소된 예약입니다" },
         { status: 400 }
       );
     }
 
-    // Calculate refund amount based on cancellation policy
-    const policy = getCancellationPolicy(
-      new Date(booking.checkIn),
-      new Date()
-    );
+    if (booking.status === "COMPLETED") {
+      return NextResponse.json(
+        { error: "이미 완료된 예약은 취소할 수 없습니다" },
+        { status: 400 }
+      );
+    }
+
+    if (booking.status === "REJECTED") {
+      return NextResponse.json(
+        { error: "거절된 예약은 취소할 수 없습니다" },
+        { status: 400 }
+      );
+    }
+
+    if (booking.status !== "CONFIRMED" && booking.status !== "PENDING") {
+      return NextResponse.json(
+        { error: "이 예약은 취소할 수 없는 상태입니다" },
+        { status: 400 }
+      );
+    }
+
+    // 5. 체크인 날짜 기반 환불율 계산
+    const policy = getCancellationPolicy(new Date(booking.checkIn), new Date());
+
+    if (!policy.allowed) {
+      return NextResponse.json(
+        { error: policy.description },
+        { status: 400 }
+      );
+    }
 
     const refundAmount = Math.round(
       Number(booking.totalAmount) * policy.refundRate
     );
 
-    // Process cancellation in transaction
+    // 6. Toss Payments 환불 API 호출 (환불율 > 0이고 결제 완료 건만)
+    if (
+      refundAmount > 0 &&
+      booking.payment &&
+      booking.payment.paymentKey &&
+      booking.payment.status === "DONE"
+    ) {
+      try {
+        await requestTossPaymentRefund(
+          booking.payment.paymentKey,
+          refundAmount,
+          cancelReason
+        );
+      } catch (error) {
+        console.error("Toss Payment refund error:", error);
+        // 프로덕션에서는 환불 실패 시 취소 중단
+        if (process.env.NODE_ENV === "production") {
+          return NextResponse.json(
+            { error: "환불 처리 중 오류가 발생했습니다. 고객센터에 문의해주세요." },
+            { status: 500 }
+          );
+        }
+        // 개발 환경에서는 계속 진행
+      }
+    }
+
+    // 7. prisma.$transaction으로 booking + payment 상태 업데이트
     const result = await prisma.$transaction(async (tx) => {
-      // Update booking status
+      // 예약 상태 업데이트
       const updatedBooking = await tx.booking.update({
-        where: { id: params.id },
+        where: { id: bookingId },
         data: {
           status: "CANCELLED",
           cancelledAt: new Date(),
-          cancellationReason: reason,
+          cancellationReason: cancelReason,
         },
       });
 
-      // Update payment status
+      // 결제 상태 업데이트 (결제 건이 있을 때)
       let updatedPayment = null;
-      if (booking.payment && refundAmount > 0) {
+      if (booking.payment) {
+        const paymentUpdateData: Record<string, unknown> = {
+          refundReason: cancelReason,
+        };
+
+        if (refundAmount > 0) {
+          paymentUpdateData.status = "CANCELLED";
+          paymentUpdateData.cancelledAt = new Date();
+          paymentUpdateData.refundedAt = new Date();
+          paymentUpdateData.refundAmount = refundAmount;
+        }
+
         updatedPayment = await tx.payment.update({
           where: { id: booking.payment.id },
-          data: {
-            status: "CANCELLED",
-            cancelledAt: new Date(),
-            refundAmount,
-            refundReason: reason,
-          },
+          data: paymentUpdateData,
         });
 
-        // Create refund transaction record
-        await tx.paymentTransaction.create({
-          data: {
-            paymentId: booking.payment.id,
-            externalId: `REFUND-${Date.now()}`,
-            type: "REFUND",
-            amount: refundAmount,
-            status: PaymentStatus.DONE,
-            method: booking.payment.paymentMethod || "GUEST_CANCEL",
-            metadata: {
-              reason,
-              policy: policy.description,
-              refundRate: policy.refundRate,
+        // 환불 트랜잭션 레코드 생성
+        if (refundAmount > 0) {
+          await tx.paymentTransaction.create({
+            data: {
+              paymentId: booking.payment.id,
+              externalId: `REFUND-${Date.now()}`,
+              type: "REFUND",
+              amount: refundAmount,
+              status: "SUCCESS",
+              method: booking.payment.paymentMethod || "GUEST_CANCEL",
+              metadata: {
+                cancelReason,
+                policy: policy.description,
+                refundRate: policy.refundRate,
+                originalAmount: Number(booking.totalAmount),
+              },
             },
-          },
-        });
+          });
+        }
       }
 
       return { updatedBooking, updatedPayment };
     });
 
-    // Send notification to host
+    // 8. 호스트에게 취소 알림
     try {
       await notifyBookingCancelled(
         booking.property.host.userId,
@@ -199,45 +279,28 @@ export async function PATCH(
         booking.property.name
       );
     } catch (error) {
-      console.error("Failed to send notification:", error);
-      // Don't fail the request if notification fails
-    }
-
-    // Request refund from Toss Payments (outside transaction)
-    if (
-      booking.payment &&
-      booking.payment.paymentKey &&
-      refundAmount > 0
-    ) {
-      try {
-        await requestTossPaymentRefund(
-          booking.payment.paymentKey,
-          refundAmount,
-          reason
-        );
-      } catch (error) {
-        console.error("Toss Payment refund error:", error);
-        // Don't fail the cancellation if refund request fails
-        // The payment status is already updated in DB
-      }
+      console.error("Failed to send cancellation notification:", error);
     }
 
     return NextResponse.json({
       success: true,
-      booking: result.updatedBooking,
+      booking: {
+        id: result.updatedBooking.id,
+        status: result.updatedBooking.status,
+        cancelledAt: result.updatedBooking.cancelledAt,
+        cancellationReason: result.updatedBooking.cancellationReason,
+      },
       refund: {
         amount: refundAmount,
-        processingDays: "3-5일",
+        rate: policy.refundRate,
         policy: policy.description,
+        processingDays: refundAmount > 0 ? "3-5 영업일" : null,
       },
     });
   } catch (error) {
     console.error("Booking cancellation error:", error);
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "예약 취소에 실패했습니다",
-      },
+      { error: "예약 취소 처리 중 오류가 발생했습니다" },
       { status: 500 }
     );
   }
