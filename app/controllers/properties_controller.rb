@@ -1,4 +1,6 @@
 class PropertiesController < ApplicationController
+  allow_unauthenticated_access only: [:index, :show]
+
   def index
     @tags = Tag.all
     @properties = Property.active
