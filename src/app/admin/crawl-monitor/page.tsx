@@ -6,6 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   RefreshCw,
   CheckCircle,
   XCircle,
@@ -14,7 +21,25 @@ import {
   Database,
   MapPin,
   TrendingUp,
+  Loader2,
 } from "lucide-react";
+
+const REGIONS = [
+  "전국",
+  "강원도",
+  "경기도",
+  "경상남도",
+  "경상북도",
+  "전라남도",
+  "전라북도",
+  "충청남도",
+  "충청북도",
+  "제주도",
+  "서울",
+  "부산",
+  "대구",
+  "인천",
+];
 
 interface JobLog {
   id: string;
@@ -96,6 +121,12 @@ export default function CrawlMonitorPage() {
   const [loading, setLoading] = useState(true);
   const [lastRefreshed, setLastRefreshed] = useState(new Date());
 
+  // 수집 시작 관련 상태
+  const [crawlSource, setCrawlSource] = useState("all");
+  const [crawlRegion, setCrawlRegion] = useState("전국");
+  const [isStarting, setIsStarting] = useState(false);
+  const [startResult, setStartResult] = useState<{ success: boolean; message: string } | null>(null);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -113,6 +144,36 @@ export default function CrawlMonitorPage() {
     }
   }, []);
 
+  const startCrawl = useCallback(async () => {
+    setIsStarting(true);
+    setStartResult(null);
+    try {
+      const res = await fetch("/api/admin/crawl-monitor/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: crawlSource,
+          region: crawlRegion === "전국" ? undefined : crawlRegion,
+          limit: 100,
+        }),
+      });
+      const json = await res.json() as { success?: boolean; error?: string; collected?: number };
+      if (res.ok) {
+        setStartResult({
+          success: true,
+          message: `수집 완료: ${json.collected ?? 0}건 수집됨`,
+        });
+        await fetchData();
+      } else {
+        setStartResult({ success: false, message: json.error ?? "수집 시작 실패" });
+      }
+    } catch {
+      setStartResult({ success: false, message: "네트워크 오류" });
+    } finally {
+      setIsStarting(false);
+    }
+  }, [crawlSource, crawlRegion, fetchData]);
+
   useEffect(() => {
     fetchData();
     // 진행 중 작업이 있으면 30초마다 자동 갱신
@@ -123,16 +184,53 @@ export default function CrawlMonitorPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* 헤더 */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-[#16325C]">크롤 모니터</h1>
           <p className="text-gray-500 text-sm mt-1">
             데이터 수집 현황 및 작업 이력
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          {/* 수집 시작 컨트롤 */}
+          <div className="flex items-center gap-2 bg-gray-50 border rounded-lg px-3 py-2">
+            <Select value={crawlSource} onValueChange={setCrawlSource}>
+              <SelectTrigger className="h-8 w-28 text-xs border-0 bg-transparent p-0 focus:ring-0">
+                <SelectValue placeholder="소스 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">전체 소스</SelectItem>
+                <SelectItem value="google">구글</SelectItem>
+                <SelectItem value="naver">네이버</SelectItem>
+              </SelectContent>
+            </Select>
+            <span className="text-gray-300 text-xs">|</span>
+            <Select value={crawlRegion} onValueChange={setCrawlRegion}>
+              <SelectTrigger className="h-8 w-24 text-xs border-0 bg-transparent p-0 focus:ring-0">
+                <SelectValue placeholder="지역 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                {REGIONS.map((r) => (
+                  <SelectItem key={r} value={r}>{r}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button
+              size="sm"
+              className="h-8 bg-[#00A1E0] hover:bg-[#0085b8] text-white text-xs px-3"
+              onClick={startCrawl}
+              disabled={isStarting || (summary?.runningJobsCount ?? 0) > 0}
+            >
+              {isStarting ? (
+                <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+              ) : (
+                <Play className="w-3.5 h-3.5 mr-1" />
+              )}
+              {isStarting ? "수집 중..." : "수집 시작"}
+            </Button>
+          </div>
           <span className="text-xs text-gray-400">
-            마지막 갱신: {lastRefreshed.toLocaleTimeString("ko-KR")}
+            {lastRefreshed.toLocaleTimeString("ko-KR")}
           </span>
           <Button
             variant="outline"
@@ -150,6 +248,30 @@ export default function CrawlMonitorPage() {
           </Link>
         </div>
       </div>
+
+      {/* 수집 결과 알림 */}
+      {startResult && (
+        <div
+          className={`mb-4 px-4 py-2 rounded-lg text-sm flex items-center gap-2 ${
+            startResult.success
+              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}
+        >
+          {startResult.success ? (
+            <CheckCircle className="w-4 h-4" />
+          ) : (
+            <XCircle className="w-4 h-4" />
+          )}
+          {startResult.message}
+          <button
+            className="ml-auto text-gray-400 hover:text-gray-600"
+            onClick={() => setStartResult(null)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* KPI 카드 */}
       {summary && (
