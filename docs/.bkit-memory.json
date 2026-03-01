@@ -1,11 +1,11 @@
 {
-  "sessionCount": 13,
+  "sessionCount": 14,
   "lastSession": {
-    "startedAt": "2026-03-01T07:30:01.269Z",
+    "startedAt": "2026-03-01T08:47:31.410Z",
     "platform": "claude",
     "level": "Dynamic"
   },
-  "currentFeature": "ui-redesign",
+  "currentFeature": "pension-crawler",
   "phase": "plan",
   "matchRate": null,
   "iterationCount": 0,
