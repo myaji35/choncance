@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
 import { ReviewDialog } from "@/components/review/review-dialog";
-import { RefundDialog } from "@/components/payments/refund-dialog";
+import { CancelBookingDialog } from "@/components/booking/cancel-booking-dialog";
 
 interface BookingDetailPageProps {
   params: Promise<{ id: string }>;
@@ -526,24 +526,21 @@ export default async function BookingDetailPage({
                 )}
 
                 {/* Cancellation Button */}
-                {booking.payment &&
-                  booking.payment.status === "DONE" &&
-                  (booking.status === "CONFIRMED" || booking.status === "PENDING") &&
-                  new Date(booking.checkIn) > new Date() && (
+                {(booking.status === "CONFIRMED" || booking.status === "PENDING") && (
                     <div className="mt-4 pt-4 border-t">
-                      <RefundDialog
-                        paymentId={booking.payment.id}
-                        amount={
+                      <CancelBookingDialog
+                        bookingId={booking.id}
+                        checkInDate={new Date(booking.checkIn)}
+                        totalAmount={
                           typeof booking.totalAmount === "number"
                             ? booking.totalAmount
                             : booking.totalAmount.toNumber()
                         }
-                        trigger={
-                          <Button variant="destructive" className="w-full">
-                            예약 취소
-                          </Button>
-                        }
-                      />
+                      >
+                        <Button variant="destructive" className="w-full">
+                          예약 취소
+                        </Button>
+                      </CancelBookingDialog>
                     </div>
                   )}
               </CardContent>

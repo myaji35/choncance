@@ -271,13 +271,22 @@ export async function POST(
       return { updatedBooking, updatedPayment };
     });
 
-    // 8. 호스트에게 취소 알림
+    // 8. 호스트 및 게스트에게 취소 알림 전송
     try {
-      await notifyBookingCancelled(
-        booking.property.host.userId,
-        booking.id,
-        booking.property.name
-      );
+      await Promise.all([
+        // 호스트 알림
+        notifyBookingCancelled(
+          booking.property.host.userId,
+          booking.id,
+          booking.property.name
+        ),
+        // 게스트 알림
+        notifyBookingCancelled(
+          userId,
+          booking.id,
+          booking.property.name
+        ),
+      ]);
     } catch (error) {
       console.error("Failed to send cancellation notification:", error);
     }

@@ -4,11 +4,12 @@ import sharp from "sharp";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import { getUser } from "@/lib/supabase/auth-helpers";
 
 export const dynamic = "force-dynamic";
 
-// Max file size: 10MB
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+// Max file size: 5MB (UI와 동일하게 통일)
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -109,13 +110,22 @@ function validateFile(file: File): string | null {
     return `지원하지 않는 파일 형식입니다: ${file.type}`;
   }
   if (file.size > MAX_FILE_SIZE) {
-    return `파일 크기는 10MB 이하여야 합니다: ${file.name}`;
+    return `파일 크기는 5MB 이하여야 합니다: ${file.name}`;
   }
   return null;
 }
 
 export async function POST(request: NextRequest) {
   try {
+    // 인증 확인
+    const authUser = await getUser();
+    if (!authUser?.profile?.id) {
+      return NextResponse.json(
+        { error: "인증이 필요합니다" },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const folder = (formData.get("folder") as string) || "properties";
 
