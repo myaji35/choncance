@@ -1,7 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
+
+type Role = "USER" | "HOST_PENDING" | "HOST" | "ADMIN";
 
 /**
  * 현재 로그인한 사용자의 정보와 역할을 가져옵니다.
@@ -53,27 +54,27 @@ export async function hasRole(requiredRole: Role | Role[]): Promise<boolean> {
   }
 
   const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-  return roles.includes(user.role);
+  return roles.includes(user.role as Role);
 }
 
 export async function isUser(): Promise<boolean> {
-  return hasRole(Role.USER);
+  return hasRole("USER");
 }
 
 export async function isHost(): Promise<boolean> {
-  return hasRole(Role.HOST);
+  return hasRole("HOST");
 }
 
 export async function isHostPending(): Promise<boolean> {
-  return hasRole(Role.HOST_PENDING);
+  return hasRole("HOST_PENDING");
 }
 
 export async function isHostOrPending(): Promise<boolean> {
-  return hasRole([Role.HOST, Role.HOST_PENDING]);
+  return hasRole(["HOST", "HOST_PENDING"]);
 }
 
 export async function isAdmin(): Promise<boolean> {
-  return hasRole(Role.ADMIN);
+  return hasRole("ADMIN");
 }
 
 export async function requireRole(
@@ -88,15 +89,15 @@ export async function requireRole(
 
   const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
 
-  if (!roles.includes(user.role)) {
+  if (!roles.includes(user.role as Role)) {
     switch (user.role) {
-      case Role.ADMIN:
+      case "ADMIN":
         redirect("/admin");
-      case Role.HOST:
+      case "HOST":
         redirect("/host/dashboard");
-      case Role.HOST_PENDING:
+      case "HOST_PENDING":
         redirect("/become-a-host/pending");
-      case Role.USER:
+      case "USER":
       default:
         redirect("/dashboard");
     }
@@ -104,15 +105,15 @@ export async function requireRole(
 }
 
 export async function requireHost(): Promise<void> {
-  await requireRole(Role.HOST);
+  await requireRole("HOST");
 }
 
 export async function requireAdmin(): Promise<void> {
-  await requireRole(Role.ADMIN);
+  await requireRole("ADMIN");
 }
 
 export async function requireUser(): Promise<void> {
-  await requireRole(Role.USER);
+  await requireRole("USER");
 }
 
 export async function requireAuth(): Promise<void> {
@@ -125,18 +126,18 @@ export async function requireAuth(): Promise<void> {
 
 export async function getUserRole(): Promise<Role | null> {
   const user = await getCurrentUser();
-  return user?.role || null;
+  return (user?.role as Role) || null;
 }
 
 export function getRoleHomePage(role: Role): string {
   switch (role) {
-    case Role.ADMIN:
+    case "ADMIN":
       return "/admin";
-    case Role.HOST:
+    case "HOST":
       return "/host/dashboard";
-    case Role.HOST_PENDING:
+    case "HOST_PENDING":
       return "/become-a-host/pending";
-    case Role.USER:
+    case "USER":
     default:
       return "/dashboard";
   }
@@ -144,13 +145,13 @@ export function getRoleHomePage(role: Role): string {
 
 export function getRoleDisplayName(role: Role): string {
   switch (role) {
-    case Role.ADMIN:
+    case "ADMIN":
       return "관리자";
-    case Role.HOST:
+    case "HOST":
       return "호스트";
-    case Role.HOST_PENDING:
+    case "HOST_PENDING":
       return "호스트 승인 대기";
-    case Role.USER:
+    case "USER":
       return "일반 사용자";
     default:
       return "사용자";

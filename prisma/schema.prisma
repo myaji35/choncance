@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
@@ -16,12 +16,12 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String?
+  access_token       String?
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String?
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -39,7 +39,7 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  clerkId       String?   @unique // Clerk user ID
+  clerkId       String?   @unique
   name          String?
   email         String?   @unique
   emailVerified DateTime?
@@ -49,11 +49,11 @@ model User {
   sessions      Session[]
   kakaoId       String?   @unique
   provider      String?   @default("email")
-  role          Role      @default(USER)
+  role          String    @default("USER")
 
   // Credit System
-  credits       Int       @default(0) // 사용 가능한 크레딧
-  totalEarned   Int       @default(0) // 누적 획득 크레딧
+  credits       Int       @default(0)
+  totalEarned   Int       @default(0)
 
   hostProfile   HostProfile?
   pmProjects    PMProject[]
@@ -70,23 +70,10 @@ model HostProfile {
   user            User   @relation(fields: [userId], references: [id])
   businessNumber  String
   contact         String
-  status          HostStatus @default(PENDING)
+  status          String @default("PENDING")
 
   properties      Property[]
   experiences     Experience[]
-}
-
-enum Role {
-  USER
-  HOST_PENDING
-  HOST
-  ADMIN
-}
-
-enum HostStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
 
 model VerificationToken {
@@ -108,13 +95,11 @@ model PMProject {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   prds        PRD[]
   epics       Epic[]
   stories     Story[]
   changeLogs  ChangeLog[]
 
-  // Created by
   creatorId   String
   creator     User     @relation(fields: [creatorId], references: [id])
 }
@@ -122,12 +107,12 @@ model PMProject {
 model PRD {
   id               String   @id @default(cuid())
   title            String
-  type             String   // "greenfield" or "brownfield"
-  goals            Json     // Array of goal strings
-  background       String   @db.Text
-  uiGoals          Json?    // UI/UX requirements
-  technicalAssum   Json?    // Technical assumptions
-  status           String   @default("draft") // draft, review, approved
+  type             String
+  goals            String   // JSON stored as String
+  background       String
+  uiGoals          String?  // JSON stored as String
+  technicalAssum   String?  // JSON stored as String
+  status           String   @default("draft")
 
   projectId        String
   project          PMProject  @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -142,10 +127,10 @@ model PRD {
 
 model Requirement {
   id          String   @id @default(cuid())
-  prefix      String   // "FR", "NFR", "CR"
+  prefix      String
   number      Int
-  description String   @db.Text
-  type        String   // "functional", "non-functional", "compatibility"
+  description String
+  type        String
 
   prdId       String
   prd         PRD      @relation(fields: [prdId], references: [id], onDelete: Cascade)
@@ -158,9 +143,9 @@ model Epic {
   id          String   @id @default(cuid())
   number      Int
   title       String
-  goal        String   @db.Text
-  type        String   @default("greenfield") // "greenfield" or "brownfield"
-  status      String   @default("pending") // pending, in_progress, completed
+  goal        String
+  type        String   @default("greenfield")
+  status      String   @default("pending")
 
   projectId   String?
   project     PMProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -180,10 +165,10 @@ model Story {
   storyNumber       Int
   title             String
   userType          String
-  action            String   @db.Text
-  benefit           String   @db.Text
-  type              String   @default("greenfield") // "greenfield" or "brownfield"
-  status            String   @default("pending") // pending, in_progress, completed
+  action            String
+  benefit           String
+  type              String   @default("greenfield")
+  status            String   @default("pending")
 
   epicId            String
   epic              Epic     @relation(fields: [epicId], references: [id], onDelete: Cascade)
@@ -201,7 +186,7 @@ model Story {
 model AcceptanceCriteria {
   id          String   @id @default(cuid())
   number      Int
-  criteria    String   @db.Text
+  criteria    String
 
   storyId     String
   story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
@@ -213,7 +198,7 @@ model AcceptanceCriteria {
 model IntegrationVerification {
   id          String   @id @default(cuid())
   number      Int
-  description String   @db.Text
+  description String
 
   storyId     String
   story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
@@ -226,7 +211,7 @@ model ChangeLog {
   id          String   @id @default(cuid())
   date        DateTime @default(now())
   version     String
-  description String   @db.Text
+  description String
   author      String
 
   projectId   String?
@@ -242,10 +227,10 @@ model ChangeLog {
 model CourseCorrection {
   id                String   @id @default(cuid())
   title             String
-  changeTrigger     String   @db.Text
-  impactAnalysis    Json     // Structured analysis results
-  proposedChanges   Json     // Array of proposed changes
-  status            String   @default("draft") // draft, review, approved, implemented
+  changeTrigger     String
+  impactAnalysis    String   // JSON stored as String
+  proposedChanges   String   // JSON stored as String
+  status            String   @default("draft")
 
   projectId         String
 
@@ -259,22 +244,15 @@ model CourseCorrection {
 
 model Tag {
   id          String   @id @default(cuid())
-  name        String   @unique  // "#논뷰맛집"
-  category    TagCategory
-  icon        String?  // 이모지
+  name        String   @unique
+  category    String   // VIEW | ACTIVITY | FACILITY | VIBE
+  icon        String?
   description String?
-  color       String?  // 배지 색상 (예: "blue", "green")
+  color       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   properties  Property[]
-}
-
-enum TagCategory {
-  VIEW
-  ACTIVITY
-  FACILITY
-  VIBE
 }
 
 model Property {
@@ -282,49 +260,40 @@ model Property {
   hostId        String
   host          HostProfile @relation(fields: [hostId], references: [id])
 
-  // 기본 정보
   name          String
-  description   String   @db.Text
+  description   String
   address       String
-  location      Json     // { lat: number, lng: number }
-  province      String?  // 시/도 (예: "강원도")
-  city          String?  // 시/군/구 (예: "강릉시")
+  location      String   // JSON stored as String: { lat, lng }
+  province      String?
+  city          String?
 
-  // 가격 및 수용 인원
-  pricePerNight Decimal  @db.Decimal(10, 2)
-  discountRate  Int?     // 할인율 (% 단위, 예: 20 = 20% 할인)
-  discountedPrice Decimal? @db.Decimal(10, 2) // 할인된 가격 (자동 계산되거나 수동 설정)
+  pricePerNight Float
+  discountRate  Int?
+  discountedPrice Float?
   maxGuests     Int
-  allowsPets    Boolean  @default(false) // 반려동물 동반 가능
+  allowsPets    Boolean  @default(false)
 
-  // 미디어
-  images        String[] // Image URLs
-  thumbnailUrl  String?  // 대표 이미지
+  images        String   @default("[]") // JSON array stored as String
+  thumbnailUrl  String?
 
-  // 스토리 및 상세 정보
-  hostStory     String?  @db.Text
-  amenities     String[] // ["wifi", "parking", "kitchen", ...]
-  rules         String?  @db.Text
+  hostStory     String?
+  amenities     String   @default("[]") // JSON array stored as String
+  rules         String?
 
-  // 체크인/체크아웃
   checkInTime   String   @default("15:00")
   checkOutTime  String   @default("11:00")
   minNights     Int      @default(1)
   maxNights     Int      @default(30)
 
-  // 상태
-  status        PropertyStatus @default(PENDING)
+  status        String   @default("PENDING")
 
-  // 태그 관계 (Many-to-Many)
   tags          Tag[]
 
-  // 관계
   bookings      Booking[]
   calendar      Calendar[]
   wishlists     Wishlist[]
   reviews       Review[]
 
-  // 타임스탬프
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -334,13 +303,6 @@ model Property {
   @@index([maxGuests])
 }
 
-enum PropertyStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  INACTIVE
-}
-
 model Experience {
   id                String   @id @default(cuid())
   propertyId        String
@@ -348,16 +310,15 @@ model Experience {
   host              HostProfile @relation(fields: [hostId], references: [id])
 
   name              String
-  description       String   @db.Text
-  price             Decimal  @db.Decimal(10, 2)
-  duration          Int      // 분 단위
+  description       String
+  price             Float
+  duration          Int
   maxParticipants   Int
 
-  images            String[]
+  images            String   @default("[]") // JSON array stored as String
 
-  // 가용 시간
-  availableDays     Int[]    // [0,1,2,3,4,5,6] (일~토)
-  availableTimes    String[] // ["10:00", "14:00"]
+  availableDays     String   @default("[]") // JSON array stored as String
+  availableTimes    String   @default("[]") // JSON array stored as String
 
   status            String   @default("active")
 
@@ -378,55 +339,39 @@ model Booking {
   propertyId          String
   property            Property @relation(fields: [propertyId], references: [id])
 
-  // 예약 날짜
   checkIn             DateTime
   checkOut            DateTime
   guests              Int
 
-  // 가격 정보
-  nightlyRate         Decimal  @db.Decimal(10, 2)
+  nightlyRate         Float
   numberOfNights      Int
-  accommodationTotal  Decimal  @db.Decimal(10, 2)
-  experiencesTotal    Decimal  @db.Decimal(10, 2) @default(0)
-  serviceFee          Decimal  @db.Decimal(10, 2)
-  totalAmount         Decimal  @db.Decimal(10, 2)
+  accommodationTotal  Float
+  experiencesTotal    Float    @default(0)
+  serviceFee          Float
+  totalAmount         Float
 
-  // 예약 상태
-  status              BookingStatus @default(PENDING)
+  status              String   @default("PENDING")
 
-  // 게스트 연락 정보
   guestName           String
   guestPhone          String
   guestEmail          String
 
-  // 특별 요청
-  specialRequests     String?  @db.Text
+  specialRequests     String?
 
-  // 타임스탬프
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   confirmedAt         DateTime?
   cancelledAt         DateTime?
-  cancellationReason  String?  @db.Text
+  cancellationReason  String?
   rejectedAt          DateTime?
-  rejectionReason     String?  @db.Text
+  rejectionReason     String?
 
-  // 관계
   items               BookingItem[]
   payment             Payment?
   review              Review?
 
   @@index([userId, status])
   @@index([propertyId, checkIn, checkOut])
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
-  REJECTED
-  NO_SHOW
 }
 
 model BookingItem {
@@ -436,11 +381,11 @@ model BookingItem {
   experienceId  String
   experience    Experience @relation(fields: [experienceId], references: [id])
 
-  date          DateTime // 체험 날짜
-  time          String   // 체험 시간 "14:00"
-  quantity      Int      // 참가 인원
-  price         Decimal  @db.Decimal(10, 2) // 단가
-  totalPrice    Decimal  @db.Decimal(10, 2) // 총 가격
+  date          DateTime
+  time          String
+  quantity      Int
+  price         Float
+  totalPrice    Float
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -451,11 +396,11 @@ model Calendar {
   propertyId    String
   property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  date          DateTime @db.Date
+  date          DateTime
   available     Boolean  @default(true)
-  priceOverride Decimal? @db.Decimal(10, 2) // 해당 날짜의 가격 오버라이드
-  reason        String?  // 불가 사유
-  minNights     Int?     // 해당 날짜의 최소 숙박일
+  priceOverride Float?
+  reason        String?
+  minNights     Int?
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -469,25 +414,22 @@ model Payment {
   bookingId     String   @unique
   booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  amount        Decimal  @db.Decimal(10, 2)
+  amount        Float
   currency      String   @default("KRW")
-  status        PaymentStatus @default(READY)
-  paymentMethod String?  // "card", "transfer", "kakao_pay"
+  status        String   @default("READY")
+  paymentMethod String?
 
-  // Toss Payments 정보
-  paymentKey    String?  // Toss paymentKey
-  orderId       String   @unique // 주문 ID
-  orderName     String   // 주문명
+  paymentKey    String?
+  orderId       String   @unique
+  orderName     String
 
-  // 타임스탬프
   requestedAt   DateTime @default(now())
   approvedAt    DateTime?
   cancelledAt   DateTime?
   refundedAt    DateTime?
 
-  // 환불 정보
-  refundAmount  Decimal? @db.Decimal(10, 2)
-  refundReason  String?  @db.Text
+  refundAmount  Float?
+  refundReason  String?
 
   transactions  PaymentTransaction[]
 
@@ -497,28 +439,21 @@ model Payment {
   @@index([orderId])
 }
 
-enum PaymentStatus {
-  READY
-  IN_PROGRESS
-  DONE
-  CANCELLED
-  FAILED
-}
-
 model PaymentTransaction {
   id          String   @id @default(cuid())
   paymentId   String
   payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
-  externalId  String?  // 외부 거래 ID
-  type        String   // "PAYMENT", "REFUND"
-  amount      Decimal  @db.Decimal(10, 2)
-  status      String   // "SUCCESS", "FAILED", "PENDING"
-  method      String?  // "card", "transfer", "kakao_pay", "DEVELOPMENT_MODE"
-  metadata    Json?    // 추가 메타데이터
+  externalId  String?
+  type        String
+  amount      Float
+  status      String
+  method      String?
+  metadata    String?  // JSON stored as String
 
   createdAt   DateTime @default(now())
 }
+
 // ============================================
 // Wishlist Model
 // ============================================
@@ -529,7 +464,7 @@ model Wishlist {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  
+
   createdAt  DateTime @default(now())
 
   @@unique([userId, propertyId])
@@ -550,17 +485,16 @@ model Review {
   bookingId   String   @unique
   booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
-  rating      Int      // 1-5 stars
-  content     String   @db.Text
-  images      String[] // Image URLs
+  rating      Int
+  content     String
+  images      String   @default("[]") // JSON array stored as String
 
-  // SNS Sharing
-  snsShareConsent Boolean  @default(false) // SNS 공유 동의 여부
-  snsShared       Boolean  @default(false) // 실제 SNS 공유 완료 여부
-  snsSharedAt     DateTime? // SNS 공유 시간
-  creditAwarded   Boolean  @default(false) // 크레딧 지급 완료 여부
+  snsShareConsent Boolean  @default(false)
+  snsShared       Boolean  @default(false)
+  snsSharedAt     DateTime?
+  creditAwarded   Boolean  @default(false)
 
-  hostReply   String?  @db.Text
+  hostReply   String?
   repliedAt   DateTime?
 
   createdAt   DateTime @default(now())
@@ -581,10 +515,10 @@ model Notification {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  type      NotificationType
+  type      String   // NotificationType enum values
   title     String
-  message   String   @db.Text
-  link      String?  // Optional link to related resource
+  message   String
+  link      String?
 
   read      Boolean  @default(false)
   readAt    DateTime?
@@ -596,19 +530,6 @@ model Notification {
   @@index([createdAt])
 }
 
-enum NotificationType {
-  BOOKING_CONFIRMED
-  BOOKING_REJECTED
-  BOOKING_CANCELLED
-  REVIEW_RECEIVED
-  HOST_REPLY
-  PAYMENT_SUCCESS
-  PAYMENT_FAILED
-  CREDIT_EARNED
-  PROPERTY_APPROVED
-  PROPERTY_REJECTED
-}
-
 // ============================================
 // Credit System
 // ============================================
@@ -618,13 +539,12 @@ model CreditHistory {
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  amount      Int      // +1000 for SNS share
-  type        CreditType
-  description String?  @db.Text
+  amount      Int
+  type        String   // CreditType enum values
+  description String?
 
-  // Related entities
-  reviewId    String?  // If earned from review
-  bookingId   String?  // If used for booking discount
+  reviewId    String?
+  bookingId   String?
 
   createdAt   DateTime @default(now())
 
@@ -633,29 +553,19 @@ model CreditHistory {
   @@index([createdAt])
 }
 
-enum CreditType {
-  EARNED_REVIEW_SNS   // SNS 공유 동의한 리뷰 작성
-  EARNED_REFERRAL     // 친구 추천 (추후 추가)
-  EARNED_EVENT        // 이벤트 참여 (추후 추가)
-  USED_BOOKING        // 예약 할인 사용
-  USED_COUPON         // 쿠폰으로 전환 (추후 추가)
-  EXPIRED             // 크레딧 만료 (추후 추가)
-}
-
 // ============================================
 // SNS Integration
 // ============================================
 
 model SNSAccount {
   id            String   @id @default(cuid())
-  platform      SNSPlatform
-  accountName   String   // Account username or page name
-  accountUrl    String   // Full URL to the account/page
-  accessToken   String?  @db.Text // For API integration (encrypted)
-  refreshToken  String?  @db.Text // For token refresh
+  platform      String   // SNSPlatform enum values
+  accountName   String
+  accountUrl    String
+  accessToken   String?
+  refreshToken  String?
   isActive      Boolean  @default(true)
 
-  // Metadata
   followerCount Int?
   lastPostAt    DateTime?
 
@@ -667,32 +577,22 @@ model SNSAccount {
   @@index([isActive])
 }
 
-enum SNSPlatform {
-  FACEBOOK
-  INSTAGRAM
-  TIKTOK
-  THREADS
-}
-
 // ============================================
 // SNS Post Tracking
 // ============================================
 
 model SNSPost {
   id          String   @id @default(cuid())
-  platform    SNSPlatform
-  postUrl     String   // URL to the actual post
-  postId      String?  // Platform-specific post ID
+  platform    String   // SNSPlatform enum values
+  postUrl     String
+  postId      String?
 
-  // Content
-  content     String   @db.Text
-  images      String[] // Image URLs
+  content     String
+  images      String   @default("[]") // JSON array stored as String
 
-  // Related
-  reviewId    String   // Source review
-  propertyId  String   // Property being reviewed
+  reviewId    String
+  propertyId  String
 
-  // Engagement
   likes       Int      @default(0)
   comments    Int      @default(0)
   shares      Int      @default(0)
@@ -710,40 +610,33 @@ model SNSPost {
 // ============================================
 
 model ChatbotSettings {
-  id          String   @id @default("default") // 싱글톤 패턴
-  llmProvider String   @default("GEMINI") // "GEMINI", "OPENAI", "KEYWORD"
-  geminiApiKey String? @db.Text
-  openaiApiKey String? @db.Text
+  id          String   @id @default("default")
+  llmProvider String   @default("GEMINI")
+  geminiApiKey String?
+  openaiApiKey String?
 
   updatedAt   DateTime @updatedAt
   createdAt   DateTime @default(now())
 }
 
-enum LLMProvider {
-  GEMINI
-  OPENAI
-  KEYWORD
-}
-
 // ============================================================
-// VINTEE Intelligence Pipeline (VIP) — 전국 펜션 크롤링 시스템
+// VINTEE Intelligence Pipeline (VIP)
 // ============================================================
 
-// 원시 크롤링 데이터
 model RawCrawlResult {
   id           String   @id @default(cuid())
-  source       String   @db.VarChar(20)   // 'naver'|'kakao'|'yanolja'|'yeogi'|'airbnb'|'blog'
-  sourceId     String?  @db.VarChar(200)
-  name         String   @db.VarChar(300)
-  address      String?  @db.Text
-  phone        String?  @db.VarChar(30)
-  lat          Decimal? @db.Decimal(10, 7)
-  lng          Decimal? @db.Decimal(10, 7)
-  sourceRating Decimal? @db.Decimal(3, 2)
+  source       String
+  sourceId     String?
+  name         String
+  address      String?
+  phone        String?
+  lat          Float?
+  lng          Float?
+  sourceRating Float?
   reviewCount  Int      @default(0)
-  rawReviews   Json?    // [{text, rating, date}]
-  amenities    String[]
-  extraData    Json?
+  rawReviews   String?  // JSON stored as String
+  amenities    String   @default("[]") // JSON array stored as String
+  extraData    String?  // JSON stored as String
   crawledAt    DateTime @default(now())
   isProcessed  Boolean  @default(false)
 
@@ -753,37 +646,33 @@ model RawCrawlResult {
   @@index([crawledAt])
 }
 
-// 정규화 + 점수 통합 데이터
 model PropertyIntelligence {
   id             String   @id @default(cuid())
-  name           String   @db.VarChar(300)
-  address        String?  @db.Text
-  region         String?  @db.VarChar(50)   // 시도
-  subregion      String?  @db.VarChar(50)   // 시군구
-  lat            Decimal? @db.Decimal(10, 7)
-  lng            Decimal? @db.Decimal(10, 7)
-  phone          String?  @db.VarChar(30)
+  name           String
+  address        String?
+  region         String?
+  subregion      String?
+  lat            Float?
+  lng            Float?
+  phone          String?
 
-  // VINTEE Score 구성요소
-  avgRating      Decimal? @db.Decimal(3, 2)
+  avgRating      Float?
   totalReviews   Int?
-  sentimentScore Decimal? @db.Decimal(4, 3)
-  themeScore     Decimal? @db.Decimal(4, 3)
-  recencyScore   Decimal? @db.Decimal(4, 3)
-  vinteeScore    Decimal? @db.Decimal(3, 2) // 1.0~5.0
+  sentimentScore Float?
+  themeScore     Float?
+  recencyScore   Float?
+  vinteeScore    Float?
 
-  // 태그 & 영입 상태
-  autoTags       String[]
+  autoTags       String   @default("[]") // JSON array stored as String
   isRecruited    Boolean  @default(false)
-  recruitNote    String?  @db.Text
+  recruitNote    String?
   recruitedAt    DateTime?
 
-  // 소스 ID 매핑
-  naverId        String?  @db.VarChar(200)
-  kakaoId        String?  @db.VarChar(200)
-  yanoljaId      String?  @db.VarChar(200)
-  yeogiId        String?  @db.VarChar(200)
-  airbnbId       String?  @db.VarChar(200)
+  naverId        String?
+  kakaoId        String?
+  yanoljaId      String?
+  yeogiId        String?
+  airbnbId       String?
 
   thumbnailUrl   String?
 
@@ -792,21 +681,20 @@ model PropertyIntelligence {
 
   @@map("property_intelligence")
   @@index([region])
-  @@index([vinteeScore(sort: Desc)])
+  @@index([vinteeScore])
   @@index([isRecruited])
 }
 
-// 크롤링 작업 로그
 model CrawlJobLog {
   id               String    @id @default(cuid())
-  source           String    @db.VarChar(20)   // 'naver'|'kakao'|... 또는 'all'
-  region           String?   @db.VarChar(50)
-  status           String    @db.VarChar(20)   // 'running'|'completed'|'failed'|'partial'
+  source           String
+  region           String?
+  status           String
   totalCrawled     Int       @default(0)
   newProperties    Int       @default(0)
   updatedProperties Int      @default(0)
   errorCount       Int       @default(0)
-  errorDetails     Json?     // [{source, message, url}]
+  errorDetails     String?   // JSON stored as String
   startedAt        DateTime  @default(now())
   completedAt      DateTime?
   durationSeconds  Int?
@@ -814,5 +702,5 @@ model CrawlJobLog {
   @@map("crawl_job_logs")
   @@index([source])
   @@index([status])
-  @@index([startedAt(sort: Desc)])
+  @@index([startedAt])
 }

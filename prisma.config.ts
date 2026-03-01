@@ -1,9 +1,5 @@
 import { defineConfig } from "prisma/config";
 
-// Load from environment variables
-const DATABASE_URL = process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/choncance?schema=public";
-const DIRECT_URL = process.env.DIRECT_URL || DATABASE_URL;
-
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
@@ -11,7 +7,6 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
-    url: DATABASE_URL,
-    directUrl: DIRECT_URL,
+    url: "file:/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/prisma/dev.db",
   },
 });

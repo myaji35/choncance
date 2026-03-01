@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser, getRoleHomePage } from "@/lib/auth-utils";
-import { Role } from "@prisma/client";
+import { getCurrentUser } from "@/lib/auth-utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
@@ -13,17 +12,17 @@ export default async function DashboardPage() {
   }
 
   // 호스트인 경우 호스트 대시보드로 리디렉션
-  if (user.role === Role.HOST) {
+  if (user.role === "HOST") {
     redirect("/host/dashboard");
   }
 
   // 관리자인 경우 관리자 페이지로 리디렉션
-  if (user.role === Role.ADMIN) {
+  if (user.role === "ADMIN") {
     redirect("/admin");
   }
 
   // 호스트 승인 대기 중인 경우
-  if (user.role === Role.HOST_PENDING) {
+  if (user.role === "HOST_PENDING") {
     redirect("/become-a-host/pending");
   }
 

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUser } from "@/lib/supabase/auth-helpers";
 import { prisma } from "@/lib/prisma";
-import { BookingStatus, PaymentStatus } from "@prisma/client";
 
 export const dynamic = 'force-dynamic';
 
@@ -81,9 +80,9 @@ export async function GET(request: NextRequest) {
     const totalRevenue = bookings
       .filter(
         (b) =>
-          (b.status === BookingStatus.CONFIRMED ||
-            b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === PaymentStatus.DONE
+          (b.status === "CONFIRMED" ||
+            b.status === "COMPLETED") &&
+          b.payment?.status === "DONE"
       )
       .reduce((sum, b) => {
         const amount =
@@ -95,17 +94,17 @@ export async function GET(request: NextRequest) {
 
     // 2. Booking counts by status
     const bookingsByStatus = {
-      PENDING: bookings.filter((b) => b.status === BookingStatus.PENDING)
+      PENDING: bookings.filter((b) => b.status === "PENDING")
         .length,
-      CONFIRMED: bookings.filter((b) => b.status === BookingStatus.CONFIRMED)
+      CONFIRMED: bookings.filter((b) => b.status === "CONFIRMED")
         .length,
-      CANCELLED: bookings.filter((b) => b.status === BookingStatus.CANCELLED)
+      CANCELLED: bookings.filter((b) => b.status === "CANCELLED")
         .length,
-      COMPLETED: bookings.filter((b) => b.status === BookingStatus.COMPLETED)
+      COMPLETED: bookings.filter((b) => b.status === "COMPLETED")
         .length,
-      REJECTED: bookings.filter((b) => b.status === BookingStatus.REJECTED)
+      REJECTED: bookings.filter((b) => b.status === "REJECTED")
         .length,
-      NO_SHOW: bookings.filter((b) => b.status === BookingStatus.NO_SHOW)
+      NO_SHOW: bookings.filter((b) => b.status === "NO_SHOW")
         .length,
     };
 
@@ -113,9 +112,9 @@ export async function GET(request: NextRequest) {
     const revenueByDate = bookings
       .filter(
         (b) =>
-          (b.status === BookingStatus.CONFIRMED ||
-            b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === PaymentStatus.DONE
+          (b.status === "CONFIRMED" ||
+            b.status === "COMPLETED") &&
+          b.payment?.status === "DONE"
       )
       .reduce((acc, b) => {
         const date = b.createdAt.toISOString().split("T")[0];
@@ -157,12 +156,12 @@ export async function GET(request: NextRequest) {
       acc[propertyId].totalBookings += 1;
 
       if (
-        b.status === BookingStatus.CONFIRMED ||
-        b.status === BookingStatus.COMPLETED
+        b.status === "CONFIRMED" ||
+        b.status === "COMPLETED"
       ) {
         acc[propertyId].confirmedBookings += 1;
 
-        if (b.payment?.status === PaymentStatus.DONE) {
+        if (b.payment?.status === "DONE") {
           const amount =
             typeof b.totalAmount === "number"
               ? b.totalAmount
@@ -221,9 +220,9 @@ export async function GET(request: NextRequest) {
     const monthlyRevenue = monthlyBookings
       .filter(
         (b) =>
-          (b.status === BookingStatus.CONFIRMED ||
-            b.status === BookingStatus.COMPLETED) &&
-          b.payment?.status === PaymentStatus.DONE
+          (b.status === "CONFIRMED" ||
+            b.status === "COMPLETED") &&
+          b.payment?.status === "DONE"
       )
       .reduce((sum, b) => {
         const amount =

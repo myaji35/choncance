@@ -2,7 +2,6 @@ import { getUser } from "@/lib/supabase/auth-helpers";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notifyBookingRejected } from "@/lib/notifications";
-import { PaymentStatus } from "@prisma/client";
 
 /**
  * PATCH /api/host/bookings/:id/reject
@@ -116,7 +115,7 @@ export async function PATCH(
               paymentId: booking.payment.id,
               type: "REFUND",
               amount: booking.totalAmount,
-              status: PaymentStatus.DONE,
+              status: "DONE",
               method: "DEVELOPMENT_MODE",
             },
           });
@@ -158,7 +157,7 @@ export async function PATCH(
               paymentId: booking.payment.id,
               type: "REFUND",
               amount: booking.totalAmount,
-              status: PaymentStatus.DONE,
+              status: "DONE",
               method: booking.payment.paymentMethod || "HOST_REJECT",
             },
           });
