@@ -5,8 +5,8 @@
     "platform": "claude",
     "level": "Dynamic"
   },
-  "currentFeature": "pension-crawler",
-  "phase": "do",
+  "currentFeature": "geo-optimization",
+  "phase": "design",
   "matchRate": null,
   "iterationCount": 0,
   "archivedFeatures": [
