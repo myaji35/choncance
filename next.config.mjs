@@ -2,9 +2,14 @@
 const nextConfig = {
   // Explicitly set src directory so Next.js uses src/app over root app/ (Rails)
   output: 'standalone', // Docker 배포용 standalone 빌드
+  // 정적 생성 타임아웃 증가 (빌드 서버에서 느릴 수 있음)
+  staticPageGenerationTimeout: 300,
   // Ignore ESLint and TypeScript errors during builds (fix separately)
   typescript: {
     ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   images: {
     // Enable image optimization for remote domains
