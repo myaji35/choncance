@@ -48,7 +48,6 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "VINTEE", // Updated title
   description: "도시 생활에 지친 MZ세대를 위한 진정성 있는 시골 여행 큐레이션 및 예약 플랫폼.", // Updated description
-  manifest: "/manifest.json",
   themeColor: "#0EA5E9",
   // Enhanced viewport for high-PPI displays
   // - width=device-width: Use device's native width

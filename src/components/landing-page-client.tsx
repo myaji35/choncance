@@ -395,42 +395,6 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-16 px-6 md:px-12 lg:px-20 bg-gray-900 text-gray-400">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-1">
-            <h3 className="text-2xl font-bold text-white mb-4">VINTEE</h3>
-            <p className="text-sm">빈티지한 감성의 시골 여행</p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white mb-4">탐색</h4>
-            <ul>
-              <li className="mb-2"><Link href="#" className="hover:text-white">테마별</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">지역별</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">인기 숙소</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white mb-4">소개</h4>
-            <ul>
-              <li className="mb-2"><Link href="#" className="hover:text-white">VINTEE 스토리</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">호스트 되기</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">채용</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white mb-4">지원</h4>
-            <ul>
-              <li className="mb-2"><Link href="#" className="hover:text-white">도움말 센터</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">이용약관</Link></li>
-              <li className="mb-2"><Link href="#" className="hover:text-white">개인정보처리방침</Link></li>
-            </ul>
-          </div>
-        </div>
-        <div className="container mx-auto text-center mt-12 border-t border-gray-800 pt-8">
-          <p className="text-sm">&copy; 2025 VINTEE. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
