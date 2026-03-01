@@ -1,14 +1,14 @@
 {
-  "sessionCount": 9,
+  "sessionCount": 10,
   "lastSession": {
-    "startedAt": "2026-03-01T06:30:45.051Z",
+    "startedAt": "2026-03-01T07:00:00.000Z",
     "platform": "claude",
     "level": "Dynamic"
   },
-  "currentFeature": null,
-  "phase": "archived",
-  "matchRate": 93,
-  "iterationCount": 5,
+  "currentFeature": "sprint-ux",
+  "phase": "plan",
+  "matchRate": null,
+  "iterationCount": 0,
   "archivedFeatures": [
     {
       "feature": "sprint-통합",
