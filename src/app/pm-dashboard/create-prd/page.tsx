@@ -103,7 +103,7 @@ function CreatePRDForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                placeholder="예: ChonCance 플랫폼 PRD"
+                placeholder="예: VINTEE 플랫폼 PRD"
                 required
               />
             </div>

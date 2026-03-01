@@ -1,4 +1,4 @@
-// ChonCance Type Definitions
+// VINTEE Type Definitions
 import type * as Icons from "lucide-react";
 
 export interface Experience {

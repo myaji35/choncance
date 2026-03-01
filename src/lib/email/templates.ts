@@ -15,7 +15,7 @@ export function getBookingConfirmationEmail(data: BookingConfirmationData): {
   subject: string;
   html: string;
 } {
-  const subject = `[ChonCance] 예약이 확정되었습니다 - ${data.propertyName}`;
+  const subject = `[VINTEE] 예약이 확정되었습니다 - ${data.propertyName}`;
 
   const html = `
     <!DOCTYPE html>
@@ -40,7 +40,7 @@ export function getBookingConfirmationEmail(data: BookingConfirmationData): {
         <div class="container">
           <div class="header">
             <h1>🎉 예약이 확정되었습니다!</h1>
-            <p>ChonCance를 이용해 주셔서 감사합니다</p>
+            <p>VINTEE를 이용해 주셔서 감사합니다</p>
           </div>
 
           <div class="content">
@@ -84,7 +84,7 @@ export function getBookingConfirmationEmail(data: BookingConfirmationData): {
             </div>
 
             <div style="text-align: center;">
-              <a href="https://choncance.com/bookings/${data.bookingId}" class="button">
+              <a href="https://vintee.com/bookings/${data.bookingId}" class="button">
                 예약 상세보기
               </a>
             </div>
@@ -100,8 +100,8 @@ export function getBookingConfirmationEmail(data: BookingConfirmationData): {
           </div>
 
           <div class="footer">
-            <p>ChonCance 고객센터: support@choncance.com</p>
-            <p>© 2025 ChonCance. All rights reserved.</p>
+            <p>VINTEE 고객센터: support@vintee.com</p>
+            <p>© 2026 VINTEE. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -123,7 +123,7 @@ export function getRefundConfirmationEmail(data: RefundConfirmationData): {
   subject: string;
   html: string;
 } {
-  const subject = `[ChonCance] 환불이 완료되었습니다 - ${data.propertyName}`;
+  const subject = `[VINTEE] 환불이 완료되었습니다 - ${data.propertyName}`;
 
   const html = `
     <!DOCTYPE html>
@@ -181,8 +181,8 @@ export function getRefundConfirmationEmail(data: RefundConfirmationData): {
 
           <div class="footer">
             <p>더 나은 서비스를 제공하기 위해 노력하겠습니다.</p>
-            <p>ChonCance 고객센터: support@choncance.com</p>
-            <p>© 2025 ChonCance. All rights reserved.</p>
+            <p>VINTEE 고객센터: support@vintee.com</p>
+            <p>© 2026 VINTEE. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -203,7 +203,7 @@ export function getPaymentFailedEmail(data: PaymentFailedData): {
   subject: string;
   html: string;
 } {
-  const subject = `[ChonCance] 결제 실패 안내 - ${data.propertyName}`;
+  const subject = `[VINTEE] 결제 실패 안내 - ${data.propertyName}`;
 
   const html = `
     <!DOCTYPE html>
@@ -237,7 +237,7 @@ export function getPaymentFailedEmail(data: PaymentFailedData): {
             <p>다시 시도하시거나, 다른 결제 수단을 사용해 주세요.</p>
 
             <div style="text-align: center;">
-              <a href="https://choncance.com/booking/checkout?bookingId=${data.bookingId}" class="button">
+              <a href="https://vintee.com/booking/checkout?bookingId=${data.bookingId}" class="button">
                 다시 결제하기
               </a>
             </div>
@@ -245,8 +245,8 @@ export function getPaymentFailedEmail(data: PaymentFailedData): {
 
           <div class="footer">
             <p>문의사항이 있으시면 언제든 연락주세요.</p>
-            <p>ChonCance 고객센터: support@choncance.com</p>
-            <p>© 2025 ChonCance. All rights reserved.</p>
+            <p>VINTEE 고객센터: support@vintee.com</p>
+            <p>© 2026 VINTEE. All rights reserved.</p>
           </div>
         </div>
       </body>

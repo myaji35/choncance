@@ -153,7 +153,7 @@ export default function ClientReviewPage() {
                   onCheckedChange={() => toggleCheck('branding', 'logo')}
                 />
                 <label htmlFor="branding-logo" className="text-sm font-medium cursor-pointer">
-                  모든 "ChonCance" → "VINTEE"로 변경 확인
+                  모든 "ChonCance" → "VINTEE"로 변경 완료
                 </label>
               </div>
               <div className="flex items-center space-x-2">

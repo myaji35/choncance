@@ -1,7 +1,7 @@
 import { defineConfig } from 'bmad-method'
 
 export default defineConfig({
-  projectName: 'ChonCance',
+  projectName: 'VINTEE',
   version: '1.0.0',
   routes: {
     base: '/api',

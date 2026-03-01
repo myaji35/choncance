@@ -1,5 +1,5 @@
 /**
- * Email sending utility for ChonCance
+ * Email sending utility for VINTEE
  *
  * To use in production, install and configure an email service:
  *
@@ -62,7 +62,7 @@ async function sendWithSendGrid(options: EmailOptions): Promise<boolean> {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     await sgMail.send({
-      from: process.env.EMAIL_FROM || 'noreply@choncance.com',
+      from: process.env.EMAIL_FROM || 'noreply@vintee.com',
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
       html: options.html,
@@ -87,7 +87,7 @@ async function sendWithResend(options: EmailOptions): Promise<boolean> {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'ChonCance <noreply@choncance.com>',
+      from: process.env.EMAIL_FROM || 'VINTEE <noreply@vintee.com>',
       to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
       html: options.html,
@@ -120,7 +120,7 @@ async function sendWithNodemailer(options: EmailOptions): Promise<boolean> {
     });
 
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@choncance.com',
+      from: process.env.EMAIL_FROM || 'noreply@vintee.com',
       to: Array.isArray(options.to) ? options.to.join(',') : options.to,
       subject: options.subject,
       html: options.html,

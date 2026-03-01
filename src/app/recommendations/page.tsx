@@ -98,7 +98,7 @@ export default async function RecommendationsPage() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6">
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">ChonCance 추천</span>
+              <span className="text-sm font-medium">VINTEE 추천</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               당신을 위한 특별한 촌캉스
