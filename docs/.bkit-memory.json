@@ -6,9 +6,10 @@
     "level": "Dynamic"
   },
   "currentFeature": "펜션-데이터-수집",
-  "phase": "do",
-  "matchRate": null,
+  "phase": "completed",
+  "matchRate": 97,
   "iterationCount": 0,
+  "completedAt": "2026-03-01T15:45:00.000Z",
   "archivedFeatures": [
     {
       "feature": "sprint-통합",

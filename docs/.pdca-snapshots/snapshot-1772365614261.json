@@ -1,0 +1,1761 @@
+{
+  "timestamp": "2026-03-01T11:46:54.260Z",
+  "reason": "compaction",
+  "status": {
+    "version": "2.1",
+    "lastUpdated": "2026-03-01T11:45:32.187Z",
+    "activeFeatures": [
+      "리뷰-시스템",
+      "validations",
+      "cancel",
+      "upload",
+      "approve",
+      "reject",
+      "hosts",
+      "admin",
+      "booking",
+      "bookings",
+      "[id]",
+      "pending",
+      "host",
+      "status",
+      "tags",
+      "ui",
+      "0002_choncance(조준범 VINTEE)",
+      "layout",
+      "auth",
+      "[[...rest]]",
+      "supabase",
+      "login",
+      "signup",
+      "settings",
+      "test-errors",
+      "crawler",
+      "db",
+      "adapters",
+      "pipeline",
+      "intelligence",
+      "recruit",
+      "crawl-monitor",
+      "jobs",
+      "geo",
+      "llms.txt",
+      "data-collection",
+      "sources",
+      "펜션-데이터-수집",
+      "prisma",
+      "dashboard",
+      "stats"
+    ],
+    "completedFeatures": [
+      "리뷰-시스템"
+    ],
+    "primaryFeature": "리뷰-시스템",
+    "features": {
+      "리뷰-시스템": {
+        "phase": "report",
+        "phaseNumber": 6,
+        "matchRate": 93,
+        "iterationCount": 1,
+        "requirements": [
+          "Epic 5.1 - 리뷰 작성",
+          "Epic 5.2 - 리뷰 표시",
+          "Epic 5.3 - 호스트 답변"
+        ],
+        "documents": {
+          "plan": "docs/01-plan/features/리뷰-시스템.plan.md",
+          "design": "docs/02-design/features/리뷰-시스템.design.md",
+          "analysis": "docs/03-analysis/리뷰-시스템.analysis.md",
+          "report": "docs/04-report/features/리뷰-시스템.report.md"
+        },
+        "timestamps": {
+          "started": "2026-02-28T00:00:00.000Z",
+          "planCompleted": "2026-02-28T00:00:00.000Z",
+          "designCompleted": "2026-02-28T00:00:00.000Z",
+          "implementationCompleted": "2026-03-01T04:43:00.000Z",
+          "analysisCompleted": "2026-03-01T04:50:00.000Z",
+          "reportCompleted": "2026-03-01T05:00:00.000Z",
+          "lastUpdated": "2026-03-01T04:45:49.076Z"
+        },
+        "summary": {
+          "componentCount": 5,
+          "apiRouteCount": 3,
+          "pageCount": 4,
+          "lineOfCode": 1950,
+          "p0GapResolved": 4,
+          "p1GapResolved": 1,
+          "p0GapRemaining": 0,
+          "p1GapRemaining": 2
+        },
+        "previousPhase": "check",
+        "autoAdvanced": true
+      },
+      "review": {
+        "phase": "archived",
+        "phaseNumber": 5,
+        "matchRate": 93,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:11:34.924Z",
+          "lastUpdated": "2026-03-01T04:43:01.986Z",
+          "archivedAt": "2026-03-01T05:00:00.000Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/review/review-form.tsx",
+        "note": "Merged into 리뷰-시스템 feature"
+      },
+      "reviews": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:12:12.267Z",
+          "lastUpdated": "2026-03-01T04:26:25.103Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/reviews/route.ts"
+      },
+      "0002_choncance(조준범 VINTEE)": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:25:58.600Z",
+          "lastUpdated": "2026-03-01T11:44:54.851Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/auth-utils.ts"
+      },
+      "validations": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:26:09.596Z",
+          "lastUpdated": "2026-03-01T04:52:47.813Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/validations/booking.ts"
+      },
+      "reply": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:26:31.601Z",
+          "lastUpdated": "2026-03-01T04:26:40.329Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/reviews/[id]/reply/route.ts"
+      },
+      "cancel": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:53:23.904Z",
+          "lastUpdated": "2026-03-01T05:20:50.346Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/bookings/[id]/cancel/route.ts"
+      },
+      "upload": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:53:36.712Z",
+          "lastUpdated": "2026-03-01T05:20:38.457Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/upload/route.ts"
+      },
+      "approve": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:53:44.674Z",
+          "lastUpdated": "2026-03-01T04:57:09.497Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/admin/properties/[id]/approve/route.ts"
+      },
+      "reject": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:53:52.919Z",
+          "lastUpdated": "2026-03-01T11:45:24.036Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/host/bookings/[id]/reject/route.ts"
+      },
+      "hosts": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:54:23.861Z",
+          "lastUpdated": "2026-03-01T06:00:31.951Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/admin/hosts/page.tsx"
+      },
+      "admin": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T04:54:51.154Z",
+          "lastUpdated": "2026-03-01T10:40:56.661Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/admin/page.tsx"
+      },
+      "booking": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:01:09.653Z",
+          "lastUpdated": "2026-03-01T05:57:27.064Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/booking/cancel-booking-dialog.tsx"
+      },
+      "bookings": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:01:18.843Z",
+          "lastUpdated": "2026-03-01T05:01:18.843Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/bookings/page.tsx"
+      },
+      "[id]": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:19:32.679Z",
+          "lastUpdated": "2026-03-01T10:51:40.867Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/property/[id]/page.tsx"
+      },
+      "pending": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:20:12.519Z",
+          "lastUpdated": "2026-03-01T06:14:05.248Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/admin/properties/pending/property-approval-actions.tsx"
+      },
+      "host": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:27:44.280Z",
+          "lastUpdated": "2026-03-01T05:58:35.366Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/host/image-upload.tsx"
+      },
+      "status": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T05:56:37.824Z",
+          "lastUpdated": "2026-03-01T05:56:37.824Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/admin/properties/[id]/status/route.ts"
+      },
+      "tags": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T06:11:20.980Z",
+          "lastUpdated": "2026-03-01T06:14:44.458Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/admin/tags/route.ts"
+      },
+      "ui": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T07:06:13.603Z",
+          "lastUpdated": "2026-03-01T07:06:13.603Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/ui/empty-state.tsx"
+      },
+      "layout": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T07:11:07.222Z",
+          "lastUpdated": "2026-03-01T07:11:07.222Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/layout/site-header-simple.tsx"
+      },
+      "auth": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T07:11:13.042Z",
+          "lastUpdated": "2026-03-01T07:11:13.042Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/components/auth/user-nav.tsx"
+      },
+      "[[...rest]]": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T07:11:29.840Z",
+          "lastUpdated": "2026-03-01T07:11:40.945Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/signup/[[...rest]]/page.tsx"
+      },
+      "supabase": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T07:19:45.945Z",
+          "lastUpdated": "2026-03-01T07:19:45.945Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/supabase/auth-helpers.ts"
+      },
+      "login": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T09:11:41.599Z",
+          "lastUpdated": "2026-03-01T09:11:41.599Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/auth/login/page.tsx"
+      },
+      "signup": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T09:11:44.683Z",
+          "lastUpdated": "2026-03-01T09:11:44.683Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/auth/signup/page.tsx"
+      },
+      "settings": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T09:11:54.609Z",
+          "lastUpdated": "2026-03-01T09:11:54.609Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/profile/settings/page.tsx"
+      },
+      "test-errors": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T09:12:05.276Z",
+          "lastUpdated": "2026-03-01T09:12:05.276Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/test-errors/route.ts"
+      },
+      "crawler": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:32:21.094Z",
+          "lastUpdated": "2026-03-01T10:36:30.345Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/backend/crawler/main.py"
+      },
+      "db": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:33:09.431Z",
+          "lastUpdated": "2026-03-01T10:33:34.771Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/backend/crawler/db/__init__.py"
+      },
+      "adapters": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:33:51.146Z",
+          "lastUpdated": "2026-03-01T10:34:57.901Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/backend/crawler/adapters/__init__.py"
+      },
+      "pipeline": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:35:13.984Z",
+          "lastUpdated": "2026-03-01T10:36:01.221Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/backend/crawler/pipeline/__init__.py"
+      },
+      "intelligence": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:36:55.883Z",
+          "lastUpdated": "2026-03-01T10:40:01.296Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/admin/intelligence/page.tsx"
+      },
+      "recruit": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:38:42.627Z",
+          "lastUpdated": "2026-03-01T10:38:42.628Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/admin/intelligence/[id]/recruit/route.ts"
+      },
+      "crawl-monitor": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:38:54.782Z",
+          "lastUpdated": "2026-03-01T11:27:47.214Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/admin/crawl-monitor/page.tsx"
+      },
+      "jobs": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:38:59.902Z",
+          "lastUpdated": "2026-03-01T11:26:50.309Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/admin/crawl-monitor/jobs/route.ts"
+      },
+      "geo": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:51:09.619Z",
+          "lastUpdated": "2026-03-01T10:51:09.619Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/geo/schemas.ts"
+      },
+      "llms.txt": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T10:52:39.658Z",
+          "lastUpdated": "2026-03-01T10:52:39.658Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/llms.txt/route.ts"
+      },
+      "data-collection": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:23:15.594Z",
+          "lastUpdated": "2026-03-01T11:28:11.208Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/data-collection/index.ts"
+      },
+      "sources": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:23:59.879Z",
+          "lastUpdated": "2026-03-01T11:24:13.178Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/lib/data-collection/sources/naver.ts"
+      },
+      "펜션-데이터-수집": {
+        "phase": "act",
+        "phaseNumber": 5,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:34:16.948Z",
+          "lastUpdated": "2026-03-01T11:34:16.949Z"
+        },
+        "previousPhase": "check",
+        "autoAdvanced": true
+      },
+      "prisma": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:42:38.607Z",
+          "lastUpdated": "2026-03-01T11:43:09.613Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/prisma/seed.ts"
+      },
+      "dashboard": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:45:05.217Z",
+          "lastUpdated": "2026-03-01T11:45:05.217Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/dashboard/page.tsx"
+      },
+      "stats": {
+        "phase": "do",
+        "phaseNumber": 3,
+        "matchRate": null,
+        "iterationCount": 0,
+        "requirements": [],
+        "documents": {},
+        "timestamps": {
+          "started": "2026-03-01T11:45:32.187Z",
+          "lastUpdated": "2026-03-01T11:45:32.187Z"
+        },
+        "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/src/app/api/host/stats/route.ts"
+      }
+    },
+    "pipeline": {
+      "currentPhase": 1,
+      "level": "Dynamic",
+      "phaseHistory": []
+    },
+    "session": {
+      "startedAt": "2026-03-01T04:04:27.359Z",
+      "onboardingCompleted": false,
+      "lastActivity": "2026-03-01T11:45:32.187Z"
+    },
+    "history": [
+      {
+        "timestamp": "2026-03-01T04:11:34.924Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:11:39.358Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:11:42.742Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:11:47.103Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:12:12.267Z",
+        "feature": "reviews",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:13:14.020Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:13:24.838Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:13:39.382Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:25:58.600Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:09.596Z",
+        "feature": "validations",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:15.368Z",
+        "feature": "reviews",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:25.103Z",
+        "feature": "reviews",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:31.601Z",
+        "feature": "reply",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:40.329Z",
+        "feature": "reply",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:44.320Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:48.451Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:26:52.848Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:27:13.378Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:27:19.251Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:27:26.021Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:27:29.601Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:27:41.160Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:43:01.986Z",
+        "feature": "review",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:45:49.077Z",
+        "feature": "리뷰-시스템",
+        "phase": "report",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:52:47.813Z",
+        "feature": "validations",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:53:23.904Z",
+        "feature": "cancel",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:53:36.712Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:53:44.674Z",
+        "feature": "approve",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:53:48.979Z",
+        "feature": "cancel",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:53:52.919Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:54:23.550Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:54:23.861Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:54:37.257Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:54:51.154Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:04.151Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:09.406Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:15.358Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:31.006Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:35.177Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:43.799Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:55:48.158Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:57:09.497Z",
+        "feature": "approve",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T04:57:16.545Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:01:09.653Z",
+        "feature": "booking",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:01:18.843Z",
+        "feature": "bookings",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:19:18.341Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:19:22.408Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:19:32.679Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:19:41.784Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:20:12.519Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:20:29.451Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:20:34.421Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:20:38.457Z",
+        "feature": "upload",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:20:50.346Z",
+        "feature": "cancel",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:27:24.682Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:27:29.286Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:27:44.280Z",
+        "feature": "host",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:27:50.810Z",
+        "feature": "host",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:28:11.976Z",
+        "feature": "host",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:28:25.159Z",
+        "feature": "host",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:43:39.769Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:45:07.477Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:45:10.627Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:56:37.824Z",
+        "feature": "status",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:56:41.614Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:56:52.128Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:57:04.103Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:57:10.450Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:57:14.791Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:57:19.878Z",
+        "feature": "booking",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:57:27.064Z",
+        "feature": "booking",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:58:35.366Z",
+        "feature": "host",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:59:05.803Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:59:33.376Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T05:59:39.959Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:02.071Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:08.565Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:12.623Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:18.357Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:22.588Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:26.740Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:00:31.951Z",
+        "feature": "hosts",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:11:20.981Z",
+        "feature": "tags",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:11:36.949Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:12:19.340Z",
+        "feature": "tags",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:12:30.844Z",
+        "feature": "tags",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:12:44.869Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:12:49.234Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:13:29.140Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:13:33.304Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:13:41.206Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:13:49.982Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:14:05.248Z",
+        "feature": "pending",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:14:44.458Z",
+        "feature": "tags",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T06:14:52.413Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:06:13.603Z",
+        "feature": "ui",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:06:19.412Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:06:31.524Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:10:32.262Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:10:41.949Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:10:44.937Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:10:47.695Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:11:07.222Z",
+        "feature": "layout",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:11:13.042Z",
+        "feature": "auth",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:11:29.840Z",
+        "feature": "[[...rest]]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:11:40.945Z",
+        "feature": "[[...rest]]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:18:24.290Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:19:13.479Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T07:19:45.945Z",
+        "feature": "supabase",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T08:07:34.112Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T09:11:41.599Z",
+        "feature": "login",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T09:11:44.683Z",
+        "feature": "signup",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T09:11:54.609Z",
+        "feature": "settings",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T09:12:05.276Z",
+        "feature": "test-errors",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:21.094Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:26.373Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:33.384Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:39.966Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:48.583Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:32:52.088Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:33:09.431Z",
+        "feature": "db",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:33:14.432Z",
+        "feature": "db",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:33:31.225Z",
+        "feature": "db",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:33:34.771Z",
+        "feature": "db",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:33:51.146Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:09.052Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:22.382Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:38.380Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:44.091Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:48.285Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:52.812Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:34:57.901Z",
+        "feature": "adapters",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:35:13.984Z",
+        "feature": "pipeline",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:35:40.478Z",
+        "feature": "pipeline",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:35:58.453Z",
+        "feature": "pipeline",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:36:01.221Z",
+        "feature": "pipeline",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:36:30.345Z",
+        "feature": "crawler",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:36:55.883Z",
+        "feature": "intelligence",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:38:39.104Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:38:42.628Z",
+        "feature": "recruit",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:38:54.782Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:38:59.902Z",
+        "feature": "jobs",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:40:01.296Z",
+        "feature": "intelligence",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:40:39.530Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:40:51.709Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:40:56.661Z",
+        "feature": "admin",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:51:09.619Z",
+        "feature": "geo",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:51:21.844Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:51:33.520Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:51:40.867Z",
+        "feature": "[id]",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:52:01.722Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:52:08.146Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:52:39.658Z",
+        "feature": "llms.txt",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:54:11.228Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T10:54:17.155Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:00:10.173Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:00:37.616Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:00:42.544Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:23:15.594Z",
+        "feature": "data-collection",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:23:35.571Z",
+        "feature": "data-collection",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:23:47.031Z",
+        "feature": "data-collection",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:23:59.879Z",
+        "feature": "sources",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:24:13.178Z",
+        "feature": "sources",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:26:34.730Z",
+        "feature": "data-collection",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:26:41.304Z",
+        "feature": "jobs",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:26:50.309Z",
+        "feature": "jobs",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:27:06.312Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:27:12.567Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:27:20.105Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:27:47.214Z",
+        "feature": "crawl-monitor",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:28:11.208Z",
+        "feature": "data-collection",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:34:16.949Z",
+        "feature": "펜션-데이터-수집",
+        "phase": "act",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:40:02.645Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:40:11.939Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:42:38.607Z",
+        "feature": "prisma",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:43:09.613Z",
+        "feature": "prisma",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:43:56.464Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:44:54.851Z",
+        "feature": "0002_choncance(조준범 VINTEE)",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:45:05.217Z",
+        "feature": "dashboard",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:45:20.780Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:45:24.036Z",
+        "feature": "reject",
+        "phase": "do",
+        "action": "updated"
+      },
+      {
+        "timestamp": "2026-03-01T11:45:32.187Z",
+        "feature": "stats",
+        "phase": "do",
+        "action": "updated"
+      }
+    ]
+  }
+}
