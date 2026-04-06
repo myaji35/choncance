@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { createReviewSchema } from "@/lib/validations/review";
+import { maskName } from "@/lib/utils/review";
 
 // POST /api/reviews — 리뷰 작성
 export async function POST(request: NextRequest) {
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest) {
       id: r.id,
       rating: r.rating,
       content: r.content,
-      guestName: r.user.name,
+      guestName: maskName(r.user.name),
       createdAt: r.createdAt,
       hostReply: r.hostReply,
       repliedAt: r.repliedAt,
