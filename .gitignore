@@ -1,0 +1,23 @@
+# macOS resource forks
+._*
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+
+# env
+.env*
+
+# database
+*.db
+*.db-journal
+
+# generated
+vintee-app/src/generated/
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts

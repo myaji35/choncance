@@ -1,0 +1,311 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-04-06T02:14:11.370Z",
+  "activeFeatures": [
+    "vintee-app",
+    "validations",
+    "reviews",
+    "reply",
+    "review",
+    "[id]",
+    "prisma"
+  ],
+  "primaryFeature": "vintee-app",
+  "features": {
+    "vintee-app": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:05:14.786Z",
+        "lastUpdated": "2026-04-06T02:14:05.634Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/lib/prisma.ts"
+    },
+    "validations": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:07:54.875Z",
+        "lastUpdated": "2026-04-06T02:11:52.473Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/lib/validations/review.ts"
+    },
+    "reviews": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:08:21.364Z",
+        "lastUpdated": "2026-04-06T02:12:31.614Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/app/host/reviews/page.tsx"
+    },
+    "reply": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:08:31.577Z",
+        "lastUpdated": "2026-04-06T02:08:31.577Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/app/api/reviews/[id]/reply/route.ts"
+    },
+    "review": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:08:54.010Z",
+        "lastUpdated": "2026-04-06T02:12:49.550Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/app/bookings/[id]/review/page.tsx"
+    },
+    "[id]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:10:26.569Z",
+        "lastUpdated": "2026-04-06T02:12:43.903Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/src/app/bookings/[id]/page.tsx"
+    },
+    "prisma": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-06T02:13:14.321Z",
+        "lastUpdated": "2026-04-06T02:14:11.369Z"
+      },
+      "lastFile": "/Volumes/E_SSD/02_GitHub.nosync/0002_choncance(조준범 VINTEE)/vintee-app/prisma/seed.ts"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-04-06T01:51:41.615Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-04-06T02:14:11.370Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-04-06T02:05:14.786Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:05:38.415Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:06:06.121Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:06:57.978Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:07:46.996Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:07:54.875Z",
+      "feature": "validations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:08:02.349Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:08:21.364Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:08:31.577Z",
+      "feature": "reply",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:08:42.726Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:08:54.010Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:09:08.359Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:09:20.467Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:09:34.767Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:09:51.640Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:10:04.864Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:10:11.842Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:10:26.569Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:10:39.733Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:10:54.587Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:11:16.441Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:11:45.319Z",
+      "feature": "validations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:11:52.473Z",
+      "feature": "validations",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:12:24.209Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:12:31.614Z",
+      "feature": "reviews",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:12:37.076Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:12:43.903Z",
+      "feature": "[id]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:12:49.550Z",
+      "feature": "review",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:13:14.321Z",
+      "feature": "prisma",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:13:28.878Z",
+      "feature": "prisma",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:14:05.634Z",
+      "feature": "vintee-app",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-06T02:14:11.369Z",
+      "feature": "prisma",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
+}

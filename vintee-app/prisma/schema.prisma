@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── 사용자 ───
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      String   @default("GUEST") // GUEST | HOST | ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties Property[]
+  bookings   Booking[]
+  reviews    Review[]
+  credits    CreditHistory[]
+}
+
+// ─── 숙소 ───
+model Property {
+  id            String  @id @default(cuid())
+  title         String
+  description   String?
+  location      String
+  address       String?
+  latitude      Float?
+  longitude     Float?
+  phone         String?
+  thumbnailUrl  String?
+  pricePerNight Int?
+  status        String  @default("draft") // draft | active | inactive
+  source        String  @default("direct") // direct | uploaded
+  uploadedBy    String? // "System Auto-Collection" 등
+
+  hostId    String
+  host      User       @relation(fields: [hostId], references: [id])
+  bookings  Booking[]
+  reviews   Review[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// ─── 예약 ───
+model Booking {
+  id       String @id @default(cuid())
+  status   String @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
+  checkIn  DateTime
+  checkOut DateTime
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  review     Review?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── 리뷰 ───
+model Review {
+  id              String   @id @default(cuid())
+  rating          Int      // 1-5
+  content         String
+  images          String   @default("[]") // JSON array of URLs
+  snsShareConsent Boolean  @default(false)
+  snsShared       Boolean  @default(false)
+  snsSharedAt     DateTime?
+  creditAwarded   Boolean  @default(false)
+  hostReply       String?
+  repliedAt       DateTime?
+
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── 크레딧 이력 ───
+model CreditHistory {
+  id     String @id @default(cuid())
+  type   String // EARNED_REVIEW_SNS | SPENT_BOOKING 등
+  amount Int
+  memo   String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
