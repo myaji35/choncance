@@ -1,10 +1,40 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { maskName } from "@/lib/utils/review";
 import ReviewList from "@/components/review/ReviewList";
 import BookingForm from "@/components/booking/BookingForm";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const property = await prisma.property.findUnique({
+    where: { id },
+    select: { title: true, description: true, location: true, thumbnailUrl: true, pricePerNight: true },
+  });
+
+  if (!property) return { title: "숙소를 찾을 수 없습니다 | VINTEE" };
+
+  const price = property.pricePerNight
+    ? `${property.pricePerNight.toLocaleString()}원/박`
+    : "";
+  const desc = `${property.location} ${price} — ${property.description?.slice(0, 100) || "VINTEE 촌캉스 숙소"}`;
+
+  return {
+    title: `${property.title} | VINTEE`,
+    description: desc,
+    openGraph: {
+      title: property.title,
+      description: desc,
+      ...(property.thumbnailUrl ? { images: [property.thumbnailUrl] } : {}),
+    },
+  };
+}
 
 export default async function PropertyDetailPage({
   params,

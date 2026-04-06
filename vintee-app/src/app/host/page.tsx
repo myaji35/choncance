@@ -84,9 +84,10 @@ export default async function HostDashboardPage() {
                 inactive: "#6B7280",
               };
               return (
-                <div
+                <Link
                   key={p.id}
-                  className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4"
+                  href={`/host/properties/${p.id}/edit`}
+                  className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 transition hover:shadow-md"
                 >
                   <div>
                     <h3 className="font-bold text-gray-900">{p.title}</h3>
@@ -100,7 +101,7 @@ export default async function HostDashboardPage() {
                   >
                     {p.status === "active" ? "운영중" : p.status === "draft" ? "임시저장" : "비활성"}
                   </span>
-                </div>
+                </Link>
               );
             })}
           </div>

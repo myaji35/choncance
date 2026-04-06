@@ -87,6 +87,44 @@ export default function Navbar() {
           </svg>
         </button>
       </div>
+
+      {/* 모바일 메뉴 */}
+      {menuOpen && (
+        <div className="border-t border-gray-200 bg-white px-4 py-3 md:hidden">
+          <div className="space-y-2">
+            <Link href="/properties" onClick={() => setMenuOpen(false)} className="block py-2 text-sm text-gray-600">
+              숙소 찾기
+            </Link>
+            {session ? (
+              <>
+                {user?.role === "HOST" && (
+                  <Link href="/host" onClick={() => setMenuOpen(false)} className="block py-2 text-sm text-gray-600">
+                    호스트 관리
+                  </Link>
+                )}
+                <Link href="/bookings" onClick={() => setMenuOpen(false)} className="block py-2 text-sm text-gray-600">
+                  내 예약
+                </Link>
+                <button
+                  onClick={() => { signOut(); setMenuOpen(false); }}
+                  className="block w-full py-2 text-left text-sm text-red-500"
+                >
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMenuOpen(false)} className="block py-2 text-sm text-gray-600">
+                  로그인
+                </Link>
+                <Link href="/register" onClick={() => setMenuOpen(false)} className="block py-2 text-sm font-medium text-[#00A1E0]">
+                  회원가입
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
