@@ -63,9 +63,14 @@ export default async function HostDashboardPage() {
       <div className="mt-8">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-[#16325C]">내 숙소</h2>
-          <Link href="/host/reviews" className="text-sm text-[#00A1E0] hover:underline">
-            리뷰 관리
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/host/bookings" className="text-sm text-[#00A1E0] hover:underline">
+              예약 관리
+            </Link>
+            <Link href="/host/reviews" className="text-sm text-[#00A1E0] hover:underline">
+              리뷰 관리
+            </Link>
+          </div>
         </div>
 
         {properties.length === 0 ? (
