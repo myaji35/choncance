@@ -11,7 +11,9 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  password  String
   name      String
+  phone     String?
   role      String   @default("GUEST") // GUEST | HOST | ADMIN
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,6 +36,8 @@ model Property {
   phone         String?
   thumbnailUrl  String?
   pricePerNight Int?
+  maxGuests     Int     @default(4)
+  amenities     String  @default("[]") // JSON array
   status        String  @default("draft") // draft | active | inactive
   source        String  @default("direct") // direct | uploaded
   uploadedBy    String? // "System Auto-Collection" 등
@@ -48,10 +52,13 @@ model Property {
 
 // ─── 예약 ───
 model Booking {
-  id       String @id @default(cuid())
-  status   String @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
-  checkIn  DateTime
-  checkOut DateTime
+  id         String @id @default(cuid())
+  status     String @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
+  checkIn    DateTime
+  checkOut   DateTime
+  guestCount Int    @default(1)
+  totalPrice Int    @default(0)
+  message    String? // 호스트에게 전하는 메시지
 
   userId     String
   user       User     @relation(fields: [userId], references: [id])

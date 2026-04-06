@@ -1,5 +1,6 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
+import bcrypt from "bcryptjs";
 import path from "path";
 
 const dbPath = path.resolve(__dirname, "../dev.db");
@@ -7,12 +8,15 @@ const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  const pw = await bcrypt.hash("password123", 12);
+
   // 호스트 생성
   const host = await prisma.user.upsert({
     where: { email: "host@vintee.kr" },
     update: {},
     create: {
       email: "host@vintee.kr",
+      password: pw,
       name: "김호스트",
       role: "HOST",
     },
@@ -24,6 +28,7 @@ async function main() {
     update: {},
     create: {
       email: "guest@vintee.kr",
+      password: pw,
       name: "홍길동",
       role: "GUEST",
     },
