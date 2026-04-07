@@ -53,10 +53,16 @@ model Property {
   petsAllowed       Boolean @default(false)
   numberOfRooms     Int     @default(1)
 
+  // ─── GraphRAG 확장 ───
+  regionId String?
+  region   Region? @relation(fields: [regionId], references: [id])
+
   hostId    String
   host      User       @relation(fields: [hostId], references: [id])
   bookings  Booking[]
   reviews   Review[]
+  tags      PropertyTag[]
+  attractions PropertyAttraction[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
@@ -99,8 +105,89 @@ model Review {
   user       User     @relation(fields: [userId], references: [id])
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id])
+  tags       ReviewTag[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+// ─── GraphRAG: 태그 (Theme/Feature/Mood/Activity/Audience/Season) ───
+model Tag {
+  id        String   @id @default(cuid())
+  type      String   // theme | feature | mood | activity | audience | season
+  name      String   // "한옥", "반려동물OK", "조용함", "가을"
+  slug      String   @unique
+  embedding Bytes?   // text-embedding-3-small (1536 dim, Float32 packed)
+  createdAt DateTime @default(now())
+
+  properties PropertyTag[]
+  reviews    ReviewTag[]
+
+  @@index([type])
+}
+
+model PropertyTag {
+  propertyId String
+  tagId      String
+  score      Float    @default(1.0) // 0-1 관련도
+  source     String   @default("manual") // manual | auto_rule | auto_llm | auto_review
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, tagId])
+  @@index([tagId])
+}
+
+model ReviewTag {
+  reviewId  String
+  tagId     String
+  sentiment String @default("neutral") // positive | neutral | negative
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([reviewId, tagId])
+  @@index([tagId])
+}
+
+// ─── GraphRAG: 지역 계층 ───
+model Region {
+  id       String   @id @default(cuid())
+  name     String   // "충남 아산"
+  slug     String   @unique
+  level    Int      // 1: 시도, 2: 시군구, 3: 읍면동
+  parentId String?
+  parent   Region?  @relation("RegionHierarchy", fields: [parentId], references: [id])
+  children Region[] @relation("RegionHierarchy")
+
+  properties Property[]
+
+  @@index([parentId])
+}
+
+// ─── GraphRAG: 관광지 ───
+model Attraction {
+  id        String  @id @default(cuid())
+  name      String
+  latitude  Float
+  longitude Float
+  category  String? // 자연 | 문화 | 역사 | 체험
+  createdAt DateTime @default(now())
+
+  properties PropertyAttraction[]
+}
+
+model PropertyAttraction {
+  propertyId   String
+  attractionId String
+  distanceKm   Float
+  travelTime   String? // "차로 15분"
+
+  property   Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  attraction Attraction @relation(fields: [attractionId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, attractionId])
+  @@index([attractionId])
 }
 
 // ─── 크레딧 이력 ───

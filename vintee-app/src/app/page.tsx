@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatRating } from "@/lib/utils/review";
 import { parseJsonArray } from "@/lib/utils/geo";
+import AiSearchBox from "./AiSearchBox";
 
 export const dynamic = "force-dynamic";
 
@@ -152,6 +153,9 @@ export default async function HomePage() {
           <path d="M0,40 C240,80 480,0 720,20 C960,40 1200,80 1440,40 L1440,60 L0,60 Z" />
         </svg>
       </section>
+
+      {/* ─── AI 자연어 검색 (GraphRAG) ─── */}
+      <AiSearchBox />
 
       {/* ─── 지역 큐레이션 ─── */}
       <section className="mx-auto max-w-5xl px-4 py-16">
