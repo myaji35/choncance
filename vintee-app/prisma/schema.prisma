@@ -11,9 +11,12 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  password  String
+  password  String?  // OAuth 사용자는 null
   name      String
   phone     String?
+  image     String?  // 프로필 이미지 (OAuth)
+  provider  String   @default("credentials") // credentials | google | kakao 등
+  providerId String? // OAuth 제공자의 사용자 ID
   role      String   @default("GUEST") // GUEST | HOST | ADMIN
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -22,6 +25,8 @@ model User {
   bookings   Booking[]
   reviews    Review[]
   credits    CreditHistory[]
+
+  @@index([provider, providerId])
 }
 
 // ─── 숙소 ───
