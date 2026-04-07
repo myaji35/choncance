@@ -42,6 +42,17 @@ model Property {
   source        String  @default("direct") // direct | uploaded
   uploadedBy    String? // "System Auto-Collection" 등
 
+  // ─── GEO 최적화 필드 ───
+  checkinTime       String? // "15:00"
+  checkoutTime      String? // "11:00"
+  highlights        String  @default("[]") // JSON: ["논뷰 전망", "바비큐"]
+  nearbyAttractions String  @default("[]") // JSON: [{"name":"현충사","distance":"차로 15분"}]
+  bestSeason        String? // "가을" | "사계절" 등
+  hostIntro         String? // 호스트 자기소개 (E-E-A-T)
+  uniqueExperience  String? // "감귤 따기, 한복 입기"
+  petsAllowed       Boolean @default(false)
+  numberOfRooms     Int     @default(1)
+
   hostId    String
   host      User       @relation(fields: [hostId], references: [id])
   bookings  Booking[]

@@ -22,6 +22,21 @@ const updateSchema = z.object({
   maxGuests: z.number().int().min(1).max(20).optional(),
   phone: z.string().optional(),
   status: z.enum(["draft", "active", "inactive"]).optional(),
+  // GEO
+  checkinTime: z.string().max(10).optional(),
+  checkoutTime: z.string().max(10).optional(),
+  highlights: z.array(z.string().max(50)).max(20).optional(),
+  nearbyAttractions: z
+    .array(z.object({ name: z.string().max(50), distance: z.string().max(50) }))
+    .max(20)
+    .optional(),
+  bestSeason: z.string().max(20).optional(),
+  hostIntro: z.string().max(2000).optional(),
+  uniqueExperience: z.string().max(500).optional(),
+  petsAllowed: z.boolean().optional(),
+  numberOfRooms: z.number().int().min(1).max(99).optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
 });
 
 export async function PUT(
@@ -42,7 +57,15 @@ export async function PUT(
     return Response.json({ error: parsed.error.issues[0]?.message ?? "입력값 오류" }, { status: 400 });
   }
 
-  const updated = await prisma.property.update({ where: { id }, data: parsed.data });
+  const { highlights, nearbyAttractions, ...rest } = parsed.data;
+  const updated = await prisma.property.update({
+    where: { id },
+    data: {
+      ...rest,
+      ...(highlights ? { highlights: JSON.stringify(highlights) } : {}),
+      ...(nearbyAttractions ? { nearbyAttractions: JSON.stringify(nearbyAttractions) } : {}),
+    },
+  });
   return Response.json({ message: "숙소가 수정되었습니다", property: updated });
 }
 

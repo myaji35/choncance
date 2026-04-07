@@ -1,7 +1,60 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { haversineDistance } from "@/lib/utils/geo";
 import { z } from "zod";
+
+export async function GET(request: NextRequest) {
+  const sp = request.nextUrl.searchParams;
+  const lat = sp.get("lat");
+  const lng = sp.get("lng");
+  const radius = sp.get("radius");
+
+  const properties = await prisma.property.findMany({
+    where: { status: "active" },
+    select: {
+      id: true,
+      title: true,
+      location: true,
+      address: true,
+      latitude: true,
+      longitude: true,
+      pricePerNight: true,
+      maxGuests: true,
+      thumbnailUrl: true,
+    },
+  });
+
+  // 위치 기반 필터링
+  if (lat && lng && radius) {
+    const latNum = Number(lat);
+    const lngNum = Number(lng);
+    const radiusNum = Number(radius);
+    if (
+      Number.isFinite(latNum) &&
+      Number.isFinite(lngNum) &&
+      Number.isFinite(radiusNum) &&
+      radiusNum > 0
+    ) {
+      const filtered = properties
+        .filter((p) => p.latitude !== null && p.longitude !== null)
+        .map((p) => ({
+          ...p,
+          distanceKm: haversineDistance(latNum, lngNum, p.latitude!, p.longitude!),
+        }))
+        .filter((p) => p.distanceKm <= radiusNum)
+        .sort((a, b) => a.distanceKm - b.distanceKm);
+
+      return Response.json({
+        properties: filtered,
+        center: { lat: latNum, lng: lngNum },
+        radius: radiusNum,
+      });
+    }
+  }
+
+  return Response.json({ properties });
+}
 
 const propertySchema = z.object({
   title: z.string().min(2, "숙소명은 2자 이상이어야 합니다").max(100),
@@ -12,6 +65,21 @@ const propertySchema = z.object({
   maxGuests: z.number().int().min(1).max(20).default(4),
   phone: z.string().optional(),
   status: z.enum(["draft", "active"]).default("draft"),
+  // GEO 필드
+  checkinTime: z.string().max(10).optional(),
+  checkoutTime: z.string().max(10).optional(),
+  highlights: z.array(z.string().max(50)).max(20).optional(),
+  nearbyAttractions: z
+    .array(z.object({ name: z.string().max(50), distance: z.string().max(50) }))
+    .max(20)
+    .optional(),
+  bestSeason: z.string().max(20).optional(),
+  hostIntro: z.string().max(2000).optional(),
+  uniqueExperience: z.string().max(500).optional(),
+  petsAllowed: z.boolean().optional(),
+  numberOfRooms: z.number().int().min(1).max(99).optional(),
+  latitude: z.number().min(-90).max(90).optional(),
+  longitude: z.number().min(-180).max(180).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -29,8 +97,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const { highlights, nearbyAttractions, ...rest } = parsed.data;
   const property = await prisma.property.create({
-    data: { ...parsed.data, hostId: user.id },
+    data: {
+      ...rest,
+      hostId: user.id,
+      ...(highlights ? { highlights: JSON.stringify(highlights) } : {}),
+      ...(nearbyAttractions ? { nearbyAttractions: JSON.stringify(nearbyAttractions) } : {}),
+    },
   });
 
   return Response.json(

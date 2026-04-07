@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
+import GeoFieldsSection, {
+  emptyGeoFields,
+  geoFieldsToPayload,
+  type GeoFieldsValue,
+} from "@/components/host/GeoFieldsSection";
 
 export default function NewPropertyPage() {
   const router = useRouter();
@@ -19,6 +24,7 @@ export default function NewPropertyPage() {
     phone: "",
     status: "active" as "draft" | "active",
   });
+  const [geo, setGeo] = useState<GeoFieldsValue>(emptyGeoFields);
 
   const update = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -35,6 +41,7 @@ export default function NewPropertyPage() {
         ...form,
         pricePerNight: form.pricePerNight ? Number(form.pricePerNight) : undefined,
         maxGuests: Number(form.maxGuests),
+        ...geoFieldsToPayload(geo),
       }),
     });
 
@@ -149,6 +156,8 @@ export default function NewPropertyPage() {
             <option value="draft">임시 저장</option>
           </select>
         </div>
+
+        <GeoFieldsSection value={geo} onChange={setGeo} />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 

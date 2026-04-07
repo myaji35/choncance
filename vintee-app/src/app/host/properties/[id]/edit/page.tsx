@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
+import GeoFieldsSection, {
+  emptyGeoFields,
+  geoFieldsToPayload,
+  type GeoFieldsValue,
+  type NearbyAttractionInput,
+} from "@/components/host/GeoFieldsSection";
+import { parseJsonArray } from "@/lib/utils/geo";
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -17,6 +24,7 @@ export default function EditPropertyPage() {
     title: "", description: "", location: "", address: "",
     pricePerNight: "", maxGuests: "4", phone: "", status: "active",
   });
+  const [geo, setGeo] = useState<GeoFieldsValue>(emptyGeoFields);
 
   useEffect(() => {
     fetch(`/api/properties/${propertyId}`)
@@ -32,6 +40,17 @@ export default function EditPropertyPage() {
           maxGuests: p.maxGuests?.toString() || "4",
           phone: p.phone || "",
           status: p.status || "active",
+        });
+        setGeo({
+          checkinTime: p.checkinTime || "",
+          checkoutTime: p.checkoutTime || "",
+          highlights: parseJsonArray<string>(p.highlights),
+          nearbyAttractions: parseJsonArray<NearbyAttractionInput>(p.nearbyAttractions),
+          bestSeason: p.bestSeason || "",
+          hostIntro: p.hostIntro || "",
+          uniqueExperience: p.uniqueExperience || "",
+          petsAllowed: !!p.petsAllowed,
+          numberOfRooms: (p.numberOfRooms ?? 1).toString(),
         });
         setLoading(false);
       })
@@ -52,6 +71,7 @@ export default function EditPropertyPage() {
         ...form,
         pricePerNight: form.pricePerNight ? Number(form.pricePerNight) : undefined,
         maxGuests: Number(form.maxGuests),
+        ...geoFieldsToPayload(geo),
       }),
     });
 
@@ -128,6 +148,8 @@ export default function EditPropertyPage() {
             <option value="inactive">비활성</option>
           </select>
         </div>
+
+        <GeoFieldsSection value={geo} onChange={setGeo} />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 

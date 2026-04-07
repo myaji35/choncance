@@ -70,6 +70,9 @@ export default async function HostDashboardPage() {
             <Link href="/host/reviews" className="text-sm text-[#00A1E0] hover:underline">
               리뷰 관리
             </Link>
+            <Link href="/host/geo" className="text-sm text-[#00A1E0] hover:underline">
+              GEO 점수
+            </Link>
           </div>
         </div>
 
