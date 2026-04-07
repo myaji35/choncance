@@ -65,8 +65,12 @@ export default async function PropertiesPage({
   });
 
   return (
+    <div className="min-h-screen bg-[#FAF8F5]">
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="text-xl font-bold text-[#16325C]">숙소 찾기</h1>
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#00A1E0]">
+        Find Your Country Stay
+      </p>
+      <h1 className="mt-1 text-2xl font-bold text-[#16325C]">숙소 찾기</h1>
 
       {/* 검색/필터 */}
       <SearchFilter
@@ -123,18 +127,16 @@ export default async function PropertiesPage({
                 href={`/property/${p.id}`}
                 className="group overflow-hidden rounded-lg border border-gray-200 bg-white transition hover:shadow-md"
               >
-                <div className="aspect-[4/3] bg-gray-100">
-                  {p.thumbnailUrl ? (
-                    <img src={p.thumbnailUrl} alt={p.title} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-gray-300">
-                      <svg width={48} height={48} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <polyline points="21 15 16 10 5 21" />
-                      </svg>
-                    </div>
-                  )}
+                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.thumbnailUrl || `https://picsum.photos/seed/${p.id}/600/450`}
+                    alt={p.title}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#16325C] shadow-sm backdrop-blur">
+                    {p.location}
+                  </div>
                 </div>
                 <div className="p-4">
                   <h3 className="font-bold text-gray-900 group-hover:text-[#00A1E0]">{p.title}</h3>
@@ -159,6 +161,7 @@ export default async function PropertiesPage({
           })}
         </div>
       )}
+    </div>
     </div>
   );
 }
