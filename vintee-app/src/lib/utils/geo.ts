@@ -3,6 +3,8 @@
 export interface NearbyAttraction {
   name: string;
   distance: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface Faq {

@@ -27,7 +27,14 @@ const updateSchema = z.object({
   checkoutTime: z.string().max(10).optional(),
   highlights: z.array(z.string().max(50)).max(20).optional(),
   nearbyAttractions: z
-    .array(z.object({ name: z.string().max(50), distance: z.string().max(50) }))
+    .array(
+      z.object({
+        name: z.string().max(50),
+        distance: z.string().max(50),
+        latitude: z.number().min(-90).max(90).optional(),
+        longitude: z.number().min(-180).max(180).optional(),
+      })
+    )
     .max(20)
     .optional(),
   bestSeason: z.string().max(20).optional(),

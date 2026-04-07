@@ -3,6 +3,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatRating } from "@/lib/utils/review";
 import SearchFilter from "./SearchFilter";
+import ViewToggle from "./ViewToggle";
+import PropertiesMap from "@/components/map/PropertiesMap";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +24,7 @@ export default async function PropertiesPage({
   const minPrice = sp.minPrice ? Number(sp.minPrice) : undefined;
   const maxPrice = sp.maxPrice ? Number(sp.maxPrice) : undefined;
   const guests = sp.guests ? Number(sp.guests) : undefined;
+  const view: "list" | "map" = sp.view === "map" ? "map" : "list";
 
   // Prisma where 조건 조합
   const where: Record<string, unknown> = { status: "active" };
@@ -71,10 +74,13 @@ export default async function PropertiesPage({
         initialValues={{ q, location, minPrice: sp.minPrice || "", maxPrice: sp.maxPrice || "", guests: sp.guests || "" }}
       />
 
-      <p className="mt-4 text-sm text-gray-500">
-        {properties.length}개의 숙소
-        {q && <span> · &quot;{q}&quot; 검색 결과</span>}
-      </p>
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-sm text-gray-500">
+          {properties.length}개의 숙소
+          {q && <span> · &quot;{q}&quot; 검색 결과</span>}
+        </p>
+        <ViewToggle view={view} />
+      </div>
 
       {properties.length === 0 ? (
         <div className="mt-8 text-center">
@@ -82,6 +88,26 @@ export default async function PropertiesPage({
           <Link href="/properties" className="mt-2 inline-block text-sm text-[#00A1E0] hover:underline">
             전체 숙소 보기
           </Link>
+        </div>
+      ) : view === "map" ? (
+        <div className="mt-4">
+          <PropertiesMap
+            properties={properties.map((p) => {
+              const avg =
+                p.reviews.length > 0
+                  ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length
+                  : 0;
+              return {
+                id: p.id,
+                title: p.title,
+                latitude: p.latitude,
+                longitude: p.longitude,
+                pricePerNight: p.pricePerNight,
+                location: p.location,
+                avgRating: avg,
+              };
+            })}
+          />
         </div>
       ) : (
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

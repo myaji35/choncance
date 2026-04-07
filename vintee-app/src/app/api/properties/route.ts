@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const lat = sp.get("lat");
   const lng = sp.get("lng");
   const radius = sp.get("radius");
+  const bounds = sp.get("bounds"); // "swLat,swLng,neLat,neLng"
 
   const properties = await prisma.property.findMany({
     where: { status: "active" },
@@ -25,7 +26,28 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  // 위치 기반 필터링
+  // 지도 영역(bounds) 기반 필터링
+  if (bounds) {
+    const parts = bounds.split(",").map(Number);
+    if (parts.length === 4 && parts.every((n) => Number.isFinite(n))) {
+      const [swLat, swLng, neLat, neLng] = parts;
+      const filtered = properties.filter(
+        (p) =>
+          p.latitude !== null &&
+          p.longitude !== null &&
+          p.latitude >= swLat &&
+          p.latitude <= neLat &&
+          p.longitude >= swLng &&
+          p.longitude <= neLng
+      );
+      return Response.json({
+        properties: filtered,
+        bounds: { swLat, swLng, neLat, neLng },
+      });
+    }
+  }
+
+  // 반경(radius) 기반 필터링
   if (lat && lng && radius) {
     const latNum = Number(lat);
     const lngNum = Number(lng);
@@ -70,7 +92,14 @@ const propertySchema = z.object({
   checkoutTime: z.string().max(10).optional(),
   highlights: z.array(z.string().max(50)).max(20).optional(),
   nearbyAttractions: z
-    .array(z.object({ name: z.string().max(50), distance: z.string().max(50) }))
+    .array(
+      z.object({
+        name: z.string().max(50),
+        distance: z.string().max(50),
+        latitude: z.number().min(-90).max(90).optional(),
+        longitude: z.number().min(-180).max(180).optional(),
+      })
+    )
     .max(20)
     .optional(),
   bestSeason: z.string().max(20).optional(),

@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 interface NearbyAttraction {
   name: string;
   distance: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface PropertyMapProps {
@@ -14,14 +16,42 @@ interface PropertyMapProps {
   nearbyAttractions?: NearbyAttraction[];
 }
 
+interface KakaoLatLngBounds {
+  extend: (latlng: unknown) => void;
+}
+
 declare global {
   interface Window {
     kakao?: {
       maps: {
         load: (cb: () => void) => void;
-        Map: new (container: HTMLElement, options: { center: unknown; level: number }) => unknown;
+        Map: new (
+          container: HTMLElement,
+          options: { center: unknown; level: number }
+        ) => {
+          setBounds: (bounds: KakaoLatLngBounds) => void;
+        };
         LatLng: new (lat: number, lng: number) => unknown;
-        Marker: new (options: { position: unknown; map?: unknown }) => unknown;
+        LatLngBounds: new () => KakaoLatLngBounds;
+        Marker: new (options: {
+          position: unknown;
+          map?: unknown;
+          image?: unknown;
+          title?: string;
+        }) => { setMap: (map: unknown) => void };
+        MarkerImage: new (
+          src: string,
+          size: unknown,
+          options?: { offset?: unknown }
+        ) => unknown;
+        Size: new (w: number, h: number) => unknown;
+        Point: new (x: number, y: number) => unknown;
+        InfoWindow: new (options: { content: string }) => {
+          open: (map: unknown, marker: unknown) => void;
+        };
+        event: {
+          addListener: (target: unknown, type: string, cb: () => void) => void;
+        };
       };
     };
   }
@@ -65,16 +95,60 @@ export default function PropertyMap({
     loadKakao()
       .then(() => {
         if (cancelled || !containerRef.current || !window.kakao) return;
-        const { Map, LatLng, Marker } = window.kakao.maps;
-        const center = new LatLng(latitude, longitude);
-        const map = new Map(containerRef.current, { center, level: 5 });
-        new Marker({ position: center, map });
+        const maps = window.kakao.maps;
+        const center = new maps.LatLng(latitude, longitude);
+        const map = new maps.Map(containerRef.current, { center, level: 6 });
+
+        // 메인 마커 (숙소)
+        const mainMarker = new maps.Marker({ position: center, map, title });
+        new maps.InfoWindow({
+          content: `<div style="padding:6px 10px;font-size:12px;font-weight:600;color:#16325C;">${title}</div>`,
+        }).open(map, mainMarker);
+
+        // 보조 마커 (주변 관광지) — 좌표 있는 것만
+        const attractionsWithCoords = nearbyAttractions.filter(
+          (a) => a.latitude !== undefined && a.longitude !== undefined
+        );
+
+        if (attractionsWithCoords.length > 0) {
+          // 보조 마커 이미지 (주황색 작은 원)
+          const iconSvg = `data:image/svg+xml;utf8,${encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#F59E0B" stroke="white" stroke-width="2"/></svg>'
+          )}`;
+          const markerImage = new maps.MarkerImage(
+            iconSvg,
+            new maps.Size(24, 24),
+            { offset: new maps.Point(12, 12) }
+          );
+
+          const bounds = new maps.LatLngBounds();
+          bounds.extend(center);
+
+          attractionsWithCoords.forEach((a) => {
+            const pos = new maps.LatLng(a.latitude!, a.longitude!);
+            const marker = new maps.Marker({
+              position: pos,
+              map,
+              image: markerImage,
+              title: a.name,
+            });
+            const infoWindow = new maps.InfoWindow({
+              content: `<div style="padding:6px 10px;font-size:12px;color:#16325C;"><strong>${a.name}</strong><br/><span style="color:#6B7280">${a.distance}</span></div>`,
+            });
+            maps.event.addListener(marker, "click", () => {
+              infoWindow.open(map, marker);
+            });
+            bounds.extend(pos);
+          });
+
+          map.setBounds(bounds);
+        }
       })
       .catch((e: Error) => setError(e.message));
     return () => {
       cancelled = true;
     };
-  }, [latitude, longitude]);
+  }, [latitude, longitude, title, nearbyAttractions]);
 
   const directionUrl = `https://map.kakao.com/link/to/${encodeURIComponent(title)},${latitude},${longitude}`;
 

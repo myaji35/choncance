@@ -5,6 +5,8 @@ import { useState } from "react";
 export interface NearbyAttractionInput {
   name: string;
   distance: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface GeoFieldsValue {
@@ -30,6 +32,8 @@ export default function GeoFieldsSection({ value, onChange }: GeoFieldsSectionPr
   const [highlightInput, setHighlightInput] = useState("");
   const [attractionName, setAttractionName] = useState("");
   const [attractionDistance, setAttractionDistance] = useState("");
+  const [attractionLat, setAttractionLat] = useState("");
+  const [attractionLng, setAttractionLng] = useState("");
 
   const update = <K extends keyof GeoFieldsValue>(key: K, v: GeoFieldsValue[K]) =>
     onChange({ ...value, [key]: v });
@@ -51,9 +55,18 @@ export default function GeoFieldsSection({ value, onChange }: GeoFieldsSectionPr
     const n = attractionName.trim();
     const d = attractionDistance.trim();
     if (!n || !d || value.nearbyAttractions.length >= 20) return;
-    update("nearbyAttractions", [...value.nearbyAttractions, { name: n, distance: d }]);
+    const latNum = attractionLat ? Number(attractionLat) : NaN;
+    const lngNum = attractionLng ? Number(attractionLng) : NaN;
+    const attraction: NearbyAttractionInput = { name: n, distance: d };
+    if (Number.isFinite(latNum) && Number.isFinite(lngNum)) {
+      attraction.latitude = latNum;
+      attraction.longitude = lngNum;
+    }
+    update("nearbyAttractions", [...value.nearbyAttractions, attraction]);
     setAttractionName("");
     setAttractionDistance("");
+    setAttractionLat("");
+    setAttractionLng("");
   };
 
   const removeAttraction = (idx: number) =>
@@ -140,28 +153,48 @@ export default function GeoFieldsSection({ value, onChange }: GeoFieldsSectionPr
 
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5">주변 관광지</label>
-        <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
-          <input
-            type="text"
-            value={attractionName}
-            onChange={(e) => setAttractionName(e.target.value)}
-            placeholder="이름 (예: 현충사)"
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
-          />
-          <input
-            type="text"
-            value={attractionDistance}
-            onChange={(e) => setAttractionDistance(e.target.value)}
-            placeholder="거리 (예: 차로 15분)"
-            className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
-          />
-          <button
-            type="button"
-            onClick={addAttraction}
-            className="rounded-lg border border-[#00A1E0] px-3 py-2.5 text-sm font-semibold text-[#00A1E0] hover:bg-[#00A1E0] hover:text-white"
-          >
-            추가
-          </button>
+        <div className="space-y-2">
+          <div className="grid grid-cols-[1fr_1fr_auto] gap-2">
+            <input
+              type="text"
+              value={attractionName}
+              onChange={(e) => setAttractionName(e.target.value)}
+              placeholder="이름 (예: 현충사)"
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
+            />
+            <input
+              type="text"
+              value={attractionDistance}
+              onChange={(e) => setAttractionDistance(e.target.value)}
+              placeholder="거리 (예: 차로 15분)"
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
+            />
+            <button
+              type="button"
+              onClick={addAttraction}
+              className="rounded-lg border border-[#00A1E0] px-3 py-2.5 text-sm font-semibold text-[#00A1E0] hover:bg-[#00A1E0] hover:text-white"
+            >
+              추가
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              type="number"
+              step="0.0001"
+              value={attractionLat}
+              onChange={(e) => setAttractionLat(e.target.value)}
+              placeholder="위도 (선택)"
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
+            />
+            <input
+              type="number"
+              step="0.0001"
+              value={attractionLng}
+              onChange={(e) => setAttractionLng(e.target.value)}
+              placeholder="경도 (선택, 지도 마커용)"
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
+            />
+          </div>
         </div>
         {value.nearbyAttractions.length > 0 && (
           <ul className="mt-2 space-y-1">
@@ -172,6 +205,11 @@ export default function GeoFieldsSection({ value, onChange }: GeoFieldsSectionPr
               >
                 <span>
                   {a.name} <span className="text-gray-500">({a.distance})</span>
+                  {a.latitude !== undefined && a.longitude !== undefined && (
+                    <span className="ml-1 text-xs text-gray-400">
+                      · {a.latitude.toFixed(3)}, {a.longitude.toFixed(3)}
+                    </span>
+                  )}
                 </span>
                 <button
                   type="button"
