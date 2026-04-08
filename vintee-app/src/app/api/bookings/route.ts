@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { sendEmail, tplNewBookingToHost } from "@/lib/email";
 import { z } from "zod";
 
 const bookingSchema = z.object({
@@ -46,8 +47,51 @@ export async function POST(request: NextRequest) {
 
   const checkInDate = new Date(checkIn);
   const checkOutDate = new Date(checkOut);
+  if (Number.isNaN(checkInDate.getTime()) || Number.isNaN(checkOutDate.getTime())) {
+    return Response.json({ error: "날짜 형식이 올바르지 않습니다" }, { status: 400 });
+  }
   if (checkInDate >= checkOutDate) {
     return Response.json({ error: "체크아웃은 체크인 이후여야 합니다" }, { status: 400 });
+  }
+
+  // ISS-009: 과거 날짜 거부 (오늘 0시 기준)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (checkInDate < today) {
+    return Response.json(
+      { error: "과거 날짜는 예약할 수 없습니다" },
+      { status: 400 }
+    );
+  }
+
+  // ISS-009: 너무 먼 미래 거부 (24개월)
+  const maxFuture = new Date(today);
+  maxFuture.setMonth(maxFuture.getMonth() + 24);
+  if (checkInDate > maxFuture) {
+    return Response.json(
+      { error: "예약은 최대 24개월 이내만 가능합니다" },
+      { status: 400 }
+    );
+  }
+
+  // ISS-010: 동일 숙소 날짜 겹침 검증 (PENDING/CONFIRMED 상태만)
+  // 겹침 조건: NOT (existing.checkOut <= new.checkIn OR existing.checkIn >= new.checkOut)
+  const overlapping = await prisma.booking.findFirst({
+    where: {
+      propertyId,
+      status: { in: ["PENDING", "CONFIRMED"] },
+      AND: [
+        { checkIn: { lt: checkOutDate } },
+        { checkOut: { gt: checkInDate } },
+      ],
+    },
+    select: { id: true, checkIn: true, checkOut: true },
+  });
+  if (overlapping) {
+    return Response.json(
+      { error: "선택하신 날짜는 이미 예약되어 있습니다" },
+      { status: 409 }
+    );
   }
 
   const nights = Math.ceil(
@@ -67,6 +111,28 @@ export async function POST(request: NextRequest) {
       status: "PENDING",
     },
   });
+
+  // ISS-023: 호스트에게 새 예약 알림 (실패해도 booking 생성은 성공으로 간주)
+  try {
+    const host = await prisma.user.findUnique({
+      where: { id: property.hostId },
+      select: { email: true, name: true },
+    });
+    if (host?.email) {
+      const tpl = tplNewBookingToHost({
+        hostName: host.name ?? "호스트",
+        guestName: user.name ?? "게스트",
+        propertyTitle: property.title,
+        checkIn: checkInDate.toISOString().slice(0, 10),
+        checkOut: checkOutDate.toISOString().slice(0, 10),
+        guestCount,
+        bookingId: booking.id,
+      });
+      await sendEmail({ to: host.email, subject: tpl.subject, html: tpl.html });
+    }
+  } catch (err) {
+    console.error("[booking] host notification failed:", err);
+  }
 
   return Response.json(
     { message: "예약이 완료되었습니다", booking },
