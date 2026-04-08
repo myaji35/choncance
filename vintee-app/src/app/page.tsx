@@ -77,40 +77,39 @@ export default async function HomePage() {
             한국의 사계절이 머무는 숙소를 VINTEE가 엄선했어요.
           </p>
 
-          {/* 검색바 */}
-          <form
-            action="/properties"
-            method="get"
-            className="mt-8 flex flex-col gap-2 rounded-2xl bg-white/95 p-3 shadow-2xl backdrop-blur sm:flex-row sm:items-center"
+          {/* AI 자연어 검색 — 히어로 직속 진입점 (0.5초 룰) */}
+          <a
+            href="#ai-search"
+            className="mt-8 flex items-center gap-3 rounded-2xl bg-white/95 p-4 shadow-2xl backdrop-blur transition hover:shadow-[0_20px_60px_rgba(74,103,65,0.35)] sm:p-5"
           >
-            <div className="flex flex-1 items-center gap-2 px-3">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#4A6741] text-white shadow-md">
               <svg
                 width={18}
                 height={18}
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#16325C"
-                strokeWidth={2}
+                stroke="currentColor"
+                strokeWidth={2.5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
               </svg>
-              <input
-                type="text"
-                name="q"
-                placeholder="지역, 테마, 숙소명 (예: 아산 한옥)"
-                className="w-full bg-transparent py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
-              />
+            </span>
+            <div className="flex-1 text-left">
+              <div className="text-xs font-semibold uppercase tracking-widest text-[#4A6741]">
+                VINTEE AI · GraphRAG
+              </div>
+              <div className="mt-0.5 text-sm font-bold text-[#1F2937] sm:text-base">
+                &ldquo;가족이랑 가을에 조용한 한옥&rdquo; 처럼 말로 찾아보세요
+              </div>
             </div>
-            <button
-              type="submit"
-              className="rounded-xl bg-[#00A1E0] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0090C7]"
-            >
-              촌캉스 찾기
-            </button>
-          </form>
+            <span className="hidden shrink-0 rounded-xl bg-[#D97B3F] px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#C26A30] sm:inline-flex">
+              AI에게 묻기 →
+            </span>
+          </a>
 
           {/* 테마 칩 */}
           <div className="mt-5 flex flex-wrap gap-2">
@@ -166,7 +165,10 @@ export default async function HomePage() {
             </p>
             <h2 className="mt-1 text-2xl font-bold text-[#16325C]">권역별 촌캉스</h2>
           </div>
-          <Link href="/properties" className="text-sm text-[#00A1E0] hover:underline">
+          <Link
+            href="/properties"
+            className="rounded-full border border-[#4A6741] bg-white px-4 py-1.5 text-sm font-semibold text-[#4A6741] transition hover:bg-[#4A6741] hover:text-white"
+          >
             전체 지역 →
           </Link>
         </div>
@@ -204,7 +206,10 @@ export default async function HomePage() {
             </p>
             <h2 className="mt-1 text-2xl font-bold text-[#16325C]">이번 주 추천 숙소</h2>
           </div>
-          <Link href="/properties" className="text-sm text-[#00A1E0] hover:underline">
+          <Link
+            href="/properties"
+            className="rounded-full border border-[#4A6741] bg-white px-4 py-1.5 text-sm font-semibold text-[#4A6741] transition hover:bg-[#4A6741] hover:text-white"
+          >
             전체 보기 →
           </Link>
         </div>
@@ -279,6 +284,11 @@ export default async function HomePage() {
                     <p className="mt-2 text-xs text-gray-400">
                       호스트 {p.host.name} · 최대 {p.maxGuests}명
                     </p>
+                    {p.hostIntro && (
+                      <p className="mt-2 line-clamp-2 border-l-2 border-[#4A6741]/40 pl-2 text-xs italic text-gray-600">
+                        &ldquo;{p.hostIntro}&rdquo;
+                      </p>
+                    )}
                   </div>
                 </Link>
               );

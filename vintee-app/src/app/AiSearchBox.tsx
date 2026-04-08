@@ -62,10 +62,11 @@ export default function AiSearchBox() {
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-16">
-      <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm md:p-10">
+    <section id="ai-search" className="scroll-mt-20 bg-[#F5F1E8] py-16">
+      <div className="mx-auto max-w-5xl px-4">
+      <div className="rounded-3xl border border-[#4A6741]/15 bg-white p-6 shadow-sm md:p-10">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#00A1E0] to-[#16325C] text-white">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#4A6741] text-white">
             <svg
               width={16}
               height={16}
@@ -81,16 +82,16 @@ export default function AiSearchBox() {
               <path d="M2 12l10 5 10-5" />
             </svg>
           </span>
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#00A1E0]">
-            AI Contextual Search
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#4A6741]">
+            VINTEE AI · GraphRAG
           </p>
         </div>
 
-        <h2 className="mt-3 text-2xl font-bold text-[#16325C] md:text-3xl">
-          뭘 원하세요? 자연어로 물어보세요
+        <h2 className="mt-3 text-2xl font-bold text-[#1F2937] md:text-3xl">
+          느낌만 말해도, 딱 맞는 촌캉스를 찾아드려요
         </h2>
         <p className="mt-2 text-sm text-gray-600">
-          GraphRAG 엔진이 숙소 특징·주변 관광지·리뷰 감성을 종합해 맞춤 추천합니다.
+          숙소 특징·주변 관광지·다녀온 분들의 후기까지 종합해, 진짜 어울리는 곳만 골라드립니다.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6">
@@ -100,12 +101,12 @@ export default function AiSearchBox() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="예: 가족이랑 가을에 조용한 한옥, 별 보고 싶어"
-              className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]"
+              className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-[#4A6741] focus:outline-none focus:ring-1 focus:ring-[#4A6741]"
             />
             <button
               type="submit"
               disabled={loading || query.trim().length < 2}
-              className="rounded-xl bg-[#00A1E0] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0090C7] disabled:opacity-50"
+              className="rounded-xl bg-[#D97B3F] px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#C26A30] disabled:opacity-50"
             >
               {loading ? "AI 탐색 중..." : "AI에게 추천받기"}
             </button>
@@ -122,7 +123,7 @@ export default function AiSearchBox() {
                 setQuery(q);
                 search(q);
               }}
-              className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-600 hover:border-[#00A1E0] hover:text-[#00A1E0]"
+              className="rounded-full border border-[#4A6741]/30 bg-[#F5F1E8] px-3 py-1.5 text-xs text-[#4A6741] hover:border-[#4A6741] hover:bg-[#4A6741] hover:text-white"
             >
               {q}
             </button>
@@ -159,7 +160,7 @@ export default function AiSearchBox() {
               <Link
                 key={r.propertyId}
                 href={`/property/${r.propertyId}`}
-                className="group block rounded-2xl border border-gray-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#00A1E0] hover:shadow-lg"
+                className="group block rounded-2xl border border-gray-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#4A6741] hover:shadow-lg"
               >
                 <div className="flex gap-4">
                   <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:h-28 sm:w-40">
@@ -169,19 +170,19 @@ export default function AiSearchBox() {
                       alt={r.title}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute left-2 top-2 rounded-full bg-[#16325C] px-2 py-0.5 text-xs font-bold text-white">
+                    <div className="absolute left-2 top-2 rounded-full bg-[#4A6741] px-2 py-0.5 text-xs font-bold text-white">
                       #{idx + 1}
                     </div>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="font-bold text-gray-900 group-hover:text-[#00A1E0]">
+                        <h3 className="font-bold text-gray-900 group-hover:text-[#4A6741]">
                           {r.title}
                         </h3>
                         <p className="mt-0.5 text-xs text-gray-500">{r.location}</p>
                       </div>
-                      <div className="flex items-center gap-1 rounded-full bg-gradient-to-r from-[#00A1E0] to-[#16325C] px-2.5 py-1 text-xs font-bold text-white">
+                      <div className="flex items-center gap-1 rounded-full bg-[#4A6741] px-2.5 py-1 text-xs font-bold text-white">
                         <svg
                           width={12}
                           height={12}
@@ -204,7 +205,7 @@ export default function AiSearchBox() {
                         {r.matchedTags.slice(0, 6).map((t) => (
                           <span
                             key={t.name}
-                            className="rounded-full bg-[#F3C969]/20 px-2 py-0.5 text-xs font-medium text-[#16325C]"
+                            className="rounded-full bg-[#4A6741] px-2 py-0.5 text-xs font-medium text-white"
                           >
                             #{t.name}
                           </span>
@@ -212,9 +213,9 @@ export default function AiSearchBox() {
                       </div>
                     )}
 
-                    {/* AI 추천 이유 */}
-                    <div className="mt-2 rounded-lg bg-gray-50 p-2.5 text-xs leading-relaxed text-gray-700">
-                      <span className="font-semibold text-[#00A1E0]">AI: </span>
+                    {/* VINTEE의 추천 이유 */}
+                    <div className="mt-2 rounded-lg border-l-2 border-[#4A6741] bg-[#F5F1E8] p-2.5 text-xs leading-relaxed text-gray-700">
+                      <span className="font-semibold text-[#4A6741]">VINTEE의 추천 이유 · </span>
                       {r.reasoning}
                     </div>
 
@@ -230,6 +231,7 @@ export default function AiSearchBox() {
             ))}
           </div>
         )}
+      </div>
       </div>
     </section>
   );

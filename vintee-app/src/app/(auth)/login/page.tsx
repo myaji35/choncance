@@ -88,16 +88,16 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-[#00A1E0] py-2.5 text-sm font-bold text-white hover:bg-[#0090C7] disabled:opacity-50"
+            className="w-full rounded-lg bg-[#4A6741] py-2.5 text-sm font-bold text-white hover:bg-[#3a5234] disabled:opacity-50"
           >
-            {loading ? "로그인 중..." : "로그인"}
+            {loading ? "로그인 중..." : "이메일로 로그인"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          계정이 없으신가요?{" "}
-          <Link href="/register" className="font-medium text-[#00A1E0] hover:underline">
-            회원가입
+          아직 VINTEE 회원이 아니세요?{" "}
+          <Link href="/register" className="font-medium text-[#4A6741] hover:underline">
+            같이 떠나볼래요
           </Link>
         </p>
       </div>

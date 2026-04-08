@@ -86,6 +86,37 @@ export default async function PropertiesPage({
         <ViewToggle view={view} />
       </div>
 
+      {/* ISS-022: AI 재정렬 진입 — 검색어 있을 때만 노출 */}
+      {q && (
+        <div className="mt-3 rounded-2xl border border-[#4A6741]/20 bg-[#F5F1E8] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4A6741] text-white">
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+              </span>
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-widest text-[#4A6741]">
+                  VINTEE AI · GraphRAG
+                </div>
+                <div className="mt-0.5 text-sm font-bold text-[#1F2937]">
+                  &ldquo;{q}&rdquo;에 진짜 어울리는 곳은 어디일까요?
+                </div>
+              </div>
+            </div>
+            <Link
+              href={`/#ai-search`}
+              className="hidden shrink-0 rounded-xl bg-[#D97B3F] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#C26A30] sm:inline-flex"
+            >
+              AI에게 묻기 →
+            </Link>
+          </div>
+        </div>
+      )}
+
       {properties.length === 0 ? (
         <div className="mt-8 text-center">
           <p className="text-gray-400">조건에 맞는 숙소가 없습니다</p>

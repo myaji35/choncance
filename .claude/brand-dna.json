@@ -1,0 +1,97 @@
+{
+  "_comment": "VINTEE Brand DNA — brand-guardian가 모든 UI 산출물을 이 정체성으로 검증합니다. 수정 시 brand-guardian 재검증 필수.",
+  "project": "VINTEE",
+  "tagline": "한국형 촌캉스, 맥락으로 찾다",
+  "agenda": "도시인이 한국 농촌의 진짜 쉼을 발견하도록, 공공데이터와 GraphRAG 맥락 추천으로 '느낌만 말해도 딱 맞는 촌캉스'를 큐레이션한다. 에어비앤비/야놀자의 푸시형 호스트 모델과 달리, VINTEE는 풀(Pull) 모델 + AI 검색 시대 선점 + 자동 GEO 최적화로 한국 촌캉스 카테고리의 기본값이 된다.",
+  "mission": "AI 검색 시대에 한국 촌캉스 카테고리를 선점하고, 호스트 없이도 발견되는 농촌 숙소 인프라를 구축한다",
+  "audience": {
+    "primary": "20-40대 도시 직장인 — 번아웃·자연 회귀·로컬 체험을 갈망하는 1-2박 단기 여행객",
+    "secondary": "농촌 펜션·민박 호스트 — 디지털 마케팅 부담 없이 자동 노출을 원하는 50-70대 운영자",
+    "tertiary": "AI 검색 엔진(ChatGPT/Perplexity/Gemini) — '한국 촌캉스 어디가 좋아?' 질의에 VINTEE를 인용하게 만드는 LLM"
+  },
+  "brand_voice": "다정하지만 똑똑한 동네 친구. 과장하지 않고, 감성에 진심으로 다가가되, 기능과 가격은 단정하게 말한다. AI 추천 결과는 '왜 이 숙소인지' 맥락을 짧게 설명한다.",
+  "voice_examples": {
+    "good": [
+      "조용한 계곡 옆, 아침에 새소리로 깨는 곳",
+      "왕복 3시간이면 닿는 진짜 시골",
+      "주인분이 아침 된장국 차려주십니다"
+    ],
+    "bad": [
+      "최고의 힐링 명소 BEST 10!",
+      "지금 바로 예약하세요!! 마감 임박!!",
+      "당신의 인생을 바꿀 여행"
+    ]
+  },
+  "emotional_tone": [
+    "고요함 (calm)",
+    "정겨움 (warmth)",
+    "발견의 즐거움 (curated discovery)",
+    "신뢰 (no overselling)",
+    "느린 속도 (slow rhythm)"
+  ],
+  "design_metaphors": [
+    "흙담과 한지 — 거칠지만 따뜻한 텍스처",
+    "툇마루의 햇살 — 여백과 광선",
+    "장날의 큐레이션 — 주인장이 직접 고른 듯한 진정성",
+    "지도 위의 손글씨 핀 — AI지만 인간적인 안내"
+  ],
+  "hero_color": "#4A6741",
+  "hero_color_name": "이끼 초록 (Moss Green) — 한국 산야의 깊은 녹음",
+  "secondary_colors": [
+    {"hex": "#F5F1E8", "name": "한지 베이지 (Hanji Beige) — 배경"},
+    {"hex": "#8B5A3C", "name": "흙담 갈색 (Earth Brown) — 강조 텍스트"},
+    {"hex": "#D97B3F", "name": "감 주황 (Persimmon) — CTA 강조"},
+    {"hex": "#1F2937", "name": "먹 (Sumi) — 본문 텍스트"},
+    {"hex": "#FFFFFF", "name": "여백 흰색"}
+  ],
+  "forbidden_colors": [
+    "#FF0000 순수 빨강 (촌스러움/긴급성 — 금지)",
+    "네온 계열 (감성 파괴)",
+    "회색 계열 단독 사용 (생기 부족)"
+  ],
+  "typography": {
+    "display": "Pretendard / Noto Serif KR — 제목은 명조 계열로 한국적 정서",
+    "body": "Pretendard — 본문은 고딕으로 가독성",
+    "accent": "손글씨 느낌 폰트는 호스트 인용/리뷰에만 제한적 사용"
+  },
+  "ui_principles": {
+    "layout": "여백 우선. 카드 사이 간격 24px 이상. 모바일 First.",
+    "imagery": "사진은 자연광 위주, 채도 낮춤. 스톡 사진 금지 — 실제 숙소 사진만.",
+    "iconography": "Feather Icons (line, stroke 2px) — SLDS 가이드 준수",
+    "motion": "느린 페이드(300-400ms). 튀는 애니메이션 금지.",
+    "density": "한 화면에 정보 밀도 낮게. 한 화면 = 하나의 결정."
+  },
+  "anti_patterns": [
+    "AI slop: 무의미한 그라데이션, 보라/핑크 글로우, 떠다니는 3D 오브젝트",
+    "쿠팡식 강조: 빨간 배지 도배, 카운트다운, 'BEST'/'HOT' 남발",
+    "야놀자식 자극: 채도 높은 이미지, 큰 할인율 강조",
+    "에어비앤비 따라하기: 동일한 카드 그리드 + 둥근 모서리 일색 (차별점 없음)",
+    "이모지 본문 사용 (제품 텍스트에 이모지 금지 — Feather SVG로 대체)",
+    "추상적 일러스트레이션 (실제 농촌 사진의 진정성 훼손)",
+    "팝업 모달 마케팅 (느린 속도 원칙 위반)",
+    "무한 스크롤 + 추천 도배 (큐레이션 정체성 훼손)"
+  ],
+  "primary_action_per_screen": "MUST_EXIST",
+  "screen_action_examples": {
+    "home": "지역/감성으로 검색 (단일 검색바)",
+    "property_list": "상세 보기 (카드 클릭 = 단일 액션)",
+    "property_detail": "예약 신청 (단일 CTA, 감 주황색)",
+    "ai_search": "자연어 입력 (Hero 검색바)",
+    "host_dashboard": "다음 예약 응답하기"
+  },
+  "user_decision_clarity": "0.5초 룰 — 첫 시선 0.5초 안에 다음 행동(검색/예약/탐색) 식별 가능해야 함. 단일 CTA는 hero_color 또는 감 주황(#D97B3F)으로만.",
+  "differentiation": {
+    "vs_airbnb": "호스트 등록을 기다리지 않는다 — 공공데이터로 먼저 채운다",
+    "vs_yanolja": "할인 경쟁이 아닌 맥락 추천으로 차별화 — 'AI가 골라준 곳'",
+    "vs_지역관광공사": "딱딱한 정보 나열이 아닌 감성 큐레이션 + 실제 예약"
+  },
+  "moat_pillars": [
+    "GEO 자동 지원 (구현 완료)",
+    "GraphRAG 맥락 추천 (구현 중)",
+    "Prospect → Claim 플로우 (계획)"
+  ],
+  "_status": "initialized",
+  "_version": "1.0.0",
+  "_created": "2026-04-08",
+  "_source": "git log + docs/01-plan/features/prospect-graphrag-claim.plan.md + 상용-고도화.plan.md + MEMORY.md"
+}
