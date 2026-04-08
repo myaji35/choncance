@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { sendEmail, tplBookingDecisionToGuest } from "@/lib/email";
+import { cancelTossPayment } from "@/lib/toss";
 import { z } from "zod";
 
 const statusSchema = z.object({
@@ -30,6 +31,11 @@ export async function PATCH(
     include: {
       property: { select: { hostId: true, title: true } },
       user: { select: { email: true, name: true } },
+      payments: {
+        where: { status: "paid" },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
     },
   });
 
@@ -64,9 +70,39 @@ export async function PATCH(
     );
   }
 
+  // ISS-043: CANCELLED 전환 시 기존 Payment 자동 환불
+  let refundInfo: { amount: number } | null = null;
+  if (parsed.data.status === "CANCELLED" && booking.payments.length > 0) {
+    const pay = booking.payments[0];
+    if (pay.providerPaymentKey) {
+      const cancelRes = await cancelTossPayment({
+        paymentKey: pay.providerPaymentKey,
+        cancelReason: isHost ? "호스트 거절" : "게스트 취소",
+      });
+      if (cancelRes.ok) {
+        await prisma.payment.update({
+          where: { id: pay.id },
+          data: {
+            status: "refunded",
+            refundedAt: new Date(),
+            rawResponse: cancelRes.rawResponse ?? pay.rawResponse,
+          },
+        });
+        refundInfo = { amount: pay.amount };
+      } else {
+        console.error("[refund] failed:", cancelRes.error);
+      }
+    }
+  }
+
   const updated = await prisma.booking.update({
     where: { id },
-    data: { status: parsed.data.status },
+    data: {
+      status: parsed.data.status,
+      ...(parsed.data.status === "CANCELLED" && refundInfo
+        ? { paymentStatus: "refunded" }
+        : {}),
+    },
   });
 
   const statusLabels: Record<string, string> = {

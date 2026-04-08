@@ -115,13 +115,39 @@ model Booking {
   totalPrice Int    @default(0)
   message    String? // 호스트에게 전하는 메시지
 
+  // ISS-040: 결제 상태 (unpaid | pending | paid | refunded)
+  paymentStatus  String  @default("unpaid")
+  commissionRate Int     @default(5) // 호스트 수수료율(%), Trial/Starter 기본 5
+
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id])
   review     Review?
+  payments   Payment[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+// ─── 결제 (ISS-040) ───
+model Payment {
+  id                String    @id @default(cuid())
+  bookingId         String
+  booking           Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider          String    // "toss" | "mock"
+  providerPaymentKey String?  // 토스 paymentKey
+  orderId           String    // 주문 번호 (보통 bookingId)
+  amount            Int       // 결제 금액 (원)
+  method            String?   // "CARD" | "TRANSFER" | ...
+  status            String    @default("pending") // pending | paid | failed | refunded
+  paidAt            DateTime?
+  refundedAt        DateTime?
+  rawResponse       String?   // 토스 응답 JSON 원본
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([bookingId])
+  @@index([orderId])
 }
 
 // ─── 리뷰 ───

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { canWriteReview } from "@/lib/utils/review";
 import Link from "next/link";
+import PayButton from "@/components/booking/PayButton";
 
 export default async function BookingDetailPage({
   params,
@@ -50,6 +51,9 @@ export default async function BookingDetailPage({
             {new Date(booking.checkIn).toLocaleDateString("ko-KR")} ~{" "}
             {new Date(booking.checkOut).toLocaleDateString("ko-KR")}
           </p>
+          <p className="mt-1 text-sm font-bold text-[#1F2937]">
+            {booking.totalPrice.toLocaleString()}원
+          </p>
           <span
             className="mt-2 inline-block rounded px-2 py-0.5 text-xs font-bold text-white"
             style={{ background: status.color }}
@@ -57,6 +61,14 @@ export default async function BookingDetailPage({
             {status.label}
           </span>
         </div>
+
+        {/* ISS-041: 결제 */}
+        <PayButton
+          bookingId={id}
+          amount={booking.totalPrice}
+          paymentStatus={booking.paymentStatus}
+          bookingStatus={booking.status}
+        />
 
         {/* 리뷰 작성 버튼 */}
         {showReviewButton && (

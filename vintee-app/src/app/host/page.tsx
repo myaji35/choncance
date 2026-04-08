@@ -115,6 +115,9 @@ export default async function HostDashboardPage() {
             <Link href="/host/insights" className="text-[#4A6741] hover:underline">
               인사이트
             </Link>
+            <Link href="/host/payouts" className="text-[#4A6741] hover:underline">
+              정산
+            </Link>
           </div>
         </div>
 
