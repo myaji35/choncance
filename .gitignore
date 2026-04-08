@@ -21,3 +21,10 @@ vintee-app/src/generated/
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Dev fallback uploads (Vercel Blob 운영 시 대체)
+vintee-app/public/uploads/
+
+# Harness state (개인 워크플로우)
+.bkit/
+.claude/CLAUDE.md.backup
