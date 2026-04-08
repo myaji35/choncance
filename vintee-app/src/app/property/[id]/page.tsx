@@ -5,6 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { maskName } from "@/lib/utils/review";
 import { generateFaqs, parseJsonArray, type NearbyAttraction } from "@/lib/utils/geo";
+import { recordPropertyView } from "@/lib/analytics";
+import { getSimilarProperties } from "@/lib/graph-rag/similar";
+import SimilarProperties from "@/components/property/SimilarProperties";
+import { getTranslatedProperty, SUPPORTED_LANGS, type SupportedLang } from "@/lib/translation";
+import LangSwitcher from "@/components/property/LangSwitcher";
 import ReviewList from "@/components/review/ReviewList";
 import BookingForm from "@/components/booking/BookingForm";
 import PropertyJsonLd from "@/components/seo/PropertyJsonLd";
@@ -47,10 +52,16 @@ export async function generateMetadata({
 
 export default async function PropertyDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ lang?: string }>;
 }) {
   const { id } = await params;
+  const { lang: rawLang } = await searchParams;
+  const lang: SupportedLang = SUPPORTED_LANGS.includes(rawLang as SupportedLang)
+    ? (rawLang as SupportedLang)
+    : "ko";
 
   const property = await prisma.property.findUnique({
     where: { id },
@@ -61,7 +72,10 @@ export default async function PropertyDetailPage({
 
   if (!property) notFound();
 
-  const [reviews, total, agg] = await Promise.all([
+  // ISS-026: 페이지 조회 트래킹 (fire-and-forget, 응답 막지 않음)
+  recordPropertyView({ propertyId: id, source: "page" }).catch(() => {});
+
+  const [reviews, total, agg, similar, translated] = await Promise.all([
     prisma.review.findMany({
       where: { propertyId: id },
       include: { user: { select: { name: true } } },
@@ -73,6 +87,8 @@ export default async function PropertyDetailPage({
       where: { propertyId: id },
       _avg: { rating: true },
     }),
+    getSimilarProperties(id, 4),
+    getTranslatedProperty(id, lang),
   ]);
 
   const reviewData = reviews.map((r) => ({
@@ -130,7 +146,10 @@ export default async function PropertyDetailPage({
         {/* 좌측: 숙소 정보 */}
         <article className="space-y-6">
           <header className="rounded-lg border border-gray-200 bg-white p-6">
-            <h1 className="text-2xl font-bold text-[#16325C]">{property.title}</h1>
+            <div className="mb-3 flex justify-end">
+              <LangSwitcher propertyId={id} current={lang} />
+            </div>
+            <h1 className="text-2xl font-bold text-[#16325C]">{translated.title}</h1>
             <p className="mt-1 text-sm text-gray-500">{property.location}</p>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-700">
               {property.pricePerNight && (
@@ -156,14 +175,14 @@ export default async function PropertyDetailPage({
           </header>
 
           {/* 숙소 소개 */}
-          {property.description && (
+          {translated.description && (
             <section
               aria-label="숙소 소개"
               className="rounded-lg border border-gray-200 bg-white p-6"
             >
               <h2 className="text-lg font-semibold text-[#16325C]">숙소 소개</h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-                {property.description}
+                {translated.description}
               </p>
             </section>
           )}
@@ -230,15 +249,15 @@ export default async function PropertyDetailPage({
           >
             <h2 className="text-lg font-semibold text-[#16325C]">호스트</h2>
             <p className="mt-2 text-sm font-medium text-gray-800">{property.host.name}</p>
-            {property.hostIntro && (
+            {translated.hostIntro && (
               <p className="mt-2 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
-                {property.hostIntro}
+                {translated.hostIntro}
               </p>
             )}
-            {property.uniqueExperience && (
+            {translated.uniqueExperience && (
               <p className="mt-3 text-sm text-gray-700">
                 <span className="font-semibold text-[#16325C]">고유 체험: </span>
-                {property.uniqueExperience}
+                {translated.uniqueExperience}
               </p>
             )}
           </section>
@@ -275,7 +294,7 @@ export default async function PropertyDetailPage({
         </article>
 
         {/* 우측: 예약 폼 */}
-        <aside className="lg:sticky lg:top-20 lg:self-start">
+        <aside className="lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto">
           <BookingForm
             propertyId={id}
             pricePerNight={property.pricePerNight}
@@ -284,6 +303,9 @@ export default async function PropertyDetailPage({
           />
         </aside>
       </div>
+
+      {/* ISS-035: 비슷한 숙소 */}
+      <SimilarProperties propertyId={id} similar={similar} />
     </div>
   );
 }

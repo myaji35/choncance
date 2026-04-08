@@ -9,6 +9,7 @@ import GeoFieldsSection, {
   type GeoFieldsValue,
   type NearbyAttractionInput,
 } from "@/components/host/GeoFieldsSection";
+import ImageUpload from "@/components/host/ImageUpload";
 import { parseJsonArray } from "@/lib/utils/geo";
 
 export default function EditPropertyPage() {
@@ -24,6 +25,7 @@ export default function EditPropertyPage() {
     title: "", description: "", location: "", address: "",
     pricePerNight: "", maxGuests: "4", phone: "", status: "active",
   });
+  const [images, setImages] = useState<string[]>([]);
   const [geo, setGeo] = useState<GeoFieldsValue>(emptyGeoFields);
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function EditPropertyPage() {
           petsAllowed: !!p.petsAllowed,
           numberOfRooms: (p.numberOfRooms ?? 1).toString(),
         });
+        setImages(parseJsonArray<string>(p.images));
         setLoading(false);
       })
       .catch(() => { setError("숙소를 찾을 수 없습니다"); setLoading(false); });
@@ -71,6 +74,8 @@ export default function EditPropertyPage() {
         ...form,
         pricePerNight: form.pricePerNight ? Number(form.pricePerNight) : undefined,
         maxGuests: Number(form.maxGuests),
+        images,
+        thumbnailUrl: images[0] ?? undefined,
         ...geoFieldsToPayload(geo),
       }),
     });
@@ -108,6 +113,8 @@ export default function EditPropertyPage() {
       <h1 className="text-xl font-bold text-[#16325C]">숙소 수정</h1>
 
       <form onSubmit={handleSave} className="mt-6 space-y-4">
+        <ImageUpload value={images} onChange={setImages} />
+
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1.5">숙소명 *</label>
           <input type="text" value={form.title} onChange={(e) => update("title", e.target.value)} required className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-[#00A1E0] focus:outline-none focus:ring-1 focus:ring-[#00A1E0]" />

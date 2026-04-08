@@ -44,6 +44,9 @@ const updateSchema = z.object({
   numberOfRooms: z.number().int().min(1).max(99).optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  // ISS-024
+  images: z.array(z.string().url().or(z.string().startsWith("/uploads/"))).max(20).optional(),
+  thumbnailUrl: z.string().optional(),
 });
 
 export async function PUT(
@@ -64,13 +67,14 @@ export async function PUT(
     return Response.json({ error: parsed.error.issues[0]?.message ?? "입력값 오류" }, { status: 400 });
   }
 
-  const { highlights, nearbyAttractions, ...rest } = parsed.data;
+  const { highlights, nearbyAttractions, images, ...rest } = parsed.data;
   const updated = await prisma.property.update({
     where: { id },
     data: {
       ...rest,
       ...(highlights ? { highlights: JSON.stringify(highlights) } : {}),
       ...(nearbyAttractions ? { nearbyAttractions: JSON.stringify(nearbyAttractions) } : {}),
+      ...(images ? { images: JSON.stringify(images) } : {}),
     },
   });
   return Response.json({ message: "숙소가 수정되었습니다", property: updated });

@@ -40,7 +40,15 @@ model Property {
   longitude     Float?
   phone         String?
   thumbnailUrl  String?
+  images        String  @default("[]") // ISS-024: JSON array of image URLs
   pricePerNight Int?
+  // ISS-025: 호스트 구독 플랜 (정산 정책)
+  // trial(3개월 무료) | starter(10000원/월+5%) | pro(30000원/월+2.5%) | success(0원+8%)
+  subscriptionPlan  String  @default("trial")
+  subscriptionUntil DateTime? // trial 종료일
+  // ISS-036: 다국어 번역 (lazy populate)
+  // JSON: {"en":{"title":"...","description":"..."},"ja":{...},"zh":{...}}
+  translations String @default("{}")
   maxGuests     Int     @default(4)
   amenities     String  @default("[]") // JSON array
   status        String  @default("draft") // draft | active | inactive
@@ -70,6 +78,31 @@ model Property {
   attractions PropertyAttraction[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+}
+
+// ─── GraphRAG 추천 로그 (ISS-033) ───
+model RecommendLog {
+  id         String   @id @default(cuid())
+  query      String   // 사용자 자연어 쿼리
+  propertyId String
+  rank       Int      // 결과 내 순위 (1~5)
+  score      Float
+  createdAt  DateTime @default(now())
+
+  @@index([propertyId, createdAt])
+  @@index([query])
+}
+
+// ─── 노출/조회 추적 (ISS-026) ───
+model PropertyView {
+  id         String   @id @default(cuid())
+  propertyId String
+  source     String   // "page" | "recommend" | "list"
+  anonId     String?  // 익명 사용자 식별 (쿠키 기반, 옵션)
+  viewedAt   DateTime @default(now())
+
+  @@index([propertyId, viewedAt])
+  @@index([source, viewedAt])
 }
 
 // ─── 예약 ───

@@ -109,6 +109,9 @@ const propertySchema = z.object({
   numberOfRooms: z.number().int().min(1).max(99).optional(),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
+  // ISS-024: 이미지 배열 + 썸네일
+  images: z.array(z.string().url().or(z.string().startsWith("/uploads/"))).max(20).optional(),
+  thumbnailUrl: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -126,13 +129,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { highlights, nearbyAttractions, ...rest } = parsed.data;
+  const { highlights, nearbyAttractions, images, ...rest } = parsed.data;
   const property = await prisma.property.create({
     data: {
       ...rest,
       hostId: user.id,
       ...(highlights ? { highlights: JSON.stringify(highlights) } : {}),
       ...(nearbyAttractions ? { nearbyAttractions: JSON.stringify(nearbyAttractions) } : {}),
+      ...(images ? { images: JSON.stringify(images) } : {}),
     },
   });
 

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { sendEmail, tplBookingDecisionToGuest } from "@/lib/email";
 import { z } from "zod";
 
 const statusSchema = z.object({
@@ -26,7 +27,10 @@ export async function PATCH(
 
   const booking = await prisma.booking.findUnique({
     where: { id },
-    include: { property: { select: { hostId: true } } },
+    include: {
+      property: { select: { hostId: true, title: true } },
+      user: { select: { email: true, name: true } },
+    },
   });
 
   if (!booking) {
@@ -70,6 +74,32 @@ export async function PATCH(
     COMPLETED: "완료",
     CANCELLED: "취소",
   };
+
+  // ISS-023: 호스트의 결정(승인/거절)을 게스트에게 알림
+  // (게스트 자가 취소나 COMPLETED는 알림 생략)
+  if (
+    isHost &&
+    (parsed.data.status === "CONFIRMED" || parsed.data.status === "CANCELLED") &&
+    booking.user?.email
+  ) {
+    try {
+      const tpl = tplBookingDecisionToGuest({
+        guestName: booking.user.name ?? "게스트",
+        propertyTitle: booking.property.title,
+        checkIn: booking.checkIn.toISOString().slice(0, 10),
+        checkOut: booking.checkOut.toISOString().slice(0, 10),
+        decision: parsed.data.status,
+        bookingId: booking.id,
+      });
+      await sendEmail({
+        to: booking.user.email,
+        subject: tpl.subject,
+        html: tpl.html,
+      });
+    } catch (err) {
+      console.error("[booking-status] guest notification failed:", err);
+    }
+  }
 
   return Response.json({
     message: `예약이 ${statusLabels[parsed.data.status]}되었습니다`,
